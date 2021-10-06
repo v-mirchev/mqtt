@@ -40,7 +40,7 @@ class Timeout  {
    * @param int $interval
    * @return $this
    */
-  public function setInterval(int $interval) {
+  public function setInterval(int $interval) : \Mqtt\Timeout {
     $this->interval = $interval;
     return $this;
   }
@@ -66,7 +66,7 @@ class Timeout  {
 
     $timePassed = time() - $this->time;
 
-    if ($timePassed > $this->interval) {
+    if ($timePassed >= $this->interval) {
       $this->handler->onTimeout();
     }
   }

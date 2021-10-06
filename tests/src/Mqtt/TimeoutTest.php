@@ -30,7 +30,6 @@ class TimeoutTest extends \PHPUnit\Framework\TestCase {
       return $this->currentTimeStubbed;
     })->build();
     $this->timeMock->enable();
-    $this->currentTimeStubbed = 0;
 
     $this->consumerMock =  $this->getMockBuilder(ITimeoutHandler::class)->getMock();
 
@@ -43,10 +42,12 @@ class TimeoutTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testNoOnTimeoutCallsWhenNotStarted() {
+    $this->currentTimeStubbed = 10;
+
     $this->object->setInterval(1);
     $this->consumerMock->expects($this->never())->method('onTimeout');
 
-    $this->currentTimeStubbed = 10;
+    $this->currentTimeStubbed = 15;
     $this->object->tick();
     $this->currentTimeStubbed = 20;
     $this->object->tick();
@@ -56,8 +57,21 @@ class TimeoutTest extends \PHPUnit\Framework\TestCase {
     $this->object->setInterval(5);
 
     $this->consumerMock->expects($this->once())->method('onTimeout');
-    $this->object->start();
+
     $this->currentTimeStubbed = 10;
+    $this->object->start();
+    $this->currentTimeStubbed = 16;
+    $this->object->tick();
+  }
+
+  public function testOnTimeoutCalledImmediatelyAfterTimeout() {
+    $this->object->setInterval(5);
+
+    $this->consumerMock->expects($this->once())->method('onTimeout');
+
+    $this->currentTimeStubbed = 10;
+    $this->object->start();
+    $this->currentTimeStubbed = 15;
     $this->object->tick();
   }
 
@@ -65,6 +79,7 @@ class TimeoutTest extends \PHPUnit\Framework\TestCase {
     $this->object->setInterval(10);
 
     $this->consumerMock->expects($this->never())->method('onTimeout');
+    $this->currentTimeStubbed = 10;
     $this->object->start();
     $this->currentTimeStubbed = 5;
     $this->object->reset();
