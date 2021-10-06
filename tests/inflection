@@ -1,0 +1,12 @@
+#!/bin/bash
+
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+cd "${SCRIPT_DIR}" || exit 1
+
+../vendor/bin/infection \
+  --min-msi=80 \
+  --configuration=inflection.json \
+  --test-framework-options='TestSuite.php' \
+  --threads=4 \
+  --log-verbosity=2 \
+  --only-covered
