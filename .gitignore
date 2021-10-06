@@ -1,6 +1,8 @@
 /nbproject/
 cache.properties
 
+**/*.local.*
+
 /vendor/
 /tests/vendor/
 composer.lock
