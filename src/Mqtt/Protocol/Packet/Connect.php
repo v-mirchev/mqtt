@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Packet;
 
-class Connect {
+class Connect implements \Mqtt\Protocol\IPacket {
 
   use \Mqtt\Protocol\Packet\TPacket;
 
