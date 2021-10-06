@@ -2,9 +2,15 @@
 
 namespace Mqtt\Connection;
 
+/**
+ * @runTestsInSeparateProcesses
+ */
 class SocketTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\TestPassedAssert;
+  use \Test\Helpers\TcpServerStub;
+
+  const PORT = 10001;
 
   /**
    * @var Socket
@@ -55,14 +61,17 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
     $this->object = new Socket(
       (new \Mqtt\Entity\Configuration\Server())->
         host('127.0.0.1')->
-        port(22)
+        port(static::PORT)
     );
+
+    $this->serverStart(static::PORT);
   }
 
   protected function tearDown() {
     $this->object->disconnect();
     $this->streamSocketRecvFromMock->disable();
     $this->streamSocketSendToMock->disable();
+    $this->serverStop();
   }
 
   public function testIsAlive() {
@@ -142,7 +151,9 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
     $this->object->connect();
 
     $this->streamSocketRecvFromMock->enable();
-    $this->expectException(\Exception::class, 'S');
+    $this->expectException(\Throwable::class);
+
+    $this->serverWrite('SSH');
     $this->object->read();
   }
 
@@ -153,12 +164,22 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
 
   public function testReadSuccess() {
     $this->object->connect();
+    $this->serverWrite('SSH');
     $this->object->read();
     $this->assertEquals('S', $this->object->getByte());
     $this->object->read();
     $this->assertEquals('S', $this->object->getByte());
     $this->object->read();
     $this->assertEquals('H', $this->object->getByte());
+    $this->object->disconnect();
+
+    $this->pass();
+  }
+
+  public function testReadEmptyData() {
+    $this->object->connect();
+    $this->object->read();
+    $this->assertNull($this->object->getByte());
     $this->object->disconnect();
 
     $this->pass();
