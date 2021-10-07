@@ -63,7 +63,7 @@ class VariableHeader {
    * @return $this
    */
   public function get() : string {
-    $length = (ord($this->body[0]) << 4) + ord($this->body[1]);
+    $length = (ord($this->body[0]) << 8) + ord($this->body[1]);
     $content = substr($this->body, 2, $length);
     $this->body = substr($this->body, $length + 2);
 
