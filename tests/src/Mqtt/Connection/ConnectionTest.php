@@ -53,17 +53,22 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testStreamWillReturnProperResult() {
-    $content = [ 'A', 'B', 'C'];
+    $inputContent = [ 'A', 'B', 'C', null, null, 'D' ];
+    $outputContent = array_filter($inputContent);
+
+    $isAliveValues = array_fill(0, count($inputContent), true);
+    $isAliveValues[] = false;
+
     $this->socketMock->
       method('isAlive')->
-      will($this->onConsecutiveCalls(true, true, true, false));
+      will(call_user_func_array([$this, 'onConsecutiveCalls'], $isAliveValues));
 
     $this->socketMock->
       method('getByte')->
-      will($this->onConsecutiveCalls('A', 'B', 'C'));
+      will($this->onConsecutiveCalls('A', 'B', 'C', null, null, 'D'));
 
-    foreach ($this->object->stream() as $ix => $byte) {
-      $this->assertEquals($content[$ix], $byte);
+    foreach ($this->object->stream() as $byte) {
+      $this->assertEquals(array_shift($outputContent), $byte);
     }
   }
 
