@@ -7,42 +7,42 @@ trait TcpServerStub {
   /**
    * @var resource
    */
-  protected $server;
+  static protected $server;
 
   /**
    * @var type
    */
-  protected $client;
+  static protected $client;
 
   public function serverStart($port) {
-    if ($this->server) {
+    if (static::$server) {
       return;
     }
 
-    $this->server = stream_socket_server('tcp://127.0.0.1:' . (int) $port, $errno, $errstr);
-    stream_set_blocking($this->server, false);
+    static::$server = stream_socket_server('tcp://127.0.0.1:' . (int) $port, $errno, $errstr);
+    stream_set_blocking(static::$server, false);
 
     declare(ticks=1);
-    register_tick_function([$this, 'serverAccept']);
+    register_tick_function(function () { static::serverAccept(); });
   }
 
-  public function serverAccept() {
-    $read = [$this->server];
+  static public function serverAccept() {
+    $read = [static::$server];
     if (!stream_select($read, $write, $except, 0, 2000)) {
       return;
     }
-    if (in_array($this->server, $read)) {
-      $this->client = stream_socket_accept($this->server);
+    if (in_array(static::$server, $read)) {
+      static::$client = stream_socket_accept(static::$server);
     }
   }
 
-  public function serverWrite($content) {
-    stream_socket_sendto($this->client, $content);
+  static public function serverWrite($content) {
+    stream_socket_sendto(static::$client, $content);
   }
 
-  public function serverStop() {
-    if ($this->server) {
-      stream_socket_shutdown($this->server, STREAM_SHUT_WR);
+  static public function serverStop() {
+    if (static::$server) {
+      stream_socket_shutdown(static::$server, STREAM_SHUT_WR);
     }
   }
 

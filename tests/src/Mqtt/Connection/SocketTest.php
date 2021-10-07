@@ -2,9 +2,6 @@
 
 namespace Mqtt\Connection;
 
-/**
- * @runTestsInSeparateProcesses
- */
 class SocketTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\TestPassedAssert;
@@ -37,7 +34,25 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
    */
   protected $eofMockedValue;
 
+  public static function setUpBeforeClass() {
+    parent::setUpBeforeClass();
+    if (!getenv('MUTATION_TESTING')) {
+      static::serverStart(static::PORT);
+    }
+  }
+
+  public static function tearDownAfterClass() {
+    if (!getenv('MUTATION_TESTING')) {
+      static::serverStop();
+    }
+    parent::tearDownAfterClass();
+  }
+
   protected function setUp() {
+    if (getenv('MUTATION_TESTING')) {
+      $this->markTestSkipped('Skipped on mutation testing');
+    }
+
     $builder = new \phpmock\MockBuilder();
 
     $this->streamSocketRecvFromMock = $builder->setNamespace(__NAMESPACE__)->
@@ -64,14 +79,12 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
         port(static::PORT)
     );
 
-    $this->serverStart(static::PORT);
   }
 
   protected function tearDown() {
     $this->object->disconnect();
     $this->streamSocketRecvFromMock->disable();
     $this->streamSocketSendToMock->disable();
-    $this->serverStop();
   }
 
   public function testIsAlive() {
@@ -99,7 +112,7 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
     $this->object = new Socket(
       (new \Mqtt\Entity\Configuration\Server())->
         host('127.0.0.1')->
-        port(22)->
+        port(static::PORT)->
         certificate('aaa')
     );
 
@@ -130,8 +143,8 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
     $this->object = $this->getMockBuilder(\Mqtt\Connection\Socket::class)->
       setConstructorArgs([
         (new \Mqtt\Entity\Configuration\Server())->
-          host('127.0.0.1')->
-          port(22)
+        host('127.0.0.1')->
+          port(static::PORT)
       ])->
       setMethods([ 'disconnect'])->
       getMock();
@@ -153,7 +166,7 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
     $this->streamSocketRecvFromMock->enable();
     $this->expectException(\Throwable::class);
 
-    $this->serverWrite('SSH');
+    static::serverWrite('SSH');
     $this->object->read();
   }
 
@@ -164,7 +177,7 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
 
   public function testReadSuccess() {
     $this->object->connect();
-    $this->serverWrite('SSH');
+    static::serverWrite('SSH');
     $this->object->read();
     $this->assertEquals('S', $this->object->getByte());
     $this->object->read();
