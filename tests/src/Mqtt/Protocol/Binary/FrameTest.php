@@ -171,7 +171,15 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->proxy($this->object)->
       with($this->object->getFixedHeaderInstane())->
       method('setAsDup')->
-      arguments([ true ])->
+      proxyArguments([ true ])->
+      assert();
+  }
+
+  public function testSetAsNotDupProxiesCalls() {
+    $this->proxy($this->object)->
+      with($this->object->getFixedHeaderInstane())->
+      method('setAsDup')->
+      arguments([ false ])->
       assert();
   }
 
@@ -188,10 +196,17 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->proxy($this->object)->
       with($this->object->getFixedHeaderInstane())->
       method('setAsRetain')->
-      arguments([ true ])->
+      proxyArguments([ true ])->
       assert();
   }
 
+  public function testSetAsNotRetainProxiesCalls() {
+    $this->proxy($this->object)->
+      with($this->object->getFixedHeaderInstane())->
+      method('setAsRetain')->
+      arguments([ false ])->
+      assert();
+  }
 
   public function testIsRetainProxiesCalls() {
     $this->proxy($this->object)->

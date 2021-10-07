@@ -46,7 +46,7 @@ class Frame {
   /**
    * @param \Iterator $stream
    */
-  public function fromStream(\Iterator $stream) {
+  public function fromStream(\Iterator $stream) : void {
     $this->body = '';
     $this->fixedHeader->fromStream($stream);
     $remainingLength = $this->fixedHeader->getRemainingLength();
@@ -76,7 +76,7 @@ class Frame {
    * @param string $content
    * @return $this
    */
-  public function addVariableHeader(string $content) {
+  public function addVariableHeader(string $content) : \Mqtt\Protocol\Binary\Frame {
     $this->variableHeaders[] = $this->variableHeader->create($content);
     return $this;
   }
@@ -84,7 +84,7 @@ class Frame {
   /**
    * @return int
    */
-  public function getVariableHeaderIdentifier() {
+  public function getVariableHeaderIdentifier() : int {
     return $this->variableHeader->getIdentifier();
   }
 
@@ -92,7 +92,7 @@ class Frame {
    * @param int $identifier
    * @return $this
    */
-  public function addVariableHeaderIdentifier(int $identifier) {
+  public function addVariableHeaderIdentifier(int $identifier) : \Mqtt\Protocol\Binary\Frame {
     $this->variableHeaders[] = $this->variableHeader->createIdentifier($identifier);
     return $this;
   }
@@ -108,7 +108,7 @@ class Frame {
    * @param int $byte
    * @return $this
    */
-  public function addVariableHeaderByte(string $byte) {
+  public function addVariableHeaderByte(string $byte): \Mqtt\Protocol\Binary\Frame {
     $this->variableHeaders[] = $this->variableHeader->createByte($byte);
     return $this;
   }
@@ -117,7 +117,7 @@ class Frame {
    * @param string $payload
    * @return $this
    */
-  public function setPayload(string $payload) {
+  public function setPayload(string $payload): \Mqtt\Protocol\Binary\Frame {
     $this->payload = $payload;
     return $this;
   }
@@ -134,7 +134,7 @@ class Frame {
    * @param type $type
    * @return $this
    */
-  public function setPacketType(int $type) {
+  public function setPacketType(int $type): \Mqtt\Protocol\Binary\Frame {
     $this->fixedHeader->setPacketType($type);
     return $this;
   }
@@ -157,7 +157,7 @@ class Frame {
    * @param int $qos
    * @return $this
    */
-  public function setQoS(int $qos) {
+  public function setQoS(int $qos): \Mqtt\Protocol\Binary\Frame {
     $this->fixedHeader->setQoS($qos);
     return $this;
   }
@@ -173,7 +173,7 @@ class Frame {
    * @param bool $dup
    * @return $this
    */
-  public function setAsDup(bool $dup = true) {
+  public function setAsDup(bool $dup = true): \Mqtt\Protocol\Binary\Frame {
     $this->fixedHeader->setAsDup($dup);
     return $this;
   }
@@ -182,7 +182,7 @@ class Frame {
    * @param bool $retain
    * @return $this
    */
-  public function setAsRetain(bool $retain = true) {
+  public function setAsRetain(bool $retain = true): \Mqtt\Protocol\Binary\Frame {
     $this->fixedHeader->setAsRetain($retain);
     return $this;
   }
