@@ -67,7 +67,7 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
     }
   }
 
-  public function testWillThrowExceptionIfSocketDies() {
+  public function testEstablishWillThrowExceptionIfSocketDies() {
     $this->socketMock->
       method('isAlive')->
       will($this->returnValue(true));

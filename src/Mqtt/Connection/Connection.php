@@ -34,7 +34,6 @@ class Connection implements \Mqtt\Connection\IConnection {
   ) {
     $this->socket = $socket;
     $this->frame = clone $frame;
-    $this->isDisconnecting = false;
   }
 
   /**
