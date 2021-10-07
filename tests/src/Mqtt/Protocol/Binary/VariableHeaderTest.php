@@ -38,7 +38,7 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
 
   public function testContentDecoding() {
     $content = str_repeat('ABCD' , 129);
-    $this->object->set($this->stringToStringStream('0204' . str_repeat('41424344', 129)));
+    $this->object->set($this->stringToStringStream('0204' . str_repeat('41424344', 129)) . $this->randomStringStream());
     $this->assertEquals($content, $this->object->get());
   }
 
@@ -50,7 +50,7 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
 
   public function testByteDecoding() {
     $byte = 0x05;
-    $this->object->set($this->toStringStream(0x05));
+    $this->object->set($this->toStringStream(0x05) . $this->randomStringStream());
     $this->assertEquals($byte, $this->object->getByte());
   }
 
@@ -62,7 +62,7 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
 
   public function testIdentifierDecoding() {
     $identifier = 0xA5;
-    $this->object->set($this->toStringStream(0x00, 0xa5));
+    $this->object->set($this->toStringStream(0x00, 0xa5) . $this->randomStringStream());
     $this->assertEquals($identifier, $this->object->getIdentifier());
   }
 
