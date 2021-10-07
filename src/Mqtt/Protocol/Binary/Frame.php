@@ -200,7 +200,7 @@ class Frame {
   public function __toString() : string {
     $variableHeaders = implode('', $this->variableHeaders);
     $this->fixedHeader->setRemainingLength(strlen($variableHeaders) + strlen($this->payload));
-    return $this->fixedHeader . $variableHeaders . $this->payload;
+    return (string)$this->fixedHeader . $variableHeaders . $this->payload;
   }
 
   public function __clone() {

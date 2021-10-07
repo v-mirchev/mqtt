@@ -18,6 +18,11 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   protected $fixedHeaderMock;
 
   /**
+   * @var int
+   */
+  protected $fixedHeaderRemainingLengthMockedValue = -1;
+
+  /**
    * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $variableHeaderMock;
@@ -30,7 +35,18 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
 
     $this->fixedHeaderMock->
       method('__toString')->
-      will($this->returnValue('#FixedHeader'));
+      will($this->returnCallback(function () { return '#FixedHeader:' . $this->fixedHeaderRemainingLengthMockedValue;} ));
+
+    $this->fixedHeaderMock->
+      method('getRemainingLength')->
+      will($this->returnCallback(function () { return $this->fixedHeaderRemainingLengthMockedValue;} ));
+
+    $this->fixedHeaderMock->
+      method('setRemainingLength')->
+      will($this->returnCallback(function ($length) {
+        $this->fixedHeaderRemainingLengthMockedValue = $length;
+        return $this->fixedHeaderMock;
+      }));
 
     $this->variableHeaderMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\VariableHeader::class)->
       disableOriginalClone()->
@@ -56,32 +72,33 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
       method('__toString')->
       will($this->returnValue('#VariableHeader'));
 
+    $this->fixedHeaderRemainingLengthMockedValue = -1;
     $this->object = new Frame($this->fixedHeaderMock, $this->variableHeaderMock);
   }
 
   public function testCloneResetsInstance() {
     $this->object->addVariableHeaderByte(0x05);
     $object = clone $this->object;
-    $this->assertEquals('#FixedHeader', (string) $object);
+    $this->assertEquals('#FixedHeader:0', (string) $object);
   }
 
   public function testEncodingFixedHeaderOnly() {
-    $this->assertEquals('#FixedHeader', (string)$this->object);
+    $this->assertEquals('#FixedHeader:0', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderByteN() {
     $this->object->addVariableHeaderByte(5);
-    $this->assertEquals('#FixedHeader#VariableHeader', (string)$this->object);
+    $this->assertEquals('#FixedHeader:15#VariableHeader', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderContent() {
     $this->object->addVariableHeader('');
-    $this->assertEquals('#FixedHeader#VariableHeader', (string)$this->object);
+    $this->assertEquals('#FixedHeader:15#VariableHeader', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderIdentifier() {
     $this->object->addVariableHeaderIdentifier(67);
-    $this->assertEquals('#FixedHeader#VariableHeader', (string)$this->object);
+    $this->assertEquals('#FixedHeader:15#VariableHeader', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderMultipleVariableHeaders() {
@@ -89,7 +106,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->object->addVariableHeaderByte(0x06);
     $this->object->addVariableHeaderIdentifier(45);
 
-    $this->assertEquals('#FixedHeader#VariableHeader#VariableHeader#VariableHeader', (string)$this->object);
+    $this->assertEquals('#FixedHeader:45#VariableHeader#VariableHeader#VariableHeader', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderMultipleVariableHeadersAndBody() {
@@ -98,7 +115,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->object->addVariableHeaderIdentifier(45);
     $this->object->setPayload('#Payload');
 
-    $this->assertEquals('#FixedHeader#VariableHeader#VariableHeader#VariableHeader#Payload', (string)$this->object);
+    $this->assertEquals('#FixedHeader:53#VariableHeader#VariableHeader#VariableHeader#Payload', (string)$this->object);
   }
 
   public function testFromStreamReadsProperlyNoBody() {
@@ -108,10 +125,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
       expects($this->once())->
       method('fromStream');
 
-    $this->object->getFixedHeaderInstane()->
-      expects($this->once())->
-      method('getRemainingLength')->
-      will($this->returnValue(0));
+    $this->fixedHeaderRemainingLengthMockedValue = 0;
 
     $this->object->getVariableHeaderInstane()->
       expects($this->once())->
@@ -130,10 +144,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
       expects($this->once())->
       method('fromStream');
 
-    $this->object->getFixedHeaderInstane()->
-      expects($this->once())->
-      method('getRemainingLength')->
-      will($this->returnValue(1));
+    $this->fixedHeaderRemainingLengthMockedValue = 1;
 
     $this->object->getVariableHeaderInstane()->
       expects($this->once())->
@@ -152,10 +163,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
       expects($this->once())->
       method('fromStream');
 
-    $this->object->getFixedHeaderInstane()->
-      expects($this->once())->
-      method('getRemainingLength')->
-      will($this->returnValue(2));
+    $this->fixedHeaderRemainingLengthMockedValue = 2;
 
     $this->object->getVariableHeaderInstane()->
       expects($this->once())->
