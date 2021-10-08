@@ -54,7 +54,7 @@ class Frame {
       $stream->next();
       $this->body .= $stream->current();
     }
-    $this->variableHeader->set($this->body);
+    $this->variableHeader->decode($this->body);
   }
 
   /**
@@ -69,7 +69,7 @@ class Frame {
    * @return $this
    */
   public function getVariableHeader() : string {
-    return $this->variableHeader->get();
+    return $this->variableHeader->getString();
   }
 
   /**
@@ -77,7 +77,7 @@ class Frame {
    * @return $this
    */
   public function addVariableHeader(string $content) : \Mqtt\Protocol\Binary\Frame {
-    $this->variableHeaders[] = $this->variableHeader->create($content);
+    $this->variableHeaders[] = $this->variableHeader->createString($content);
     return $this;
   }
 
@@ -85,7 +85,7 @@ class Frame {
    * @return int
    */
   public function getVariableHeaderIdentifier() : int {
-    return $this->variableHeader->getIdentifier();
+    return $this->variableHeader->getWord();
   }
 
   /**
@@ -93,7 +93,7 @@ class Frame {
    * @return $this
    */
   public function addVariableHeaderIdentifier(int $identifier) : \Mqtt\Protocol\Binary\Frame {
-    $this->variableHeaders[] = $this->variableHeader->createIdentifier($identifier);
+    $this->variableHeaders[] = $this->variableHeader->createWord($identifier);
     return $this;
   }
 

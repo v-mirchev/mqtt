@@ -29,7 +29,7 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
 
   public function testContentEncoding() {
     $content = str_repeat('ABCD' , 129);
-    $object = $this->object->create($content);
+    $object = $this->object->createString($content);
     $this->assertEquals(
       $this->stringToStringStream('0204' . str_repeat('41424344', 129)),
       (string) $object
@@ -38,8 +38,8 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
 
   public function testContentDecoding() {
     $content = str_repeat('ABCD' , 129);
-    $this->object->set($this->stringToStringStream('0204' . str_repeat('41424344', 129)) . $this->randomStringStream());
-    $this->assertEquals($content, $this->object->get());
+    $this->object->decode($this->stringToStringStream('0204' . str_repeat('41424344', 129)) . $this->randomStringStream());
+    $this->assertEquals($content, $this->object->getString());
   }
 
   public function testByteEncoding() {
@@ -50,24 +50,24 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
 
   public function testByteDecoding() {
     $byte = 0x05;
-    $this->object->set($this->toStringStream(0x05) . $this->randomStringStream());
+    $this->object->decode($this->toStringStream(0x05) . $this->randomStringStream());
     $this->assertEquals($byte, $this->object->getByte());
   }
 
   public function testIdentifierEncoding() {
     $identifier = 0xA5;
-    $object = $this->object->createIdentifier($identifier);
+    $object = $this->object->createWord($identifier);
     $this->assertEquals($this->toStringStream(0x00, 0xa5), (string)$object);
   }
 
   public function testIdentifierDecoding() {
     $identifier = 0xA5;
-    $this->object->set($this->toStringStream(0x00, 0xa5) . $this->randomStringStream());
-    $this->assertEquals($identifier, $this->object->getIdentifier());
+    $this->object->decode($this->toStringStream(0x00, 0xa5) . $this->randomStringStream());
+    $this->assertEquals($identifier, $this->object->getWord());
   }
 
   public function testSetGetBody() {
-    $this->object->set('ABCDEF');
+    $this->object->decode('ABCDEF');
     $this->assertEquals('ABCDEF', $this->object->getBody());
   }
 
@@ -77,7 +77,7 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
 
   public function testGetIdentifiersProcessesProperlyBody() {
     $bytes = [ 0x1, 0x5, 0x9 ];
-    $this->object->set(call_user_func_array([ $this, 'toStringStream' ], $bytes));
+    $this->object->decode(call_user_func_array([ $this, 'toStringStream' ], $bytes));
     $this->assertEquals($bytes, $this->object->getBytes());
   }
 

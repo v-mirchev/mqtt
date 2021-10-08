@@ -35,7 +35,7 @@ class VariableHeader {
   /**
    * @param string $content
    */
-  public function create(string $content) : \Mqtt\Protocol\Binary\VariableHeader {
+  public function createString(string $content) : \Mqtt\Protocol\Binary\VariableHeader {
     $instance = clone $this;
     $instance->word->set(strlen($content));
     $instance->content = $content;
@@ -46,7 +46,7 @@ class VariableHeader {
   /**
    * @param string $body
    */
-  public function set(string $body) {
+  public function decode(string $body) {
     $this->body = $body;
   }
 
@@ -61,7 +61,7 @@ class VariableHeader {
    * @param int length
    * @return $this
    */
-  public function get() : string {
+  public function getString() : string {
     $this->word->setBytes($this->body[0], $this->body[1]);
     $content = substr($this->body, 2, $this->word->get());
     $this->body = substr($this->body, $this->word->get() + 2);
@@ -72,7 +72,7 @@ class VariableHeader {
   /**
    * @param int $identifier
    */
-  public function createIdentifier(int $identifier) {
+  public function createWord(int $identifier) {
     $instance = clone $this;
     $instance->word->set($identifier);
     $instance->content = '';
@@ -83,7 +83,7 @@ class VariableHeader {
   /**
    * @return int
    */
-  public function getIdentifier() {
+  public function getWord() {
     $this->word->setBytes($this->body[0], $this->body[1]);
     $this->body = substr($this->body, 2);
     return $this->word->get();
