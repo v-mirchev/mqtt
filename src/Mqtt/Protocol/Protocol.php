@@ -37,7 +37,7 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
     $this->connection = $connection;
     $this->connection->setProtocol($this);
 
-    $this->frame = $frame;
+    $this->frame = clone $frame;
     $this->packetFactory = $packetFactory;
   }
 
@@ -60,7 +60,7 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
    * @param \Iterator $stream
    */
   public function read(\Iterator $stream) : void {
-    $frame = $this->getNewFrame();
+    $frame = clone $this->frame;
     $frame->decode($stream);
 
     $receivedPacket = $this->packetFactory->create($frame->getPacketType());
@@ -74,7 +74,7 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
    * @param \Mqtt\Protocol\IPacket $packet
    */
   public function writePacket(\Mqtt\Protocol\IPacket $packet) : void {
-    $frame = $this->getNewFrame();
+    $frame = clone $this->frame;
     $packet->encode($frame);
     $this->connection->write((string)$frame);
     unset($frame);
@@ -98,10 +98,6 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
 
   public function onTick() : void {
     $this->session->onTick();
-  }
-
-  public function getNewFrame() : \Mqtt\Protocol\Binary\Frame {
-    return clone $this->frame;
   }
 
 }
