@@ -9,14 +9,24 @@ class Byte {
    */
   protected $value;
 
+  public function setFromMsb(int $value) {
+    $this->set($value >> 8);
+  }
+
+  public function setFromLsb(int $value) {
+    $this->set($value);
+  }
+
+  public function msb(int $msb) : int {
+    return $this->get() + ($msb << 8);
+  }
+
   /**
    * @param type $value
    * @return $this
    */
   public function set($value) : \Mqtt\Protocol\Binary\Byte {
-    $this->value = is_int($value) ?
-      (0xFF & (int)$value) :
-      \ord($value);
+    $this->value = is_string($value) ? \ord($value) : (0xFF & (int)$value);
     return $this;
   }
 
