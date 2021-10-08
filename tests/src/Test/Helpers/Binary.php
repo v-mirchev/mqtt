@@ -8,7 +8,12 @@ trait Binary {
    * @return string
    */
   protected function toStringStream() : string {
-    return implode('', array_map('chr', func_get_args()));
+    if (is_array(func_get_arg(0))) {
+      $bytes = func_get_arg(0);
+    } else {
+      $bytes = func_get_args();
+    }
+    return implode('', array_map('chr', $bytes));
   }
 
   /**
@@ -37,7 +42,12 @@ trait Binary {
    * @return \Iterator
    */
   protected function toArrayStream() : \Iterator {
-    return new \ArrayIterator(array_map('chr', func_get_args()));
+    if (is_array(func_get_arg(0))) {
+      $bytes = func_get_arg(0);
+    } else {
+      $bytes = func_get_args();
+    }
+    return new \ArrayIterator(array_map('chr', $bytes));
   }
 
 }
