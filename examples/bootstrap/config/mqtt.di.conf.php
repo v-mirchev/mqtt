@@ -34,6 +34,7 @@ return [
         $container->get(\Mqtt\Entity\Configuration\Protocol::class)
       ))->
       clientId($container->get('mqtt.session.clientId'))->
+      usePersistent($container->get('mqtt.session.persistent'))->
       keepAliveInterval($container->get('mqtt.session.keepAliveInterval'));
 
       $session->will();
@@ -50,8 +51,7 @@ return [
 
   \Mqtt\Connection\Connection::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Connection\Connection(
-      $container->get(\Mqtt\Connection\Socket::class),
-      $container->get(\Mqtt\Protocol\Binary\Frame::class)
+      $container->get(\Mqtt\Connection\Socket::class)
     ));
   },
 
