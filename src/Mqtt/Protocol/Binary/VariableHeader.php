@@ -5,14 +5,9 @@ namespace Mqtt\Protocol\Binary;
 class VariableHeader {
 
   /**
-   * @var int
+   * @var \Mqtt\Protocol\Binary\Word
    */
-  protected $lsb;
-
-  /**
-   * @var int
-   */
-  protected $msb;
+  protected $word;
 
   /**
    * @var string
@@ -24,9 +19,15 @@ class VariableHeader {
    */
   protected $body;
 
-  public function __construct() {
-    $this->lsb = 0;
-    $this->msb = 0;
+  /**
+   * @var bool
+   */
+
+  /**
+   * @param \Mqtt\Protocol\Binary\Word $word
+   */
+  public function __construct(\Mqtt\Protocol\Binary\Word $word) {
+    $this->word = clone $word;
     $this->content = '';
     $this->body = '';
   }
@@ -36,9 +37,7 @@ class VariableHeader {
    */
   public function create(string $content) : \Mqtt\Protocol\Binary\VariableHeader {
     $instance = clone $this;
-    $dataLength = strlen($content);
-    $instance->msb = $dataLength >> 8;
-    $instance->lsb = $dataLength % 256;
+    $instance->word->set(strlen($content));
     $instance->content = $content;
 
     return $instance;
@@ -63,9 +62,9 @@ class VariableHeader {
    * @return $this
    */
   public function get() : string {
-    $length = (ord($this->body[0]) << 8) + ord($this->body[1]);
-    $content = substr($this->body, 2, $length);
-    $this->body = substr($this->body, $length + 2);
+    $this->word->setBytes($this->body[0], $this->body[1]);
+    $content = substr($this->body, 2, $this->word->get());
+    $this->body = substr($this->body, $this->word->get() + 2);
 
     return $content;
   }
@@ -75,8 +74,7 @@ class VariableHeader {
    */
   public function createIdentifier(int $identifier) {
     $instance = clone $this;
-    $instance->msb = $identifier >> 8;
-    $instance->lsb = $identifier % 256;
+    $instance->word->set($identifier);
     $instance->content = '';
 
     return $instance;
@@ -86,9 +84,9 @@ class VariableHeader {
    * @return int
    */
   public function getIdentifier() {
-    $identifier = (ord($this->body[0]) << 4) + ord($this->body[1]);
+    $this->word->setBytes($this->body[0], $this->body[1]);
     $this->body = substr($this->body, 2);
-    return $identifier;
+    return $this->word->get();
   }
 
   /**
@@ -107,8 +105,7 @@ class VariableHeader {
    */
   public function createByte(string $byte) {
     $instance = clone $this;
-    $instance->msb = null;
-    $instance->lsb = null;
+    $instance->word = null;
     $instance->content = chr($byte);
 
     return $instance;
@@ -118,9 +115,9 @@ class VariableHeader {
    * @return string
    */
   public function getByte() : int {
-    $byte = (ord($this->body[0]));
+    $this->word->setBytes(0, $this->body[0]);
     $this->body = substr($this->body, 1);
-    return $byte;
+    return $this->word->getLsb()->get();
   }
 
   /**
@@ -128,14 +125,12 @@ class VariableHeader {
    */
   public function __toString() : string {
     return
-      ( is_null($this->msb) ? '' : \chr($this->msb) ) .
-      ( is_null($this->lsb) ? '' : \chr($this->lsb) ) .
+      $this->word .
       $this->content;
   }
 
   public function __clone() {
-    $this->lsb = 0;
-    $this->msb = 0;
+    $this->word = clone $this->word;
     $this->content = '';
     $this->body = '';
   }

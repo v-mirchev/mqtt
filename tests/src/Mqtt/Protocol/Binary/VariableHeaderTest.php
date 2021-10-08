@@ -12,7 +12,7 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new VariableHeader;
+    $this->object = new VariableHeader(new \Mqtt\Protocol\Binary\Word(new \Mqtt\Protocol\Binary\Byte()));
   }
 
   public function testCloneResetsInstance() {
