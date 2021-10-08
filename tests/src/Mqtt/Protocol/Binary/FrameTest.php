@@ -3,7 +3,8 @@
 namespace Mqtt\Protocol\Binary;
 
 /**
- * @inject $container
+ * @Inject $container
+ * @property \Psr\Container\ContainerInterface ___$container
  */
 class FrameTest extends \PHPUnit\Framework\TestCase {
 
@@ -16,7 +17,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = clone $this->container->get(\Mqtt\Protocol\Binary\Frame::class);
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Binary\Frame::class);
   }
 
   public function testCloneResetsInstance() {

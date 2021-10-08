@@ -3,8 +3,8 @@
 namespace Mqtt\Protocol\Binary\Flags;
 
 /**
- * @inject $container
- * @property \Psr\Container\ContainerInterface $container
+ * @Inject $container
+ * @property \Psr\Container\ContainerInterface ___$container
  */
 class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
@@ -16,7 +16,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = clone $this->container->get(ConnAck::class);
+    $this->object = clone $this->___container->get(ConnAck::class);
   }
 
   public function testCloneResetsInstance() {

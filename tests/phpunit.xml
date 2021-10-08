@@ -25,7 +25,13 @@
   </logging>
 
   <listeners>
-    <listener class="\Test\Injector" />
+    <listener class="\Test\Injector">
+      <arguments>
+        <array>
+          <element key="0"><string>$container</string></element>
+        </array>
+      </arguments>
+    </listener>
   </listeners>
 
 </phpunit>
