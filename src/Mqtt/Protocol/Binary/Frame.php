@@ -68,7 +68,7 @@ class Frame {
    * @param int length
    * @return $this
    */
-  public function getVariableHeader() : string {
+  public function getString() : string {
     return $this->variableHeader->getString();
   }
 
@@ -76,7 +76,7 @@ class Frame {
    * @param string $content
    * @return $this
    */
-  public function addVariableHeader(string $content) : \Mqtt\Protocol\Binary\Frame {
+  public function addString(string $content) : \Mqtt\Protocol\Binary\Frame {
     $this->variableHeaders[] = $this->variableHeader->createString($content);
     return $this;
   }
@@ -84,7 +84,7 @@ class Frame {
   /**
    * @return int
    */
-  public function getVariableHeaderIdentifier() : int {
+  public function getWord() : int {
     return $this->variableHeader->getWord();
   }
 
@@ -92,7 +92,7 @@ class Frame {
    * @param int $identifier
    * @return $this
    */
-  public function addVariableHeaderIdentifier(int $identifier) : \Mqtt\Protocol\Binary\Frame {
+  public function addWord(int $identifier) : \Mqtt\Protocol\Binary\Frame {
     $this->variableHeaders[] = $this->variableHeader->createWord($identifier);
     return $this;
   }
@@ -100,7 +100,7 @@ class Frame {
   /**
    * @return string
    */
-  public function getVariableHeaderByte() : int {
+  public function getByte() : int {
     return $this->variableHeader->getByte();
   }
 
@@ -108,7 +108,7 @@ class Frame {
    * @param int $byte
    * @return $this
    */
-  public function addVariableHeaderByte(string $byte): \Mqtt\Protocol\Binary\Frame {
+  public function addByte(string $byte): \Mqtt\Protocol\Binary\Frame {
     $this->variableHeaders[] = $this->variableHeader->createByte($byte);
     return $this;
   }
@@ -209,23 +209,6 @@ class Frame {
     $this->variableHeaders = [];
     $this->payload = '';
     $this->body = '';
-  }
-
-
-  /**
-   * @return \Mqtt\Protocol\Binary\IFixedHeader
-   * @CodeSmell Used only for unit testing, no Singleton used
-   */
-  public function getFixedHeaderInstane(): \Mqtt\Protocol\Binary\IFixedHeader {
-    return $this->fixedHeader;
-  }
-
-  /**
-   * @return \Mqtt\Protocol\Binary\VariableHeader
-   * @CodeSmell Used only for unit testing, no Singleton used
-   */
-  public function getVariableHeaderInstane(): \Mqtt\Protocol\Binary\VariableHeader {
-    return $this->variableHeader;
   }
 
   /**

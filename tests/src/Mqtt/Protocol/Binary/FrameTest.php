@@ -77,7 +77,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testCloneResetsInstance() {
-    $this->object->addVariableHeaderByte(0x05);
+    $this->object->addByte(0x05);
     $object = clone $this->object;
     $this->assertEquals('#FixedHeader:0', (string) $object);
   }
@@ -87,32 +87,32 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderByteN() {
-    $this->object->addVariableHeaderByte(5);
+    $this->object->addByte(5);
     $this->assertEquals('#FixedHeader:15#VariableHeader', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderContent() {
-    $this->object->addVariableHeader('');
+    $this->object->addString('');
     $this->assertEquals('#FixedHeader:15#VariableHeader', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderIdentifier() {
-    $this->object->addVariableHeaderIdentifier(67);
+    $this->object->addWord(67);
     $this->assertEquals('#FixedHeader:15#VariableHeader', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderMultipleVariableHeaders() {
-    $this->object->addVariableHeader('');
-    $this->object->addVariableHeaderByte(0x06);
-    $this->object->addVariableHeaderIdentifier(45);
+    $this->object->addString('');
+    $this->object->addByte(0x06);
+    $this->object->addWord(45);
 
     $this->assertEquals('#FixedHeader:45#VariableHeader#VariableHeader#VariableHeader', (string)$this->object);
   }
 
   public function testEncodingFixedHeaderMultipleVariableHeadersAndBody() {
-    $this->object->addVariableHeader('');
-    $this->object->addVariableHeaderByte(0x06);
-    $this->object->addVariableHeaderIdentifier(45);
+    $this->object->addString('');
+    $this->object->addByte(0x06);
+    $this->object->addWord(45);
     $this->object->setPayload('#Payload');
 
     $this->assertEquals('#FixedHeader:53#VariableHeader#VariableHeader#VariableHeader#Payload', (string)$this->object);

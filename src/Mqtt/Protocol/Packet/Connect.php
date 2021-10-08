@@ -46,22 +46,22 @@ class Connect implements \Mqtt\Protocol\IPacket {
     }
 
     $frame->setPacketType(\Mqtt\Protocol\IPacket::CONNECT);
-    $frame->addVariableHeader($this->sessionParameters->protocol->protocol);
-    $frame->addVariableHeaderByte($this->sessionParameters->protocol->version);
-    $frame->addVariableHeaderByte($this->flags->get());
-    $frame->addVariableHeaderIdentifier($this->sessionParameters->keepAliveInterval);
-    $frame->addVariableHeader($this->sessionParameters->clientId);
+    $frame->addString($this->sessionParameters->protocol->protocol);
+    $frame->addByte($this->sessionParameters->protocol->version);
+    $frame->addByte($this->flags->get());
+    $frame->addWord($this->sessionParameters->keepAliveInterval);
+    $frame->addString($this->sessionParameters->clientId);
 
     if ($this->sessionParameters->useWill) {
-      $frame->addVariableHeader($this->sessionParameters->will->topic);
-      $frame->addVariableHeader($this->sessionParameters->will->content);
+      $frame->addString($this->sessionParameters->will->topic);
+      $frame->addString($this->sessionParameters->will->content);
     }
 
     if ($this->sessionParameters->useAuthentication) {
-      $frame->addVariableHeader($this->sessionParameters->authentication->username);
+      $frame->addString($this->sessionParameters->authentication->username);
     }
     if ($this->sessionParameters->useAuthentication) {
-      $frame->addVariableHeader($this->sessionParameters->authentication->password);
+      $frame->addString($this->sessionParameters->authentication->password);
     }
 
   }

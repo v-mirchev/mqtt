@@ -32,7 +32,7 @@ class SubAck implements \Mqtt\Protocol\IPacket {
    * @param \Mqtt\Protocol\Binary\Frame $frame
    */
   public function decode(\Mqtt\Protocol\Binary\Frame $frame) {
-    $this->id = $frame->getVariableHeaderIdentifier();
+    $this->id = $frame->getWord();
     $this->returnCodes = $frame->getPayloadBytes();
  }
 

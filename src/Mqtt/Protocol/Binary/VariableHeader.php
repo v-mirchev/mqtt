@@ -44,6 +44,28 @@ class VariableHeader {
   }
 
   /**
+   * @param int $identifier
+   */
+  public function createWord(int $identifier) {
+    $instance = clone $this;
+    $instance->word->set($identifier);
+    $instance->content = '';
+
+    return $instance;
+  }
+
+  /**
+   * @param string $byte
+   */
+  public function createByte(string $byte) {
+    $instance = clone $this;
+    $instance->word = null;
+    $instance->content = chr($byte);
+
+    return $instance;
+  }
+
+  /**
    * @param string $body
    */
   public function decode(string $body) {
@@ -70,17 +92,6 @@ class VariableHeader {
   }
 
   /**
-   * @param int $identifier
-   */
-  public function createWord(int $identifier) {
-    $instance = clone $this;
-    $instance->word->set($identifier);
-    $instance->content = '';
-
-    return $instance;
-  }
-
-  /**
    * @return int
    */
   public function getWord() {
@@ -90,34 +101,23 @@ class VariableHeader {
   }
 
   /**
-   * @return int[]
-   */
-  public function getBytes() {
-    $identifiers = [];
-    while (strlen($this->body)) {
-      $identifiers[] = $this->getByte();
-    }
-    return $identifiers;
-  }
-
-  /**
-   * @param string $byte
-   */
-  public function createByte(string $byte) {
-    $instance = clone $this;
-    $instance->word = null;
-    $instance->content = chr($byte);
-
-    return $instance;
-  }
-
-  /**
    * @return string
    */
   public function getByte() : int {
     $this->word->setBytes(0, $this->body[0]);
     $this->body = substr($this->body, 1);
     return $this->word->getLsb()->get();
+  }
+
+  /**
+   * @return int[]
+   */
+  public function getBytes() {
+    $bytes = [];
+    while (strlen($this->body)) {
+      $bytes[] = $this->getByte();
+    }
+    return $bytes;
   }
 
   /**

@@ -18,12 +18,12 @@ class Subscribe implements \Mqtt\Protocol\IPacket {
 
   public function encode(\Mqtt\Protocol\Binary\Frame $frame) {
     $frame->setPacketType(\Mqtt\Protocol\IPacket::SUBSCRIBE);
-    $frame->addVariableHeaderIdentifier($this->id);
+    $frame->addWord($this->id);
 
     foreach ($this->topics as $topic) {
       /* @var $topic \Mqtt\Entity\Topic */
-      $frame->addVariableHeader($topic->name);
-      $frame->addVariableHeaderByte($topic->qos->qos);
+      $frame->addString($topic->name);
+      $frame->addByte($topic->qos->qos);
     }
   }
 

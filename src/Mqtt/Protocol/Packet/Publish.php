@@ -38,9 +38,9 @@ class Publish implements \Mqtt\Protocol\IPacket {
     $frame->setPacketType(\Mqtt\Protocol\IPacket::PUBLISH);
     $frame->setQoS($this->qos);
     $frame->setAsRetain($this->retain);
-    $frame->addVariableHeader($this->topic);
+    $frame->addString($this->topic);
     if ($this->qos > \Mqtt\Entity\IQoS::AT_MOST_ONCE) {
-      $frame->addVariableHeaderIdentifier($this->id);
+      $frame->addWord($this->id);
     }
     $frame->setPayload($this->content);
   }
