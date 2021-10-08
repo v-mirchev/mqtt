@@ -12,127 +12,157 @@ class FixedHeaderTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new FixedHeader;
+    $this->object = new FixedHeader(new Byte());
   }
 
-  public function testCloneIsCleanObject() {
+  public function testClonedIsCleanObject() {
     $object = clone $this->object;
     $this->assertEquals($this->toStringStream(0x00, 0x00), (string)$object);
+    $this->assertEmpty($object->getRemainingLength());
   }
 
-  public function testSetAsDupProperlySetsBit() {
-    $this->object->setAsDup(true);
-    $this->assertEquals($this->toStringStream( 0x08, 0x00), (string)$this->object);
-    $this->object->setAsDup(false);
-    $this->assertEquals($this->toStringStream( 0x00, 0x00), (string)$this->object);
+  public function firstByteDataProvider() {
+    $object = new FixedHeader(new Byte());
+    $flagPermutations = [
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE)->
+          setAsDup(false)->
+          setAsRetain(false),
+        0x0
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE)->
+          setAsDup(false)->
+          setAsRetain(false),
+        0x2
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::EXACTLY_ONCE)->
+          setAsDup(false)->
+          setAsRetain(false),
+        0x4
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE)->
+          setAsDup(true)->
+          setAsRetain(false),
+        0x8
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE)->
+          setAsDup(true)->
+          setAsRetain(false),
+        0xA
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::EXACTLY_ONCE)->
+          setAsDup(true)->
+          setAsRetain(false),
+        0xC
+      ],
+
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE)->
+          setAsDup(false)->
+          setAsRetain(true),
+        0x1
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE)->
+          setAsDup(false)->
+          setAsRetain(true),
+        0x3
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::EXACTLY_ONCE)->
+          setAsDup(false)->
+          setAsRetain(true),
+        0x5
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE)->
+          setAsDup(true)->
+          setAsRetain(true),
+        0x9
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE)->
+          setAsDup(true)->
+          setAsRetain(true),
+        0xB
+      ],
+      [
+        (clone $object)->
+          setQoS(\Mqtt\Entity\IQoS::EXACTLY_ONCE)->
+          setAsDup(true)->
+          setAsRetain(true),
+        0xD
+      ],
+    ];
+
+    $permutations = [];
+    for (
+      $packetType = \Mqtt\Protocol\IPacket::CONNECT;
+      $packetType <= \Mqtt\Protocol\IPacket::DISCONNECT;
+      $packetType ++) {
+        $packetPermutation = [];
+        foreach ($flagPermutations as $flagPermutation) {
+          $flagPermutation[0]->setPacketType($packetType);
+          $flagPermutation[1] += ($packetType << 4);
+          $packetPermutation = $flagPermutation;
+        }
+      $permutations[] = $packetPermutation;
+      return $permutations;
+    }
+    return $permutations;
   }
 
-  public function testIsDupProperlyReadsBit() {
-    $this->object->fromStream($this->toArrayStream(0x00, 0x00));
-    $this->assertFalse($this->object->isDup());
-    $this->object->fromStream($this->toArrayStream(0x08, 0x00));
-    $this->assertTrue($this->object->isDup());
+  /**
+   * @dataProvider firstByteDataProvider
+   */
+  public function testFirstByteEncoding(FixedHeader $header, int $expected) {
+    $header->setRemainingLength(0);
+    $this->assertEquals($this->toStringStream($expected, 0x00), (string)$header);
   }
 
-  public function testSetPacketTypeProperlySetsBit() {
-    $this->object->setPacketType(\Mqtt\Protocol\IPacket::CONNACK);
-    $this->assertEquals($this->toStringStream(0x20, 0x00), (string)$this->object);
-    $this->object->setPacketType(\Mqtt\Protocol\IPacket::UNSUBSCRIBE);
-    $this->assertEquals($this->toStringStream(0xA0, 0x00), (string)$this->object);
+  public function remainingLengthTestDataProvider() {
+    return [
+      [0, 0x00,         [0x00, 0x00]],
+      [53, 0x00,        [0x00, 0x35]],
+      [127, 0x00,       [0x00, 0x7F]],
+      [128, 0x00,       [0x00, 0x80, 0x01]],
+      [4295, 0x00,      [0x00, 0xC7, 0x21]],
+      [16383, 0x00,     [0x00, 0xFF, 0x7F]],
+      [16384, 0x00,     [0x00, 0x80, 0x80, 0x01]],
+      [2097151, 0x00,   [0x00, 0xFF, 0xFF, 0x7F]],
+      [2097152, 0x00,   [0x00, 0x80, 0x80, 0x80, 0x01]],
+      [20971520, 0x00,   [0x00, 0x80, 0x80, 0x80, 0x0a]],
+      [268435455, 0x00, [0x00, 0xFF, 0xFF, 0xFF, 0x7F]],
+    ];
   }
 
-  public function testGetPacketTypeProperlyReadsBit() {
-    $this->object->fromStream($this->toArrayStream(0x20, 0x00));
-    $this->assertEquals(\Mqtt\Protocol\IPacket::CONNACK, $this->object->getPacketType());
-    $this->object->fromStream($this->toArrayStream(0xA0, 0x00));
-    $this->assertEquals(\Mqtt\Protocol\IPacket::UNSUBSCRIBE, $this->object->getPacketType());
-  }
-
-  public function testSetAsRetainProperlySetsBit() {
-    $this->object->setAsRetain(true);
-    $this->assertEquals($this->toStringStream(0x01, 0x00), (string)$this->object);
-    $this->object->setAsRetain(false);
-    $this->assertEquals($this->toStringStream(0x00, 0x00), (string)$this->object);
-  }
-
-  public function testIsRetainProperlyReadsBit() {
-    $this->object->fromStream($this->toArrayStream(0x00, 0x00));
-    $this->assertFalse($this->object->isRetain());
-    $this->object->fromStream($this->toArrayStream(0x01, 0x00));
-    $this->assertTrue($this->object->isRetain());
-  }
-
-  public function testSetQosAtMostOnceProperlySetsBits() {
-    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE);
-    $this->assertEquals($this->toStringStream(0x00, 0x00), (string)$this->object);
-    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE);
-    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE);
-    $this->assertEquals($this->toStringStream(0x00, 0x00), (string)$this->object);
-  }
-
-  public function testGetQosProperlyReadsBitsForAtMostOnce() {
-    $this->object->fromStream($this->toArrayStream(0x00, 0x00));
-    $this->assertEquals(\Mqtt\Entity\IQoS::AT_MOST_ONCE, $this->object->getQoS());
-  }
-
-  public function testSetQosAtLeastOnceProperlySetsBits() {
-    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE);
-    $this->assertEquals($this->toStringStream(0x02, 0x00), (string)$this->object);
-    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE);
-    $this->assertEquals($this->toStringStream(0x00, 0x00), (string)$this->object);
-  }
-
-  public function testGetQosProperlyReadsBitsForAtLeastOnce() {
-    $this->object->fromStream($this->toArrayStream(0x02, 0x00));
-    $this->assertEquals(\Mqtt\Entity\IQoS::AT_LEAST_ONCE, $this->object->getQoS());
-  }
-
-  public function testSetQosExactlyOnceProperlySetsBits() {
-    $this->object->setQoS(\Mqtt\Entity\IQoS::EXACTLY_ONCE);
-    $this->assertEquals($this->toStringStream(0x04, 0x00), (string)$this->object);
-    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE);
-    $this->assertEquals($this->toStringStream(0x00, 0x00), (string)$this->object);
-  }
-
-  public function testGetQosProperlyReadsBitsForExactlyOnce() {
-    $this->object->fromStream($this->toArrayStream(0x04, 0x00));
-    $this->assertEquals(\Mqtt\Entity\IQoS::EXACTLY_ONCE, $this->object->getQoS());
-  }
-
-  public function testSetRemainingLengthSmallPayloadProperlySetsBits() {
-    $this->object->setRemainingLength(17);
-    $this->assertEquals($this->toStringStream(0x00, 0x11), (string)$this->object);
-    $this->object->setRemainingLength(0);
-    $this->assertEquals($this->toStringStream(0x00, 0x00), (string)$this->object);
-  }
-
-  public function testGetRemainingLengthSmallPayloadProperlyReadsBits() {
-    $this->object->fromStream($this->toArrayStream(0x00, 0x11));
-    $this->assertEquals(17, $this->object->getRemainingLength());
-  }
-
-  public function testSetRemainingLengthBigPayloadProperlySetsBits() {
-    $this->object->setRemainingLength(1049);
-    $this->assertEquals($this->toStringStream(0x00, 0x99, 0x08), (string)$this->object);
-    $this->object->setRemainingLength(0);
-    $this->assertEquals($this->toStringStream(0x00, 0x00), (string)$this->object);
-  }
-
-  public function testGetRemainingLengthBigPayloadProperlyReadsBits() {
-    $this->object->fromStream($this->toArrayStream(0x00, 0x99, 0x08));
-    $this->assertEquals(1049, $this->object->getRemainingLength());
-  }
-
-  public function testToStringProperlyEncodesSmallPayload() {
-    $this->assertEquals(chr(0x00) . chr(0x00), (string) $this->object);
-
-    $this->object->setAsDup();
-    $this->object->setAsRetain();
-    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE);
-    $this->object->setPacketType(\Mqtt\Protocol\IPacket::SUBSCRIBE);
-    $this->object->setRemainingLength(235);
-
-    $this->assertEquals($this->toStringStream(0x8b, 0xeb, 0x01), (string) $this->object);
+  /**
+   * @dataProvider remainingLengthTestDataProvider
+   */
+  public function testSetRemainingLengthProperlySetsBits(
+    int $remainingLength,
+    int $fixedHeaderByte,
+    array $encodedBytes
+  ) {
+    $this->object->decode($this->toArrayStream($fixedHeaderByte));
+    $this->object->setRemainingLength($remainingLength);
+    $this->assertEquals($this->toStringStream($encodedBytes), (string)$this->object);
   }
 
 }
