@@ -22,7 +22,7 @@ class PubRecTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->once())->
-      method('getVariableHeaderIdentifier')->
+      method('getWord')->
       will($this->returnValue($actualId));
 
     $this->object->decode($frameMock);

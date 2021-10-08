@@ -103,47 +103,47 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->protocol->protocol));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderByte')->
+      method('addByte')->
       with($this->equalTo($this->sessionParameters->protocol->version));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderByte')->
+      method('addByte')->
       with($this->equalTo($this->flagsMock->get()));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderIdentifier')->
+      method('addWord')->
       with($this->equalTo($this->sessionParameters->keepAliveInterval));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->clientId));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->will->topic));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->will->content));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->authentication->username));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->authentication->password));
 
     $this->object->encode($frameMock);
@@ -174,37 +174,37 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->protocol->protocol));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderByte')->
+      method('addByte')->
       with($this->equalTo($this->sessionParameters->protocol->version));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderByte')->
+      method('addByte')->
       with($this->equalTo($this->flagsMock->get()));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderIdentifier')->
+      method('addWord')->
       with($this->equalTo($this->sessionParameters->keepAliveInterval));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->clientId));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->will->topic));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->will->content));
 
     $this->object->encode($frameMock);
@@ -235,37 +235,37 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->protocol->protocol));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderByte')->
+      method('addByte')->
       with($this->equalTo($this->sessionParameters->protocol->version));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderByte')->
+      method('addByte')->
       with($this->equalTo($this->flagsMock->get()));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderIdentifier')->
+      method('addWord')->
       with($this->equalTo($this->sessionParameters->keepAliveInterval));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->clientId));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->authentication->username));
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeader')->
+      method('addString')->
       with($this->equalTo($this->sessionParameters->authentication->password));
 
     $this->object->encode($frameMock);

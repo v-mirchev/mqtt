@@ -22,7 +22,7 @@ class SubAckTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->once())->
-      method('getVariableHeaderIdentifier')->
+      method('getWord')->
       will($this->returnValue($actualId));
 
     $this->object->decode($frameMock);
@@ -38,7 +38,7 @@ class SubAckTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->once())->
-      method('getVariableHeaderIdentifier')->
+      method('getWord')->
       will($this->returnValue(111));
 
     $frameMock->

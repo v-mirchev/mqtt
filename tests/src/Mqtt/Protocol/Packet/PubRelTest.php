@@ -31,7 +31,7 @@ class PubRelTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderIdentifier')->
+      method('addWord')->
       with($this->equalTo($this->object->id));
 
     $this->object->encode($frameMock);

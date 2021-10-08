@@ -46,18 +46,18 @@ class SubscribeTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
-      method('addVariableHeaderIdentifier')->
+      method('addWord')->
       with($this->equalTo($this->object->id));
 
     foreach ($this->object->topics as $topic) {
       $frameMock->
         expects($this->callSequence()->next())->
-        method('addVariableHeader')->
+        method('addString')->
         with($this->equalTo($topic->name));
 
       $frameMock->
         expects($this->callSequence()->next())->
-        method('addVariableHeaderByte')->
+        method('addByte')->
         with($this->equalTo($topic->qos->qos));
     }
 

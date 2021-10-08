@@ -25,7 +25,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testDecodeProxiesFrameBodyToFlags() {
-    $body = 'ABCDEF';
+    $body = 0x0001;
 
     $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
       disableOriginalConstructor()->
@@ -33,7 +33,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->any())->
-      method('getBody')->
+      method('getWord')->
       will($this->returnValue($body));
 
     $this->proxy($this->object)->
