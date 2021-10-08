@@ -123,7 +123,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
 
     $this->object->getFixedHeaderInstane()->
       expects($this->once())->
-      method('fromStream');
+      method('decode');
 
     $this->fixedHeaderRemainingLengthMockedValue = 0;
 
@@ -142,7 +142,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
 
     $this->object->getFixedHeaderInstane()->
       expects($this->once())->
-      method('fromStream');
+      method('decode');
 
     $this->fixedHeaderRemainingLengthMockedValue = 1;
 
@@ -161,7 +161,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
 
     $this->object->getFixedHeaderInstane()->
       expects($this->once())->
-      method('fromStream');
+      method('decode');
 
     $this->fixedHeaderRemainingLengthMockedValue = 2;
 

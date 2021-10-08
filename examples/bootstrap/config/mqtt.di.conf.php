@@ -59,6 +59,12 @@ return [
     return $container->get(\Mqtt\Connection\Connection::class);
   },
 
+  \Mqtt\Protocol\Binary\IFixedHeader::class => function (\Psr\Container\ContainerInterface $container) {
+    return (new \Mqtt\Protocol\Binary\FixedHeader(
+      $container->get(\Mqtt\Protocol\Binary\Byte::class)
+    ));
+  },
+
   \Mqtt\Protocol\Protocol::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Protocol\Protocol(
       $container->get(\Mqtt\Connection\Connection::class),

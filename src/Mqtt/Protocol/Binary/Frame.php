@@ -5,7 +5,7 @@ namespace Mqtt\Protocol\Binary;
 class Frame {
 
   /**
-   * @var \Mqtt\Protocol\Binary\FixedHeader
+   * @var \Mqtt\Protocol\Binary\IFixedHeader
    */
   public $fixedHeader;
 
@@ -30,11 +30,11 @@ class Frame {
   protected $variableHeaders;
 
   /**
-   * @param \Mqtt\Protocol\Binary\FixedHeader $fixedHeader
+   * @param \Mqtt\Protocol\Binary\IFixedHeader $fixedHeader
    * @param \Mqtt\Protocol\Binary\VariableHeader $variableHeader
    */
   public function __construct(
-    \Mqtt\Protocol\Binary\FixedHeader $fixedHeader,
+    \Mqtt\Protocol\Binary\IFixedHeader $fixedHeader,
     \Mqtt\Protocol\Binary\VariableHeader $variableHeader
   ) {
     $this->fixedHeader = clone $fixedHeader;
@@ -48,7 +48,7 @@ class Frame {
    */
   public function fromStream(\Iterator $stream) : void {
     $this->body = '';
-    $this->fixedHeader->fromStream($stream);
+    $this->fixedHeader->decode($stream);
     $remainingLength = $this->fixedHeader->getRemainingLength();
     for ($i = 0; $i < $remainingLength; $i++) {
       $stream->next();
@@ -213,10 +213,10 @@ class Frame {
 
 
   /**
-   * @return \Mqtt\Protocol\Binary\FixedHeader
+   * @return \Mqtt\Protocol\Binary\IFixedHeader
    * @CodeSmell Used only for unit testing, no Singleton used
    */
-  public function getFixedHeaderInstane(): \Mqtt\Protocol\Binary\FixedHeader {
+  public function getFixedHeaderInstane(): \Mqtt\Protocol\Binary\IFixedHeader {
     return $this->fixedHeader;
   }
 

@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Binary;
 
-class FixedHeader {
+class FixedHeader implements IFixedHeader {
 
   /**
    * @var int[]
@@ -115,10 +115,11 @@ class FixedHeader {
 
   /**
    * @param \Iterator $stream
+   * @return \Mqtt\Protocol\Binary\IFixedHeader
    */
-  public function fromStream(\Iterator $stream) {
     $this->bytes = [ 0, 0 ];
     $this->bytes[0] = ord($stream->current());
+  public function decode(\Iterator $stream) : IFixedHeader {
 
     $multiplier = 1;
     $this->remainingLength = 0;
@@ -129,6 +130,7 @@ class FixedHeader {
       $multiplier *= 128;
     } while (($digit & 128) !== 0);
 
+    return $this;
   }
 
   /**
