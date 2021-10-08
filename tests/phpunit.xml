@@ -24,4 +24,8 @@
     <log type="coverage-html" target="build/coverage/html" lowUpperBound="35" highLowerBound="70"/>
   </logging>
 
+  <listeners>
+    <listener class="\Test\Injector" />
+  </listeners>
+
 </phpunit>
