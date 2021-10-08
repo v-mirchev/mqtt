@@ -58,13 +58,6 @@ class Frame {
   }
 
   /**
-   * @return string
-   */
-  public function getBody(): string {
-    return $this->body;
-  }
-
-  /**
    * @param int length
    * @return $this
    */

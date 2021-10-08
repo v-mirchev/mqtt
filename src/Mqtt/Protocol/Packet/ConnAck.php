@@ -33,7 +33,7 @@ class ConnAck implements \Mqtt\Protocol\IPacket {
    * @param \Mqtt\Protocol\Binary\Frame $frame
    */
   public function decode(\Mqtt\Protocol\Binary\Frame $frame) {
-    $this->flags->set($frame->getBody());
+    $this->flags->set($frame->getWord());
   }
 
   /**
