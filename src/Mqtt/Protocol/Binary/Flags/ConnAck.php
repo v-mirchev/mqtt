@@ -30,7 +30,7 @@ class ConnAck {
     $word = clone $this->word;
     $word->set($value);
 
-    $this->sessionPresent = $word->getMsb()->getBit(1);
+    $this->sessionPresent = $word->getMsb()->getBit(0);
     $this->returnCode = $word->getLsb()->get();
   }
 
