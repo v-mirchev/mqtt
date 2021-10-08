@@ -4,7 +4,7 @@ namespace Mqtt\Protocol\Binary;
 
 /**
  * @Inject $container
- * @property \Psr\Container\ContainerInterface ___$container
+ * @property \Psr\Container\ContainerInterface $___container
  */
 class FrameTest extends \PHPUnit\Framework\TestCase {
 

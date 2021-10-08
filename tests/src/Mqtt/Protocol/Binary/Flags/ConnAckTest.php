@@ -4,7 +4,7 @@ namespace Mqtt\Protocol\Binary\Flags;
 
 /**
  * @Inject $container
- * @property \Psr\Container\ContainerInterface ___$container
+ * @property \Psr\Container\ContainerInterface $___container
  */
 class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
