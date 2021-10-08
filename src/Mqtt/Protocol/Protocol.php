@@ -61,7 +61,7 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
    */
   public function read(\Iterator $stream) : void {
     $frame = $this->getNewFrame();
-    $frame->fromStream($stream);
+    $frame->decode($stream);
 
     $receivedPacket = $this->packetFactory->create($frame->getPacketType());
     $receivedPacket->decode($frame);

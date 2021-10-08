@@ -46,7 +46,7 @@ class Frame {
   /**
    * @param \Iterator $stream
    */
-  public function fromStream(\Iterator $stream) : void {
+  public function decode(\Iterator $stream) : void {
     $this->body = '';
     $this->fixedHeader->decode($stream);
     $remainingLength = $this->fixedHeader->getRemainingLength();

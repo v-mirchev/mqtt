@@ -132,7 +132,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
       method('set')->
       with($this->equalTo($expectedBody));
 
-    $this->object->fromStream(new \ArrayIterator([ '#FixedHeader' , '#Body1', '#Body2', '#Body3']));
+    $this->object->decode(new \ArrayIterator([ '#FixedHeader' , '#Body1', '#Body2', '#Body3']));
 
     $this->assertEquals($expectedBody, $this->object->getBody());
   }
@@ -151,7 +151,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
       method('set')->
       with($this->equalTo($expectedBody));
 
-    $this->object->fromStream(new \ArrayIterator([ '#FixedHeader' , '#Body1', '#Body2', '#Body3']));
+    $this->object->decode(new \ArrayIterator([ '#FixedHeader' , '#Body1', '#Body2', '#Body3']));
 
     $this->assertEquals($expectedBody, $this->object->getBody());
   }
@@ -170,7 +170,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
       method('set')->
       with($this->equalTo($expectedBody));
 
-    $this->object->fromStream(new \ArrayIterator([ '#FixedHeader' , '#Body1', '#Body2', '#Body3']));
+    $this->object->decode(new \ArrayIterator([ '#FixedHeader' , '#Body1', '#Body2', '#Body3']));
 
     $this->assertEquals($expectedBody, $this->object->getBody());
   }
