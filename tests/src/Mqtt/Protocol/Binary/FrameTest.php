@@ -2,6 +2,9 @@
 
 namespace Mqtt\Protocol\Binary;
 
+/**
+ * @inject $container
+ */
 class FrameTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\ProxyAssert;
@@ -13,10 +16,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new Frame(
-      new \Mqtt\Protocol\Binary\FixedHeader(new \Mqtt\Protocol\Binary\Byte()),
-      new \Mqtt\Protocol\Binary\VariableHeader(new \Mqtt\Protocol\Binary\Word(new \Mqtt\Protocol\Binary\Byte()))
-    );
+    $this->object = clone $this->container->get(\Mqtt\Protocol\Binary\Frame::class);
   }
 
   public function testCloneResetsInstance() {
