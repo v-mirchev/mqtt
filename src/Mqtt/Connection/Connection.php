@@ -10,11 +10,6 @@ class Connection implements \Mqtt\Connection\IConnection {
   protected $socket;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Frame
-   */
-  protected $frame;
-
-  /**
    * @var \Mqtt\Connection\IHandler
    */
   protected $protocol;
@@ -26,14 +21,11 @@ class Connection implements \Mqtt\Connection\IConnection {
 
   /**
    * @param \Mqtt\Connection\Socket $socket
-   * @param \Mqtt\Protocol\Binary\Frame $frame
    */
   public function __construct(
-    \Mqtt\Connection\Socket $socket,
-    \Mqtt\Protocol\Binary\Frame $frame
+    \Mqtt\Connection\Socket $socket
   ) {
     $this->socket = $socket;
-    $this->frame = clone $frame;
   }
 
   /**

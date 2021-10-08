@@ -26,16 +26,11 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
       disableOriginalConstructor()->
       getMock();
 
-    $this->protocolFrameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
-      disableOriginalConstructor()->
-      disableOriginalClone()->
-      getMock();
-
     $this->protocolMock = $this->getMockBuilder(\Mqtt\Connection\IHandler::class)->
       disableOriginalConstructor()->
       getMock();
 
-    $this->object = new Connection($this->socketMock, $this->protocolFrameMock);
+    $this->object = new Connection($this->socketMock, new \Mqtt\Protocol\Binary\Byte());
     $this->object->setProtocol($this->protocolMock);
   }
 
@@ -129,12 +124,13 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testWriteUsesSocket() {
+    $bytes = '#BYTES';
     $this->socketMock->
       expects($this->once())->
       method('write')->
-      with($this->equalTo($this->protocolFrameMock));
+      with($this->equalTo($bytes));
 
-    $this->object->write($this->protocolFrameMock);
+    $this->object->write($bytes);
   }
 
   public function testDisconnectUsesSocket() {
