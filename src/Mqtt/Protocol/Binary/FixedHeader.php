@@ -126,7 +126,7 @@ class FixedHeader implements IFixedHeader {
       $stream->next();
       $byte = clone $this->byte;
       $byte->set($stream->current());
-      $this->remainingLength += $byte->getBit(7) * $multiplier;
+      $this->remainingLength += $byte->getSub(0, 6) * $multiplier;
       $multiplier *= 128;
     } while ($byte->getBit(7));
 
