@@ -2,6 +2,10 @@
 
 namespace Mqtt\Protocol\Binary\Flags;
 
+/**
+ * @inject $container
+ * @property \Psr\Container\ContainerInterface $container
+ */
 class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\Binary;
@@ -12,7 +16,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new ConnAck;
+    $this->object = clone $this->container->get(ConnAck::class);
   }
 
   public function testCloneResetsInstance() {
@@ -22,32 +26,17 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
     $this->assertNull($cloning->getReturnCode());
   }
 
-  public function testSetFailsOnEmptyInput() {
-    $this->expectException(\Exception::class);
-    $this->object->set('');
-  }
-
-  public function testSetFailsOnTooShortInput() {
-    $this->expectException(\Exception::class);
-    $this->object->set('A');
-  }
-
-  public function testSetFailsOnTooLongInput() {
-    $this->expectException(\Exception::class);
-    $this->object->set('AAA');
-  }
-
   public function testSessionPresentProperlyWritenAndRead() {
-    $this->object->set($this->toStringStream(0x00, 0x00));
+    $this->object->set(0x0000);
     $this->assertFalse($this->object->getSessionPresent());
 
-    $this->object->set($this->toStringStream(0x01, 0x00));
+    $this->object->set(0x0100);
     $this->assertTrue($this->object->getSessionPresent());
   }
 
   public function testReturnCodeProperlyWritenAndRead() {
     for ($returnCode = 0; $returnCode < 5; $returnCode ++) {
-      $this->object->set($this->toStringStream(0x00, $returnCode));
+      $this->object->set($returnCode);
       $this->assertEquals($returnCode, $this->object->getReturnCode());
     }
   }
