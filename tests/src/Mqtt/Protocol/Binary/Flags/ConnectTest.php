@@ -12,7 +12,7 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new Connect;
+    $this->object = new Connect(new \Mqtt\Protocol\Binary\Byte);
   }
 
   public function testCloneResetsInstance() {
@@ -68,9 +68,9 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
     $this->object->setWillQoS(0);
     $this->assertEquals(0x00, $this->object->get());
     $this->object->setWillQoS(1);
-    $this->assertEquals(0x00, $this->object->get());
+    $this->assertEquals(0x08, $this->object->get());
     $this->object->setWillQoS(2);
-    $this->assertEquals(0x00, $this->object->get());
+    $this->assertEquals(0x10, $this->object->get());
   }
 
   public function testSetWillQosToAtMostOnceWithUseWillSetsBitProperly() {
@@ -97,7 +97,7 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
     $this->object->setWillRetain(false);
     $this->assertEquals(0x00, $this->object->get());
     $this->object->setWillRetain(true);
-    $this->assertEquals(0x00, $this->object->get());
+    $this->assertEquals(0x20, $this->object->get());
   }
 
   public function testSetWillReatinWithUseWillSetsBitProperly() {

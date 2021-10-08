@@ -5,6 +5,11 @@ namespace Mqtt\Protocol\Binary\Flags;
 class ConnAck {
 
   /**
+   * @var \Mqtt\Protocol\Binary\Word
+   */
+  protected $word;
+
+  /**
    * @var bool
    */
   protected $sessionPresent;
@@ -14,20 +19,19 @@ class ConnAck {
    */
   protected $returnCode;
 
-  public function __construct() {
+  public function __construct(\Mqtt\Protocol\Binary\Word $word) {
+    $this->word = clone $word;
+
     $this->sessionPresent = false;
     $this->returnCode = null;
   }
 
-  public function set(string $bytes) {
-    if (strlen($bytes) != 2) {
-      throw new \Exception('ConnAck variable header length mismatch');
-    }
-    $byte1 = \ord($bytes[0]);
-    $byte2 = \ord($bytes[1]);
+  public function set($value) {
+    $word = clone $this->word;
+    $word->set($value);
 
-    $this->sessionPresent = (bool)$byte1 & 0x01;
-    $this->returnCode = (int)$byte2;
+    $this->sessionPresent = $word->getMsb()->getBit(1);
+    $this->returnCode = $word->getLsb()->get();
   }
 
   /**

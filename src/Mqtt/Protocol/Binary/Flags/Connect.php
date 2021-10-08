@@ -5,36 +5,26 @@ namespace Mqtt\Protocol\Binary\Flags;
 class Connect {
 
   /**
-   * @var bool
+   * @var \Mqtt\Protocol\Binary\Byte
    */
-  protected $useUsername ;
+  protected $byte;
 
-  /**
-   * @var bool
-   */
-  protected $usePassword;
-
-  /**
-   * @var bool
-   */
-  protected $willRetain;
-
-  /**
-   * @var int
-   */
-  protected $willQoS;
-
-  /**
-   * @var bool
-   */
-  protected $useWill;
+  const BIT_CLEAN_SESSION = 1;
+  const BIT_WILL = 2;
+  const BIT_WILL_QOS_LS = 3;
+  const BIT_WILL_QOS_MS = 4;
+  const BIT_WILL_REATIN = 5;
+  const BIT_PASSWORD = 6;
+  const BIT_USERNAME = 7;
 
   /**
    * @var bool
    */
   protected $useCleanSession;
 
-  public function __construct() {
+  public function __construct(\Mqtt\Protocol\Binary\Byte $byte) {
+    $this->byte = clone $byte;
+
     $this->useUsername = false;
     $this->usePassword = false;
     $this->willRetain = false;
@@ -46,63 +36,56 @@ class Connect {
    * @param bool $useUsername
    */
   public function useUsername(bool $useUsername = true) {
-    $this->useUsername = $useUsername;
+    $this->byte->setBit(static::BIT_USERNAME, $useUsername);
   }
 
   /**
    * @param bool $usePassword
    */
   public function usePassword(bool $usePassword = true) {
-    $this->usePassword = $usePassword;
+    $this->byte->setBit(static::BIT_PASSWORD, $usePassword);
   }
 
   /**
    * @param bool $willRetain
    */
   public function setWillRetain(bool $willRetain = true) {
-    $this->willRetain = $willRetain;
+    $this->byte->setBit(static::BIT_WILL_REATIN, $willRetain);
   }
 
   /**
    * @param int $willQoS
    */
   public function setWillQoS(int $willQoS = 0) {
-    $this->willQoS = $willQoS;
+    $this->byte->setSub(static::BIT_WILL_QOS_LS, static::BIT_WILL_QOS_MS, $willQoS);
   }
 
   /**
    * @param bool $will
    */
   public function useWill(bool $will = true) {
-    $this->useWill = $will;
+    $this->byte->setBit(static::BIT_WILL, $will);
   }
 
   /**
    * @param bool $cleanSession
    */
   public function useCleanSession(bool $cleanSession = true) {
-    $this->useCleanSession = $cleanSession;
+    $this->byte->setBit(static::BIT_CLEAN_SESSION, $cleanSession);
   }
 
   /**
    * @return int
    */
   public function get() : int {
-    return
-      ((bool)$this->useUsername * 128) +
-      ((bool)$this->useUsername * (bool)$this->usePassword * 64) +
-      ((bool)$this->useWill * (bool)$this->willRetain * 32) +
-      ((bool)$this->useWill * ((int)$this->willQoS << 3)) +
-      ((bool)$this->useWill * 4) +
-      ((bool)$this->useCleanSession * 2);
+    if (!$this->byte->getBit(static::BIT_USERNAME)) {
+      $this->byte->setBit(static::BIT_PASSWORD, false);
+    }
+    return $this->byte->get();
   }
 
   public function reset() {
-    $this->useUsername = false;
-    $this->usePassword = false;
-    $this->willRetain = false;
-    $this->willQoS = false;
-    $this->useWill = false;
+    $this->byte->set(0);
   }
 
 }
