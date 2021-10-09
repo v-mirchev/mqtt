@@ -7,12 +7,12 @@ interface IHandler {
   /**
    * @return void
    */
-  public function onConnect() : void;
+  public function onConnectionConnect() : void;
 
   /**
    * @return void
    */
-  public function onDisconnect() : void;
+  public function onConnectionDisconnect() : void;
 
   /**
    * @return void

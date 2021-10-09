@@ -71,12 +71,12 @@ class Session implements
     $this->sessionState->unsubscribe();
   }
 
-  public function onConnect(): void {
-    $this->sessionState->onConnect();
+  public function onProtocolConnect(): void {
+    $this->sessionState->onProtocolConnect();
   }
 
-  public function onDisconnect(): void {
-    $this->sessionState->onDisconnect();
+  public function onProtocolDisconnect(): void {
+    $this->sessionState->onProtocolDisconnect();
   }
 
   /**

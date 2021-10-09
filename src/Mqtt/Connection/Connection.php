@@ -57,7 +57,7 @@ class Connection implements \Mqtt\Connection\IConnection {
   public function establish() : void {
     $this->isDisconnecting = false;
     $this->socket->connect();
-    $this->protocol->onConnect();
+    $this->protocol->onConnectionConnect();
 
     try {
       while ($this->socket->isAlive()) {
@@ -69,7 +69,7 @@ class Connection implements \Mqtt\Connection\IConnection {
       }
     }
 
-    $this->protocol->onDisconnect();
+    $this->protocol->onConnectionDisconnect();
     $this->socket->disconnect();
   }
 

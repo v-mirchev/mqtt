@@ -50,7 +50,7 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
     $this->context->getProtocol()->connect();
   }
 
-  public function onConnect(): void {
+  public function onProtocolConnect(): void {
     $connectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacket::CONNECT);
     $connectPacket->cleanSession = !$this->sessionConfiguration->isPersistent;
     $connectPacket->keepAliveInterval = $this->sessionConfiguration->keepAliveInterval;
@@ -61,7 +61,7 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
     $this->context->getProtocol()->writePacket($connectPacket);
   }
 
-  public function onDisconnect(): void {
+  public function onProtocolDisconnect(): void {
   }
 
   public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {

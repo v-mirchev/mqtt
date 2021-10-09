@@ -97,10 +97,11 @@ class ProtocolTest extends \PHPUnit\Framework\TestCase {
       assert();
   }
 
-  public function testOnConnectProxiesToSession() {
+  public function testOnConnectionConnectProxiesToSession() {
     $this->proxy($this->object)->
       with($this->sessionMock)->
-      method('onConnect')->
+      method('onConnectionConnect')->
+      proxyMethod('onProtocolConnect')->
       assert();
   }
 
@@ -111,10 +112,11 @@ class ProtocolTest extends \PHPUnit\Framework\TestCase {
       assert();
   }
 
-  public function testOnDisconnectProxiesToSession() {
+  public function testOnConnectionDisconnectProxiesToSession() {
     $this->proxy($this->object)->
       with($this->sessionMock)->
-      method('onDisconnect')->
+      method('onConnectionDisconnect')->
+      proxyMethod('onProtocolDisconnect')->
       assert();
   }
 

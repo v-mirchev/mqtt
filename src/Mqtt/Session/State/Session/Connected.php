@@ -35,11 +35,11 @@ class Connected implements \Mqtt\Session\State\ISessionState {
   public function unsubscribe(): void {
   }
 
-  public function onConnect(): void {
+  public function onProtocolConnect(): void {
     throw new \Exception('Already connected');
   }
 
-  public function onDisconnect(): void {
+  public function onProtocolDisconnect(): void {
     $this->stateChanger->setState(\Mqtt\Session\State\Session\Disconnected::class);
   }
 

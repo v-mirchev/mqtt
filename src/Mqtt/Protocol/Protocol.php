@@ -80,12 +80,12 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
     unset($frame);
   }
 
-  public function onConnect() : void {
-    $this->session->onConnect();
+  public function onConnectionConnect() : void {
+    $this->session->onProtocolConnect();
   }
 
-  public function onDisconnect() : void {
-    $this->session->onDisconnect();
+  public function onConnectionDisconnect() : void {
+    $this->session->onProtocolDisconnect();
   }
 
   /**
