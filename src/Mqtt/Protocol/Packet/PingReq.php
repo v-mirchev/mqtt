@@ -11,4 +11,12 @@ class PingReq implements \Mqtt\Protocol\IPacket {
     $frame->setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE);
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::PINGREQ === $packetId;
+  }
+
 }

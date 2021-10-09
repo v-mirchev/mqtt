@@ -66,4 +66,12 @@ class Connect implements \Mqtt\Protocol\IPacket {
 
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::CONNECT === $packetId;
+  }
+
 }

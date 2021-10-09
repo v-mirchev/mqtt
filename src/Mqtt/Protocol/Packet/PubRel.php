@@ -19,4 +19,12 @@ class PubRel implements \Mqtt\Protocol\IPacket {
     $frame->addWord($this->id);
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::PUBREL === $packetId;
+  }
+
 }

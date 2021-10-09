@@ -45,4 +45,12 @@ class Publish implements \Mqtt\Protocol\IPacket {
     $frame->setPayload($this->content);
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::PUBLISH === $packetId;
+  }
+
 }

@@ -9,4 +9,12 @@ class PingResp implements \Mqtt\Protocol\IPacket {
   public function decode(\Mqtt\Protocol\Binary\Frame $frame) {
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::PINGRESP === $packetId;
+  }
+
 }

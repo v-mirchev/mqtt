@@ -29,4 +29,10 @@ interface IPacket {
    */
   public function decode(\Mqtt\Protocol\Binary\Frame $frame);
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId) : bool;
+
 }

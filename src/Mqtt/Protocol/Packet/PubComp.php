@@ -25,4 +25,12 @@ class PubComp implements \Mqtt\Protocol\IPacket {
     return $this->id;
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::PUBCOMP === $packetId;
+  }
+
 }

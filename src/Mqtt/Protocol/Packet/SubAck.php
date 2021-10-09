@@ -50,4 +50,12 @@ class SubAck implements \Mqtt\Protocol\IPacket {
     return $this->returnCodes;
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::SUBACK === $packetId;
+  }
+
 }

@@ -57,4 +57,12 @@ class ConnAck implements \Mqtt\Protocol\IPacket {
     return $this->flags->getSessionPresent();
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::CONNACK === $packetId;
+  }
+
 }

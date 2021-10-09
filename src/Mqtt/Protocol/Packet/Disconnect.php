@@ -10,4 +10,12 @@ class Disconnect implements \Mqtt\Protocol\IPacket {
     $frame->setPacketType(\Mqtt\Protocol\IPacket::DISCONNECT);
   }
 
+  /**
+   * @param int $packetId
+   * @return bool
+   */
+  public function is(int $packetId): bool {
+    return \Mqtt\Protocol\IPacket::DISCONNECT === $packetId;
+  }
+
 }
