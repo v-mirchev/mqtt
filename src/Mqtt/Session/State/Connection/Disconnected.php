@@ -6,58 +6,35 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
 
   use \Mqtt\Session\State\Connection\TSession;
 
-  /**
-   * @var \Mqtt\Entity\Configuration\Session
-   */
-  protected $sessionConfiguration;
-
-  /**
-   * @var \Mqtt\Entity\Configuration\Authentication
-   */
-  protected $authentication;
-
-  /**
-   * @var \Mqtt\Entity\Configuration\Will
-   */
-  protected $will;
-
-  /**
-   * @var \Mqtt\Session\ISessionStateChanger
-   */
-  protected $stateChanger;
-
-  /**
-   * @var \Mqtt\Session\ISessionContext
-   */
-  protected $context;
-
-  /**
-   * @param \Mqtt\Entity\Configuration\Session $sessionConfiguration
-   * @param \Mqtt\Entity\Configuration\Authentication $authentication
-   * @param \Mqtt\Entity\Configuration\Will $will
-   */
-  public function __construct(
-    \Mqtt\Entity\Configuration\Session $sessionConfiguration,
-    \Mqtt\Entity\Configuration\Authentication $authentication,
-    \Mqtt\Entity\Configuration\Will $will = null
-  ) {
-    $this->sessionConfiguration = $sessionConfiguration;
-    $this->will = $will;
-    $this->authentication = $authentication;
-  }
-
   public function start() : void {
     $this->context->getProtocol()->connect();
   }
 
+  public function stop() : void {
+    throw new \Exception('Not allowed in this state');
+  }
+
+  public function publish() : void {
+    throw new \Exception('Not allowed in this state');
+  }
+
+  public function subscribe() : void {
+    throw new \Exception('Not allowed in this state');
+  }
+
+  public function unsubscribe() : void {
+    throw new \Exception('Not allowed in this state');
+  }
+
   public function onProtocolConnect(): void {
+    $sessionConfiguration = $this->context->getSessionConfiguration();
     $connectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacket::CONNECT);
-    $connectPacket->cleanSession = !$this->sessionConfiguration->isPersistent;
-    $connectPacket->keepAliveInterval = $this->sessionConfiguration->keepAliveInterval;
-    $connectPacket->will = $this->will;
-    $connectPacket->clientId = $this->sessionConfiguration->clientId;
-    $connectPacket->username = $this->authentication->username;
-    $connectPacket->password = $this->authentication->password;
+    $connectPacket->cleanSession = !$sessionConfiguration->isPersistent;
+    $connectPacket->keepAliveInterval = $sessionConfiguration->keepAliveInterval;
+    $connectPacket->will = $sessionConfiguration->will;
+    $connectPacket->clientId = $sessionConfiguration->clientId;
+    $connectPacket->username = $sessionConfiguration->authentication->username;
+    $connectPacket->password = $sessionConfiguration->authentication->password;
     $this->context->getProtocol()->writePacket($connectPacket);
   }
 
@@ -65,7 +42,7 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
   }
 
   public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {
-    if (!$packet instanceof \Mqtt\Protocol\Packet\ConnAck) {
+    if (!$packet->is(\Mqtt\Protocol\IPacket::CONNACK)) {
       throw new \Exception('CONNACK packet expected');
     }
 

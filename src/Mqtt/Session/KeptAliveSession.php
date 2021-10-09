@@ -4,13 +4,8 @@ namespace Mqtt\Session;
 
 class KeptAliveSession implements
   \Mqtt\Session\ISession,
-  \Mqtt\Session\ISessionStateChanger,
-  \Mqtt\Session\ISessionContext,
-  \Mqtt\Session\ISessionKeepAliveStateChanger,
-  \Mqtt\Session\ISessionKeepAliveContext,
-  \Mqtt\ITimeoutHandler
+  \Mqtt\Session\ISessionStateChanger
 {
-
 
   /**
    * @var \Mqtt\Entity\Configuration\Session
@@ -33,6 +28,11 @@ class KeptAliveSession implements
   protected $stateFactory;
 
   /**
+   * @var \Mqtt\Session\ISessionContext
+   */
+  protected $context;
+
+  /**
    * @var \Mqtt\Timeout
    */
   protected $keppAliveTimeout;
@@ -53,6 +53,7 @@ class KeptAliveSession implements
    * @param \Mqtt\State\ISession $session
    * @param str $inititalSessionState
    * @param \Mqtt\Session\State\Factory $stateFactory
+   * @param \Mqtt\Session\ISessionContext $context
    * @param \Mqtt\Timeout $keppAliveTimeout
    */
   public function __construct(
@@ -61,6 +62,7 @@ class KeptAliveSession implements
     \Mqtt\Session\ISession $session,
     string $inititalSessionState,
     \Mqtt\Session\State\Factory $stateFactory,
+    \Mqtt\Session\ISessionContext $context,
     \Mqtt\Timeout $keppAliveTimeout
   ) {
     $this->configuration = $configuration;
@@ -71,14 +73,14 @@ class KeptAliveSession implements
     $this->initialStateName = $inititalSessionState;
 
     $this->stateFactory = $stateFactory;
+    $this->context = $context;
+    $this->context->setSession($this);
 
     $this->keppAliveTimeout = $keppAliveTimeout;
+    $this->keppAliveTimeout->setInterval(ceil($this->configuration->keepAliveInterval / 3));
   }
 
   public function start() : void {
-    $this->keppAliveTimeout->subscribe($this);
-    $this->keppAliveTimeout->setInterval(ceil($this->configuration->keepAliveInterval / 2));
-
     $this->setKeepAliveState($this->initialStateName);
     $this->sessionState->start();
 
@@ -141,33 +143,28 @@ class KeptAliveSession implements
   public function setKeepAliveState(string $sessionStateName) : void {
     $previous = $this->sessionState;
     $this->sessionState = clone $this->stateFactory->create($sessionStateName);
-    $this->sessionState->setStateChanger($this);
-    $this->sessionState->setContext($this);
-    $this->sessionState->setKeepAliveContext($this);
+    $this->setDelegatedStateChanger();
+    $this->sessionState->setContext($this->context);
     unset($previous);
+
+    $this->sessionState->onStateEnter();
   }
 
-  public function onTimeout(): void {
-    $this->sessionState->onTimeOut();
-  }
+  public function setDelegatedStateChanger() {
+    $this->sessionState->setStateChanger(new class($this) implements ISessionStateChanger {
+      /**
+       * @var KeptAliveSession
+       */
+      protected $self;
 
-  /**
-   * @return \Mqtt\Timeout
-   */
-  public function getTimeoutWatcher(): \Mqtt\Timeout {
-    return $this->keppAliveTimeout;
-  }
+      public function __construct(KeptAliveSession $self) {
+        $this->self = $self;
+      }
 
-  public function getIdProvider(): \Mqtt\IPacketIdProvider {
-    return $this->session->getIdProvider();
-  }
-
-  public function getProtocol(): \Mqtt\Protocol\IProtocol {
-    return $this->protocol;
-  }
-
-  public function getSession(): ISession {
-    return $this->session;
+      public function setState(string $sessionState): void {
+        $this->self->setKeepAliveState($sessionState);
+      }
+    });
   }
 
 }

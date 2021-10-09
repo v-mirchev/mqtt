@@ -2,61 +2,43 @@
 
 namespace Mqtt\Session\State\Connection;
 
-class PingWaiting implements \Mqtt\Session\State\ISessionKeepAliveState {
+class PingWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHandler {
 
   use \Mqtt\Session\State\Connection\TSession;
-  use \Mqtt\Session\State\Connection\TSessionKeepAlive;
 
   /**
-   * @var \Mqtt\Session\ISessionKeepAliveStateChanger
+   * @var \Mqtt\Timeout
    */
-  protected $stateChanger;
+  protected $timeout;
 
   /**
-   * @var \Mqtt\Session\ISessionContext
+   * @param \Mqtt\Timeout $timeout
    */
-  protected $context;
-
-  /**
-   * @var \Mqtt\Session\ISessionKeepAliveContext
-   */
-  protected $keepAliveContext;
-
-  public function start() : void {
+  public function __construct(\Mqtt\Timeout $timeout) {
+    $this->timeout = clone $timeout;
   }
 
-  public function stop() : void {
-  }
+  public function onProtocolConnect(): void {}
 
-  public function publish() : void {
-  }
+  public function onProtocolDisconnect(): void {}
 
-  public function subscribe() : void {
-  }
+  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {}
 
-  public function unsubscribe(): void {
-  }
-
-  public function onProtocolConnect(): void {
-    $this->context->getTimeoutWatcher()->start();
-  }
-
-  public function onProtocolDisconnect(): void {
-    $this->context->getTimeoutWatcher()->stop();
-  }
-
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {
-    $this->keepAliveContext->getSession()->onPacketReceived($packet);
+  public function onStateEnter(): void {
+    $this->timeout->setInterval(ceil($this->context->getSessionConfiguration()->keepAliveInterval / 2));
+    $this->timeout->subscribe($this);
+    $this->timeout->start();
   }
 
   public function onTick(): void {
-    $this->keepAliveContext->getTimeoutWatcher()->tick();
+    $this->timeout->tick();
   }
 
   public function onTimeout(): void {
-    $pingPacket = $this->keepAliveContext->getProtocol()->createPacket(\Mqtt\Protocol\IPacket::PINGREQ);
-    $this->keepAliveContext->getProtocol()->writePacket($pingPacket);
-    $this->stateChanger->setKeepAliveState(\Mqtt\Session\State\ISessionState::PONG_WAIT);
+    $pingPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacket::PINGREQ);
+    $this->context->getProtocol()->writePacket($pingPacket);
+
+    $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::PONG_WAIT);
   }
 
 }

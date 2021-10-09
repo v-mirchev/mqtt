@@ -4,25 +4,27 @@ namespace Mqtt\Session\State\Connection;
 
 trait TSession  {
 
-  public function start() : void {
-    throw new \Exception('Not allowed in this state');
-  }
+  /**
+   * @var \Mqtt\Session\ISessionStateChanger
+   */
+  protected $stateChanger;
 
-  public function stop() : void {
-    throw new \Exception('Not allowed in this state');
-  }
+  /**
+   * @var \Mqtt\Session\ISessionContext
+   */
+  protected $context;
 
-  public function publish() : void {
-    throw new \Exception('Not allowed in this state');
-  }
+  public function start() : void {}
 
-  public function subscribe() : void {
-    throw new \Exception('Not allowed in this state');
-  }
+  public function stop() : void {}
 
-  public function unsubscribe() : void {
-    throw new \Exception('Not allowed in this state');
-  }
+  public function publish() : void {}
+
+  public function subscribe() : void {}
+
+  public function unsubscribe() : void {}
+
+  public function onStateEnter() : void {}
 
   /**
    * @param \Mqtt\Session\ISessionStateChanger $stateChanger

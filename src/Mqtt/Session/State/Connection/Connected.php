@@ -6,16 +6,6 @@ class Connected implements \Mqtt\Session\State\ISessionState {
 
   use \Mqtt\Session\State\Connection\TSession;
 
-  /**
-   * @var \Mqtt\Session\ISessionStateChanger
-   */
-  protected $stateChanger;
-
-  /**
-   * @var \Mqtt\Session\ISessionContext
-   */
-  protected $context;
-
   public function start() : void {
     throw new \Exception('Already started');
   }
@@ -36,7 +26,6 @@ class Connected implements \Mqtt\Session\State\ISessionState {
   }
 
   public function onProtocolConnect(): void {
-    throw new \Exception('Already connected');
   }
 
   public function onProtocolDisconnect(): void {

@@ -71,4 +71,11 @@ class Timeout  {
     }
   }
 
+  public function __clone() {
+    $this->handler = null;
+    $this->interval = null;
+    $this->isActive = null;
+    $this->time = null;
+  }
+
 }

@@ -4,8 +4,7 @@ namespace Mqtt\Session;
 
 class Session implements
   \Mqtt\Session\ISession,
-  \Mqtt\Session\ISessionStateChanger,
-  \Mqtt\Session\ISessionContext
+  \Mqtt\Session\ISessionStateChanger
 {
 
   /**
@@ -29,6 +28,11 @@ class Session implements
   protected $stateFactory;
 
   /**
+   * @var \Mqtt\Session\ISessionContext
+   */
+  protected $context;
+
+  /**
    * @var \Mqtt\PacketIdProvider\IPacketIdProvider
    */
   protected $idProvider;
@@ -38,12 +42,14 @@ class Session implements
    * @param \Mqtt\Session\State\ISessionState $initialStateName
    * @param \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider
    * @param \Mqtt\Session\State\Factory $stateFactory
+   * @param \Mqtt\Session\ISessionContext $context
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
     string $initialStateName,
     \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider,
-    \Mqtt\Session\State\Factory $stateFactory
+    \Mqtt\Session\State\Factory $stateFactory,
+    \Mqtt\Session\ISessionContext $context
   ) {
     $this->protocol = $protocol;
     $this->protocol->setSession($this);
@@ -52,6 +58,8 @@ class Session implements
 
     $this->idProvider = $idProvider;
     $this->stateFactory = $stateFactory;
+    $this->context = $context;
+    $this->context->setSession($this);
   }
 
   public function start() : void {
@@ -101,31 +109,10 @@ class Session implements
    */
   public function setState(string $sessionState) : void {
     $previous = $this->sessionState;
-    $this->sessionState = clone $this->stateFactory->create($sessionState);
+    $this->sessionState = $this->stateFactory->create($sessionState);
     $this->sessionState->setStateChanger($this);
-    $this->sessionState->setContext($this);
+    $this->sessionState->setContext($this->context);
     unset($previous);
-  }
-
-  /**
-   * @return \Mqtt\Protocol\IProtocol
-   */
-  public function getProtocol(): \Mqtt\Protocol\IProtocol {
-    return $this->protocol;
-  }
-
-  /**
-   * @return \Mqtt\IPacketIdProvider
-   */
-  public function getIdProvider(): \Mqtt\IPacketIdProvider {
-    return $this->idProvider;
-  }
-
-  /**
-   * @return \Mqtt\Session\ISession
-   */
-  public function getSession(): ISession {
-    return $this;
   }
 
 }
