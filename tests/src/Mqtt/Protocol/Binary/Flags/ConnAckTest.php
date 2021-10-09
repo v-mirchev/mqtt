@@ -23,7 +23,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
     $cloning = clone $this->object;
 
     $this->assertFalse($cloning->getSessionPresent());
-    $this->assertNull($cloning->getReturnCode());
+    $this->assertEmpty($cloning->getReturnCode());
   }
 
   public function testSessionPresentProperlyWritenAndRead() {

@@ -24,12 +24,6 @@ class Connect {
 
   public function __construct(\Mqtt\Protocol\Binary\Byte $byte) {
     $this->byte = clone $byte;
-
-    $this->useUsername = false;
-    $this->usePassword = false;
-    $this->willRetain = false;
-    $this->willQoS = false;
-    $this->useWill = false;
   }
 
   /**
