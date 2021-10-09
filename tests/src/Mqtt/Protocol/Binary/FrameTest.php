@@ -32,9 +32,10 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderByte() {
+    $this->object->setPacketType(\Mqtt\Protocol\IPacket::PINGREQ);
     $this->object->setAsDup();
     $this->object->addByte(5);
-    $this->assertEquals($this->stringToStringStream('080105'), (string) $this->object);
+    $this->assertEquals($this->stringToStringStream('c80105'), (string) $this->object);
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderString() {
