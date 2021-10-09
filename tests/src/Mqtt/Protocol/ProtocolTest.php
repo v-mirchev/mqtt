@@ -2,6 +2,10 @@
 
 namespace Mqtt\Protocol;
 
+/**
+ * @Inject $container
+ * @property \Psr\Container\ContainerInterface $___container
+ */
 class ProtocolTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\ProxyAssert;
@@ -11,11 +15,6 @@ class ProtocolTest extends \PHPUnit\Framework\TestCase {
    * @var \PHPUnit\Framework\MockObject\MockObject
    */
   protected $connectionMock;
-
-  /**
-   * @var \PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $frameMock;
 
   /**
    * @var \PHPUnit\Framework\MockObject\MockObject
@@ -38,20 +37,7 @@ class ProtocolTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
-      disableOriginalClone()->
-      disableOriginalConstructor()->
-      getMock();
-
     $this->connectionMock = $this->getMockBuilder(\Mqtt\Connection\IConnection::class)->
-      disableOriginalConstructor()->
-      getMock();
-
-    $this->packetFactoryMock = $this->getMockBuilder(\Mqtt\Protocol\Packet\Factory::class)->
-      disableOriginalConstructor()->
-      getMock();
-
-    $this->packetMock = $this->getMockBuilder(\Mqtt\Protocol\IPacket::class)->
       disableOriginalConstructor()->
       getMock();
 
@@ -62,62 +48,37 @@ class ProtocolTest extends \PHPUnit\Framework\TestCase {
     /**
      * @HINT Partially mocking of SUT so clone $frame is disabled in Test context
      */
-    $this->object = $this->getMockBuilder(\Mqtt\Protocol\Protocol::class)->
-      setConstructorArgs([$this->connectionMock, $this->frameMock, $this->packetFactoryMock])->
-      setMethods([ 'getNewFrame' ])->
-      getMock();
-
-    $this->object->
-      expects($this->any())->
-      method('getNewFrame')->
-      will($this->returnValue($this->frameMock));
+    $this->object = new \Mqtt\Protocol\Protocol(
+      $this->connectionMock,
+      $this->___container->get(\Mqtt\Protocol\Binary\Frame::class),
+      $this->___container->get(\Mqtt\Protocol\Packet\Factory::class)
+    );
 
     $this->object->setSession($this->sessionMock);
   }
 
-  public function testReadDecodesPacketProperly() {
-    $stream = $this->toArrayStream(0x1, 0x2, 0x5);
+  public function testReceivedPacketIfForwardedToSessionHandler() {
+    $stream = $this->toArrayStream(0xc0, 0x00);
 
-    $this->packetMock->
-      expects($this->once())->
-      method('decode')->
-      with($this->equalTo($this->frameMock));
-
-    $this->frameMock->
-      expects($this->once())->
-      method('fromStream')->
-      with($this->equalTo($stream));
-
-    $this->packetFactoryMock->
-      expects($this->any())->
-      method('create')->
-      will($this->returnValue($this->packetMock));
+    $expectedPacket = $this->object->createPacket(\Mqtt\Protocol\IPacket::PINGREQ);
 
     $this->sessionMock->
       expects($this->once())->
       method('onPacketReceived')->
-      with($this->equalTo($this->packetMock));
+      with($this->equalTo($expectedPacket));
 
     $this->object->read($stream);
   }
 
   public function testWriteEncodesPacketProperly() {
-    $this->frameMock->
-      expects($this->any())->
-      method('__toString')->
-      will($this->returnValue('#frame'));
-
-    $this->packetMock->
-      expects($this->once())->
-      method('encode')->
-      with($this->equalTo($this->frameMock));
+    $packet = $this->object->createPacket(\Mqtt\Protocol\IPacket::PINGREQ);
 
     $this->connectionMock->
       expects($this->once())->
       method('write')->
-      with($this->equalTo((string)$this->frameMock));
+      with($this->equalTo($this->toStringStream(0xc0, 0x00)));
 
-    $this->object->writePacket($this->packetMock);
+    $this->object->writePacket($packet);
   }
 
   public function testConnectProxiesToConnection() {
@@ -155,21 +116,6 @@ class ProtocolTest extends \PHPUnit\Framework\TestCase {
       with($this->sessionMock)->
       method('onDisconnect')->
       assert();
-  }
-
-  public function testCreatePacketProxiesToPacketFactory() {
-    $this->proxy($this->object)->
-      with($this->packetFactoryMock)->
-      method('createPacket')->
-      proxyMethod('create')->
-      arguments([4])->
-      assert();
-  }
-
-  public function testGetNewFrameClonesFrame() {
-    $this->object = new Protocol($this->connectionMock, $this->frameMock, $this->packetFactoryMock);
-    $this->assertEquals($this->frameMock, $this->object->getNewFrame());
-    $this->assertNotSame($this->frameMock, $this->object->getNewFrame());
   }
 
 }
