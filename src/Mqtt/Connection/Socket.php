@@ -125,7 +125,7 @@ class Socket {
     $this->byte = null;
 
     $readStreams = [$this->socket];
-    $streamChanged = @stream_select($readStreams, $writeStreams, $exceptionalStreams, 0, 50000);
+    $streamChanged = @stream_select($readStreams, $writeStreams, $exceptionalStreams, 0, $this->server->selectTimeout);
     if ($streamChanged) {
       $byte = stream_socket_recvfrom($this->socket, 1);
       if ($byte === false) {

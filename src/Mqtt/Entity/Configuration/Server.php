@@ -24,6 +24,11 @@ class Server {
    */
   public $timeout = 5;
 
+  /**
+   * @var int
+   */
+  public $selectTimeout = 20000;
+
     /**
    * @var string
    */
@@ -71,6 +76,15 @@ class Server {
    */
   public function connectTimeout(int $timeout) : \Mqtt\Entity\Configuration\Server {
     $this->connectTimeout = $timeout;
+    return $this;
+  }
+
+  /**
+   * @param int $selectTimeout
+   * @return $this
+   */
+  public function selectTimeout(int $selectTimeout) : \Mqtt\Entity\Configuration\Server {
+    $this->selectTimeout = $selectTimeout;
     return $this;
   }
 
