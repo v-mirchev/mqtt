@@ -4,7 +4,19 @@ namespace Mqtt\Session;
 
 interface ISessionContext {
 
-  public function getProtocol() : \Mqtt\Protocol\IProtocol;
+  /**
+   * @return \Mqtt\Session\ISession
+   */
+  public function getSession() : \Mqtt\Session\ISession;
+
+  /**
+   * @return \Mqtt\IPacketIdProvider
+   */
   public function getIdProvider() : \Mqtt\IPacketIdProvider;
+
+  /**
+   * @return \Mqtt\Protocol\IProtocol
+   */
+  public function getProtocol() : \Mqtt\Protocol\IProtocol;
 
 }

@@ -121,4 +121,11 @@ class Session implements
     return $this->idProvider;
   }
 
+  /**
+   * @return \Mqtt\Session\ISession
+   */
+  public function getSession(): ISession {
+    return $this;
+  }
+
 }
