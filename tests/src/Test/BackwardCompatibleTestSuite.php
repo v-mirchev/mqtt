@@ -1,17 +1,19 @@
 <?php
 
-if (!class_exists('PHPUnit_Framework_TestSuite')) {
-  class PHPUnit_Framework_TestSuite extends PHPUnit\Framework\TestSuite {}
+namespace Test;
+
+if (!class_exists('\PHPUnit_Framework_TestSuite')) {
+  class PHPUnit_Framework_TestSuite extends \PHPUnit\Framework\TestSuite {}
 }
 
-class TestSuite extends PHPUnit_Framework_TestSuite {
+class BackwardCompatibleTestSuite extends PHPUnit_Framework_TestSuite {
 
   /**
    * @static
    * @return TestSuite
    */
   public static function suite() {
-    $suite = new TestSuite();
+    $suite = new self;
     foreach (self::toRun() as $file) {
       $suite->addTestFile($file);
     }
@@ -22,7 +24,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
    * @return array an array of files to be run by PHPUnit
    */
   private static function toRun() {
-    $run = __DIR__ . '/src/';
+    $run = __DIR__ . '/../';
     if ($run === null) {
       throw new Exception(sprintf("No environment variable to run (%s) found.", self::ENV_RUN));
     }
@@ -33,7 +35,7 @@ class TestSuite extends PHPUnit_Framework_TestSuite {
       } elseif (is_file($part)) {
         $result[] = $part;
       } else {
-        throw new Exception(sprintf("Argument '%s' neither file nor directory.", $part));
+        throw new \Exception(sprintf("Argument '%s' neither file nor directory.", $part));
       }
     }
     return $result;

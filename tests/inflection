@@ -6,7 +6,7 @@ cd "${SCRIPT_DIR}" || exit 1
 ../vendor/bin/infection \
   --min-msi=80 \
   --configuration=inflection.json \
-  --test-framework-options='TestSuite.php' \
-  --threads=4 \
+  --test-framework-options='./src/Test/BackwardCompatibleTestSuite.php' \
+  --threads=16 \
   --log-verbosity=2 \
   --only-covered
