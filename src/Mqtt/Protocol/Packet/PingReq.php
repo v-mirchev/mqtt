@@ -8,7 +8,7 @@ class PingReq implements \Mqtt\Protocol\IPacket {
 
   public function encode(\Mqtt\Protocol\Binary\Frame $frame) {
     $frame->setPacketType(\Mqtt\Protocol\IPacket::PINGREQ);
-    $frame->setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE);
+    $frame->setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE);
   }
 
 }

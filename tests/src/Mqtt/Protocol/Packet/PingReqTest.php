@@ -30,7 +30,7 @@ class PingReqTest extends \PHPUnit\Framework\TestCase {
     $frameMock->
       expects($this->callSequence()->next())->
       method('setQos')->
-      with($this->equalTo(\Mqtt\Entity\IQoS::AT_LEAST_ONCE));
+      with($this->equalTo(\Mqtt\Entity\IQoS::AT_MOST_ONCE));
 
     $this->object->encode($frameMock);
   }
