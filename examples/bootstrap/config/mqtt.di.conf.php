@@ -119,8 +119,8 @@ return [
       $container->get(\Mqtt\Entity\Configuration\Session::class),
       $container->get(\Mqtt\Protocol\IProtocol::class),
       $container->get(\Mqtt\Session\Session::class),
-      $container->get(\Mqtt\Session\State\Connection\PingWaiting::class),
-      $container,
+      \Mqtt\Session\State\ISessionState::PING_WAIT,
+      $container->get(\Mqtt\Session\State\Factory::class),
       $container->get(\Mqtt\Timeout::class),
     ));
   },
@@ -159,6 +159,8 @@ return [
   'mqtt.session.state.classmap' => [
     \Mqtt\Session\State\ISessionState::CONNECTED => \Mqtt\Session\State\Connection\Connected::class,
     \Mqtt\Session\State\ISessionState::DISCONNECTED => \Mqtt\Session\State\Connection\Disconnected::class,
+    \Mqtt\Session\State\ISessionState::PING_WAIT => \Mqtt\Session\State\Connection\PingWaiting::class,
+    \Mqtt\Session\State\ISessionState::PONG_WAIT => \Mqtt\Session\State\Connection\PongWaiting::class,
   ],
 
   \Mqtt\Session\State\Factory::class => function (\Psr\Container\ContainerInterface $container) {
