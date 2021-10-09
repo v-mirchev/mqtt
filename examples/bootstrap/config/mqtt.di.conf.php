@@ -2,10 +2,6 @@
 
 return [
 
-  \Mqtt\Protocol\Packet\Factory::class => function (\Psr\Container\ContainerInterface $container) {
-    return new \Mqtt\Protocol\Packet\Factory($container, $container->get('mqtt.classmap'));
-  },
-
   \Mqtt\Entity\Configuration\Authentication::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Entity\Configuration\Authentication())->
       password($container->get('mqtt.auth.password'))->
@@ -112,9 +108,9 @@ return [
   \Mqtt\Session\Session::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Session\Session(
       $container->get(\Mqtt\Protocol\IProtocol::class),
-      $container->get(\Mqtt\Session\State\Connection\Disconnected::class),
+      \Mqtt\Session\State\ISessionState::DISCONNECTED,
       $container->get(\Mqtt\PacketIdProvider\IPacketIdProvider::class),
-      $container
+      $container->get(\Mqtt\Session\State\Factory::class)
     ));
   },
 
@@ -139,7 +135,7 @@ return [
     ));
   },
 
-  'mqtt.classmap' => [
+  'mqtt.protocol.packet.classmap' => [
     \Mqtt\Protocol\IPacket::CONNECT => \Mqtt\Protocol\Packet\Connect::class,
     \Mqtt\Protocol\IPacket::CONNACK => \Mqtt\Protocol\Packet\ConnAck::class,
     \Mqtt\Protocol\IPacket::PINGREQ => \Mqtt\Protocol\Packet\PingReq::class,
@@ -155,5 +151,18 @@ return [
     \Mqtt\Protocol\IPacket::UNSUBSCRIBE=> \Mqtt\Protocol\Packet\Unsubscribe::class,
     \Mqtt\Protocol\IPacket::UNSUBACK=> \Mqtt\Protocol\Packet\UnsubAck::class,
   ],
+
+  \Mqtt\Protocol\Packet\Factory::class => function (\Psr\Container\ContainerInterface $container) {
+    return new \Mqtt\Protocol\Packet\Factory($container, $container->get('mqtt.protocol.packet.classmap'));
+  },
+
+  'mqtt.session.state.classmap' => [
+    \Mqtt\Session\State\ISessionState::CONNECTED => \Mqtt\Session\State\Connection\Connected::class,
+    \Mqtt\Session\State\ISessionState::DISCONNECTED => \Mqtt\Session\State\Connection\Disconnected::class,
+  ],
+
+  \Mqtt\Session\State\Factory::class => function (\Psr\Container\ContainerInterface $container) {
+    return new \Mqtt\Session\State\Factory($container, $container->get('mqtt.session.state.classmap'));
+  },
 
 ];

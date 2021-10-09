@@ -14,14 +14,19 @@ class Session implements
   protected $protocol;
 
   /**
+   * @var string
+   */
+  protected $initialStateName;
+
+  /**
    * @var \Mqtt\Session\State\ISessionState
    */
   protected $sessionState;
 
   /**
-   * @var \Psr\Container\ContainerInterface
+   * @var \Mqtt\Session\State\Factory
    */
-  protected $dic;
+  protected $stateFactory;
 
   /**
    * @var \Mqtt\PacketIdProvider\IPacketIdProvider
@@ -30,28 +35,27 @@ class Session implements
 
   /**
    * @param \Mqtt\Protocol\IProtocol $protocol
-   * @param \Mqtt\Session\State\ISessionState $session
+   * @param \Mqtt\Session\State\ISessionState $initialStateName
    * @param \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider
-   * @param \Psr\Container\ContainerInterface $dic
+   * @param \Mqtt\Session\State\Factory $stateFactory
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
-    \Mqtt\Session\State\ISessionState $session,
+    string $initialStateName,
     \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider,
-    \Psr\Container\ContainerInterface $dic
+    \Mqtt\Session\State\Factory $stateFactory
   ) {
     $this->protocol = $protocol;
     $this->protocol->setSession($this);
 
-    $this->sessionState = $session;
-    $this->sessionState->setStateChanger($this);
-    $this->sessionState->setContext($this);
+    $this->initialStateName = $initialStateName;
 
     $this->idProvider = $idProvider;
-    $this->dic = $dic;
+    $this->stateFactory = $stateFactory;
   }
 
   public function start() : void {
+    $this->setState($this->initialStateName);
     $this->sessionState->start();
   }
 
@@ -97,7 +101,7 @@ class Session implements
    */
   public function setState(string $sessionState) : void {
     $previous = $this->sessionState;
-    $this->sessionState = clone $this->dic->get($sessionState);
+    $this->sessionState = clone $this->stateFactory->create($sessionState);
     $this->sessionState->setStateChanger($this);
     $this->sessionState->setContext($this);
     unset($previous);

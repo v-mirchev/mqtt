@@ -40,7 +40,7 @@ class Connected implements \Mqtt\Session\State\ISessionState {
   }
 
   public function onProtocolDisconnect(): void {
-    $this->stateChanger->setState(\Mqtt\Session\State\Connection\Disconnected::class);
+    $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::DISCONNECTED);
   }
 
   public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {

@@ -73,7 +73,7 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
       throw new \Exception($packet->getReturnCodeMessage() .', error code ' . $packet->getReturnCode());
     }
 
-    $this->stateChanger->setState(\Mqtt\Session\State\Connection\Connected::class);
+    $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::CONNECTED);
   }
 
   public function onTick(): void {
