@@ -1,10 +1,10 @@
 <?php declare(ticks = 1);
 
-namespace Mqtt\Session\State\Session;
+namespace Mqtt\Session\State\Connection;
 
 class Disconnected implements \Mqtt\Session\State\ISessionState {
 
-  use \Mqtt\Session\State\Session\TSession;
+  use \Mqtt\Session\State\Connection\TSession;
 
   /**
    * @var \Mqtt\Entity\Configuration\Session
@@ -73,7 +73,7 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
       throw new \Exception($packet->getReturnCodeMessage() .', error code ' . $packet->getReturnCode());
     }
 
-    $this->stateChanger->setState(\Mqtt\Session\State\Session\Connected::class);
+    $this->stateChanger->setState(\Mqtt\Session\State\Connection\Connected::class);
   }
 
   public function onTick(): void {

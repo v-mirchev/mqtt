@@ -1,10 +1,10 @@
 <?php declare(ticks = 1);
 
-namespace Mqtt\Session\State\Session;
+namespace Mqtt\Session\State\Connection;
 
 class Connected implements \Mqtt\Session\State\ISessionState {
 
-  use \Mqtt\Session\State\Session\TSession;
+  use \Mqtt\Session\State\Connection\TSession;
 
   /**
    * @var \Mqtt\Session\ISessionStateChanger
@@ -40,7 +40,7 @@ class Connected implements \Mqtt\Session\State\ISessionState {
   }
 
   public function onProtocolDisconnect(): void {
-    $this->stateChanger->setState(\Mqtt\Session\State\Session\Disconnected::class);
+    $this->stateChanger->setState(\Mqtt\Session\State\Connection\Disconnected::class);
   }
 
   public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {

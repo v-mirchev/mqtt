@@ -93,16 +93,16 @@ return [
     return $will;
   },
 
-  \Mqtt\Session\State\Session\Disconnected::class => function (\Psr\Container\ContainerInterface $container) {
-    return (new \Mqtt\Session\State\Session\Disconnected(
+  \Mqtt\Session\State\Connection\Disconnected::class => function (\Psr\Container\ContainerInterface $container) {
+    return (new \Mqtt\Session\State\Connection\Disconnected(
       $container->get(\Mqtt\Entity\Configuration\Session::class),
       $container->get(\Mqtt\Entity\Configuration\Authentication::class),
       $container->get(\Mqtt\Entity\Configuration\Will::class)
     ));
   },
 
-  \Mqtt\Session\State\Session\Connected::class => function (\Psr\Container\ContainerInterface $container) {
-    return (new \Mqtt\Session\State\Session\Connected());
+  \Mqtt\Session\State\Connection\Connected::class => function (\Psr\Container\ContainerInterface $container) {
+    return (new \Mqtt\Session\State\Connection\Connected());
   },
 
   \Mqtt\PacketIdProvider\IPacketIdProvider::class => function (\Psr\Container\ContainerInterface $container) {
@@ -112,14 +112,25 @@ return [
   \Mqtt\Session\Session::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Session\Session(
       $container->get(\Mqtt\Protocol\IProtocol::class),
-      $container->get(\Mqtt\Session\State\Session\Disconnected::class),
+      $container->get(\Mqtt\Session\State\Connection\Disconnected::class),
       $container->get(\Mqtt\PacketIdProvider\IPacketIdProvider::class),
       $container
     ));
   },
 
+  \Mqtt\Session\KeptAliveSession::class => function (\Psr\Container\ContainerInterface $container) {
+    return (new \Mqtt\Session\KeptAliveSession(
+      $container->get(\Mqtt\Entity\Configuration\Session::class),
+      $container->get(\Mqtt\Protocol\IProtocol::class),
+      $container->get(\Mqtt\Session\Session::class),
+      $container->get(\Mqtt\Session\State\Connection\PingWaiting::class),
+      $container,
+      $container->get(\Mqtt\Timeout::class),
+    ));
+  },
+
   \Mqtt\Session\ISession::class => function (\Psr\Container\ContainerInterface $container) {
-    return $container->get(\Mqtt\Session\Session::class);
+    return $container->get(\Mqtt\Session\KeptAliveSession::class);
   },
 
   \Mqtt\Client::class => function (\Psr\Container\ContainerInterface $container) {

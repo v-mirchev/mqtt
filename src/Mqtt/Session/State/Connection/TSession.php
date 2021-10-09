@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Session\State\Session;
+namespace Mqtt\Session\State\Connection;
 
 trait TSession  {
 
