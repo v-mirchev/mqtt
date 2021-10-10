@@ -75,6 +75,7 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
    */
   public function writePacket(\Mqtt\Protocol\IPacket $packet) : void {
     $frame = clone $this->frame;
+    $this->session->onPacketSent($packet);
     $packet->encode($frame);
     $this->connection->write((string)$frame);
     unset($frame);

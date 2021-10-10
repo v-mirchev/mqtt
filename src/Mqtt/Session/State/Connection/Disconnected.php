@@ -4,7 +4,8 @@ namespace Mqtt\Session\State\Connection;
 
 class Disconnected implements \Mqtt\Session\State\ISessionState {
 
-  use \Mqtt\Session\State\Connection\TSession;
+  use \Mqtt\Session\TSession;
+  use \Mqtt\Session\State\Connection\TState;
 
   public function start() : void {
     $this->context->getProtocol()->connect();

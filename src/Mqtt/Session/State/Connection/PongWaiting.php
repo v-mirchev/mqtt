@@ -4,7 +4,8 @@ namespace Mqtt\Session\State\Connection;
 
 class PongWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHandler {
 
-  use \Mqtt\Session\State\Connection\TSession;
+  use \Mqtt\Session\TSession;
+  use \Mqtt\Session\State\Connection\TState;
 
   /**
    * @var \Mqtt\Timeout

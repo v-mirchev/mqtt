@@ -25,4 +25,10 @@ interface IHandler {
    */
   public function onPacketReceived(\Mqtt\Protocol\IPacket $packet) : void;
 
+  /**
+   * @param \Mqtt\Protocol\IPacket $packet
+   * @return void
+   */
+  public function onPacketSent(\Mqtt\Protocol\IPacket $packet) : void;
+
 }

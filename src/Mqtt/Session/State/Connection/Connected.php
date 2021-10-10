@@ -4,7 +4,8 @@ namespace Mqtt\Session\State\Connection;
 
 class Connected implements \Mqtt\Session\State\ISessionState {
 
-  use \Mqtt\Session\State\Connection\TSession;
+  use \Mqtt\Session\TSession;
+  use \Mqtt\Session\State\Connection\TState;
 
   /**
    * @var \Mqtt\Session\KeepAlive
@@ -54,6 +55,10 @@ class Connected implements \Mqtt\Session\State\ISessionState {
 
   public function onTick(): void {
     $this->keepAlive->onTick();
+  }
+
+  public function onPacketSent(\Mqtt\Protocol\IPacket $packet): void {
+
   }
 
 }

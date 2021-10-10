@@ -2,10 +2,7 @@
 
 namespace Mqtt\Session;
 
-class Session implements
-  \Mqtt\Session\ISession,
-  \Mqtt\Session\ISessionStateChanger
-{
+class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChanger {
 
   /**
    * @var \Mqtt\Protocol\IProtocol
@@ -97,6 +94,10 @@ class Session implements
    */
   public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {
     $this->sessionState->onPacketReceived($packet);
+  }
+
+  public function onPacketSent(\Mqtt\Protocol\IPacket $packet): void {
+    $this->sessionState->onPacketSent($packet);
   }
 
   public function onTick(): void {

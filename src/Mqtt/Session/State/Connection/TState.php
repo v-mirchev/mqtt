@@ -2,7 +2,7 @@
 
 namespace Mqtt\Session\State\Connection;
 
-trait TSession  {
+trait TState  {
 
   /**
    * @var \Mqtt\Session\ISessionStateChanger
@@ -13,16 +13,6 @@ trait TSession  {
    * @var \Mqtt\Session\ISessionContext
    */
   protected $context;
-
-  public function start() : void {}
-
-  public function stop() : void {}
-
-  public function publish() : void {}
-
-  public function subscribe() : void {}
-
-  public function unsubscribe() : void {}
 
   public function onStateEnter() : void {}
 

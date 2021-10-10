@@ -2,10 +2,9 @@
 
 namespace Mqtt\Session;
 
-class KeepAlive implements
-  \Mqtt\Session\ISession,
-  \Mqtt\Session\ISessionStateChanger
-{
+class KeepAlive implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChanger {
+
+  use \Mqtt\Session\TSession;
 
   /**
    * @var \Mqtt\Entity\Configuration\Session
@@ -76,18 +75,6 @@ class KeepAlive implements
 
   public function stop() : void {
     $this->sessionState->stop();
-  }
-
-  public function publish() : void {
-  }
-
-  public function subscribe() : void {
-  }
-
-  public function unsubscribe(): void {
-  }
-
-  public function onProtocolConnect(): void {
   }
 
   public function onProtocolDisconnect(): void {
