@@ -112,6 +112,7 @@ class Session implements
     $this->sessionState = $this->stateFactory->create($sessionState);
     $this->sessionState->setStateChanger($this);
     $this->sessionState->setContext($this->context);
+    $this->sessionState->onStateEnter();
     unset($previous);
   }
 

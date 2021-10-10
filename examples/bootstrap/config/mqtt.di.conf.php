@@ -98,7 +98,9 @@ return [
   },
 
   \Mqtt\Session\State\Connection\Connected::class => function (\Psr\Container\ContainerInterface $container) {
-    return (new \Mqtt\Session\State\Connection\Connected());
+    return (new \Mqtt\Session\State\Connection\Connected(
+      $container->get(\Mqtt\Session\KeepAlive::class)
+    ));
   },
 
   \Mqtt\PacketIdProvider\IPacketIdProvider::class => function (\Psr\Container\ContainerInterface $container) {
@@ -115,20 +117,19 @@ return [
     ));
   },
 
-  \Mqtt\Session\KeptAliveSession::class => function (\Psr\Container\ContainerInterface $container) {
-    return (new \Mqtt\Session\KeptAliveSession(
+  \Mqtt\Session\KeepAlive::class => function (\Psr\Container\ContainerInterface $container) {
+    return (new \Mqtt\Session\KeepAlive(
       $container->get(\Mqtt\Entity\Configuration\Session::class),
       $container->get(\Mqtt\Protocol\IProtocol::class),
       $container->get(\Mqtt\Session\Session::class),
       \Mqtt\Session\State\ISessionState::PING_WAIT,
       $container->get(\Mqtt\Session\State\Factory::class),
-      $container->get(\Mqtt\Session\State\Context::class),
-      $container->get(\Mqtt\Timeout::class),
+      $container->get(\Mqtt\Session\State\Context::class)
     ));
   },
 
   \Mqtt\Session\ISession::class => function (\Psr\Container\ContainerInterface $container) {
-    return $container->get(\Mqtt\Session\KeptAliveSession::class);
+    return $container->get(\Mqtt\Session\Session::class);
   },
 
   \Mqtt\Client::class => function (\Psr\Container\ContainerInterface $container) {

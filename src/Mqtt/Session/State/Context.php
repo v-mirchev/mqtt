@@ -15,21 +15,6 @@ class Context implements \Mqtt\Session\ISessionContext {
   protected $sessionConfiguration;
 
   /**
-   * @var \Mqtt\Entity\Configuration\Authentication
-   */
-  protected $authentication;
-
-  /**
-   * @var \Mqtt\Entity\Configuration\Will
-   */
-  protected $will;
-
-  /**
-   * @var \Mqtt\Protocol\IProtocol
-   */
-  protected $protocol;
-
-  /**
    * @var \Mqtt\Session\State\Factory
    */
   protected $stateFactory;
