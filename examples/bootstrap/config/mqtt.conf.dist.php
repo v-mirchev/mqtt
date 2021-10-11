@@ -12,7 +12,7 @@ return [
   'mqtt.server.timeout' => 30000,
 
   'mqtt.session.clientId' => 'pure-mqtt',
-  'mqtt.session.keepAliveInterval' => 20,
+  'mqtt.session.keepAliveInterval' => 60,
   'mqtt.session.certificateFile' => null,
   'mqtt.session.will.topic' => 'lib-will-topic',
   'mqtt.session.will.content' => 'lib-will-content',

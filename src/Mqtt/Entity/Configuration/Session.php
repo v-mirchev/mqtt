@@ -12,7 +12,7 @@ class Session {
   /**
    * @var int
    */
-  public $keepAliveInterval = 5;
+  public $keepAliveInterval = 60;
 
   /**
    * @var bool
