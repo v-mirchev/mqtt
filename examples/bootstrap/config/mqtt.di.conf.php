@@ -162,6 +162,7 @@ return [
     \Mqtt\Session\State\ISessionState::DISCONNECTED => \Mqtt\Session\State\Connection\Disconnected::class,
     \Mqtt\Session\State\ISessionState::PING_WAIT => \Mqtt\Session\State\Connection\PingWaiting::class,
     \Mqtt\Session\State\ISessionState::PONG_WAIT => \Mqtt\Session\State\Connection\PongWaiting::class,
+    \Mqtt\Session\State\ISessionState::KEEP_ALIVE_DISABLED => \Mqtt\Session\State\Connection\KeepAliveDisabled::class,
   ],
 
   \Mqtt\Session\State\Factory::class => function (\Psr\Container\ContainerInterface $container) {

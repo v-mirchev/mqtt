@@ -66,7 +66,11 @@ class KeepAlive implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateCh
   }
 
   public function start() : void {
-    $this->setState(\Mqtt\Session\State\ISessionState::PING_WAIT);
+    $this->setState(
+      $this->configuration->keepAliveInterval > 0 ?
+        \Mqtt\Session\State\ISessionState::PING_WAIT:
+        \Mqtt\Session\State\ISessionState::KEEP_ALIVE_DISABLED
+    );
     $this->sessionState->start();
   }
 

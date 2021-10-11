@@ -8,6 +8,7 @@ interface ISessionState extends \Mqtt\Session\ISession {
   const DISCONNECTED = 'disconnected';
   const PING_WAIT = 'ping.wait';
   const PONG_WAIT = 'pong.wait';
+  const KEEP_ALIVE_DISABLED = 'keepalive.disabled';
 
   public function onStateEnter() : void;
 
