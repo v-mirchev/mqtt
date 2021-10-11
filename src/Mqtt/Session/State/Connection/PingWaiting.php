@@ -25,6 +25,10 @@ class PingWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHa
 
   public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {}
 
+  public function onPacketSent(\Mqtt\Protocol\IPacket $packet): void {
+    $this->timeout->reset();
+  }
+
   public function onStateEnter(): void {
     $this->timeout->setInterval(ceil($this->context->getSessionConfiguration()->keepAliveInterval / 2));
     $this->timeout->subscribe($this);
