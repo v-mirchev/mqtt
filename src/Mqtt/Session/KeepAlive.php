@@ -45,7 +45,6 @@ class KeepAlive implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateCh
    * @param \Mqtt\Entity\Configuration\Session $configuration
    * @param \Mqtt\Protocol\IProtocol $protocol
    * @param \Mqtt\State\ISession $session
-   * @param str $inititalSessionState
    * @param \Mqtt\Session\State\Factory $stateFactory
    * @param \Mqtt\Session\ISessionContext $context
    */
@@ -53,7 +52,6 @@ class KeepAlive implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateCh
     \Mqtt\Entity\Configuration\Session $configuration,
     \Mqtt\Protocol\IProtocol $protocol,
     \Mqtt\Session\ISession $session,
-    string $inititalSessionState,
     \Mqtt\Session\State\Factory $stateFactory,
     \Mqtt\Session\ISessionContext $context
   ) {
@@ -61,7 +59,6 @@ class KeepAlive implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateCh
     $this->protocol = $protocol;
 
     $this->session = $session;
-    $this->initialStateName = $inititalSessionState;
 
     $this->stateFactory = $stateFactory;
     $this->context = $context;
@@ -69,7 +66,7 @@ class KeepAlive implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateCh
   }
 
   public function start() : void {
-    $this->setState($this->initialStateName);
+    $this->setState(\Mqtt\Session\State\ISessionState::PING_WAIT);
     $this->sessionState->start();
   }
 

@@ -110,7 +110,6 @@ return [
   \Mqtt\Session\Session::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Session\Session(
       $container->get(\Mqtt\Protocol\IProtocol::class),
-      \Mqtt\Session\State\ISessionState::DISCONNECTED,
       $container->get(\Mqtt\PacketIdProvider\IPacketIdProvider::class),
       $container->get(\Mqtt\Session\State\Factory::class),
       $container->get(\Mqtt\Session\State\Context::class)
@@ -122,7 +121,6 @@ return [
       $container->get(\Mqtt\Entity\Configuration\Session::class),
       $container->get(\Mqtt\Protocol\IProtocol::class),
       $container->get(\Mqtt\Session\Session::class),
-      \Mqtt\Session\State\ISessionState::PING_WAIT,
       $container->get(\Mqtt\Session\State\Factory::class),
       $container->get(\Mqtt\Session\State\Context::class)
     ));

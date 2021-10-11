@@ -10,11 +10,6 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChan
   protected $protocol;
 
   /**
-   * @var string
-   */
-  protected $initialStateName;
-
-  /**
    * @var \Mqtt\Session\State\ISessionState
    */
   protected $sessionState;
@@ -36,22 +31,18 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChan
 
   /**
    * @param \Mqtt\Protocol\IProtocol $protocol
-   * @param \Mqtt\Session\State\ISessionState $initialStateName
    * @param \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider
    * @param \Mqtt\Session\State\Factory $stateFactory
    * @param \Mqtt\Session\ISessionContext $context
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
-    string $initialStateName,
     \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider,
     \Mqtt\Session\State\Factory $stateFactory,
     \Mqtt\Session\ISessionContext $context
   ) {
     $this->protocol = $protocol;
     $this->protocol->setSession($this);
-
-    $this->initialStateName = $initialStateName;
 
     $this->idProvider = $idProvider;
     $this->stateFactory = $stateFactory;
@@ -60,7 +51,7 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChan
   }
 
   public function start() : void {
-    $this->setState($this->initialStateName);
+    $this->setState(\Mqtt\Session\State\ISessionState::DISCONNECTED);
     $this->sessionState->start();
   }
 
