@@ -20,9 +20,9 @@ interface ISessionContext {
   public function setSession(\Mqtt\Session\ISession $session);
 
   /**
-   * @return \Mqtt\IPacketIdProvider
+   * @return \Mqtt\Protocol\Packet\Id\IProvider
    */
-  public function getIdProvider() : \Mqtt\IPacketIdProvider;
+  public function getIdProvider() : \Mqtt\Protocol\Packet\Id\IProvider;
 
   /**
    * @return \Mqtt\Protocol\IProtocol

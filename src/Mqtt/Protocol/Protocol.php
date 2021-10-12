@@ -71,9 +71,9 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
   }
 
   /**
-   * @param \Mqtt\Protocol\IPacket $packet
+   * @param \Mqtt\Protocol\Packet\IType $packet
    */
-  public function writePacket(\Mqtt\Protocol\IPacket $packet) : void {
+  public function writePacket(\Mqtt\Protocol\Packet\IType $packet) : void {
     $frame = clone $this->frame;
     $this->session->onPacketSent($packet);
     $packet->encode($frame);
@@ -91,9 +91,9 @@ class Protocol implements \Mqtt\Protocol\IProtocol, \Mqtt\Connection\IHandler {
 
   /**
    * @param int $type
-   * @return \Mqtt\Protocol\IPacket
+   * @return \Mqtt\Protocol\Packet\IType
    */
-  public function createPacket(int $type) : \Mqtt\Protocol\IPacket {
+  public function createPacket(int $type) : \Mqtt\Protocol\Packet\IType {
     return $this->packetFactory->create($type);
   }
 

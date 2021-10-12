@@ -23,9 +23,9 @@ class PingWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHa
 
   public function onProtocolDisconnect(): void {}
 
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {}
+  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {}
 
-  public function onPacketSent(\Mqtt\Protocol\IPacket $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
     $this->timeout->reset();
   }
 
@@ -40,7 +40,7 @@ class PingWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHa
   }
 
   public function onTimeout(): void {
-    $pingPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacket::PINGREQ);
+    $pingPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::PINGREQ);
     $this->context->getProtocol()->writePacket($pingPacket);
 
     $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::PONG_WAIT);

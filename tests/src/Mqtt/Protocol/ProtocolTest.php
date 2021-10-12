@@ -60,7 +60,7 @@ class ProtocolTest extends \PHPUnit\Framework\TestCase {
   public function testReceivedPacketIfForwardedToSessionHandler() {
     $stream = $this->toArrayStream(0xc0, 0x00);
 
-    $expectedPacket = $this->object->createPacket(\Mqtt\Protocol\IPacket::PINGREQ);
+    $expectedPacket = $this->object->createPacket(\Mqtt\Protocol\Packet\IType::PINGREQ);
 
     $this->sessionMock->
       expects($this->once())->
@@ -71,7 +71,7 @@ class ProtocolTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testWriteEncodesPacketProperly() {
-    $packet = $this->object->createPacket(\Mqtt\Protocol\IPacket::PINGREQ);
+    $packet = $this->object->createPacket(\Mqtt\Protocol\Packet\IType::PINGREQ);
 
     $this->connectionMock->
       expects($this->once())->

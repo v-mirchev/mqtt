@@ -36,7 +36,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testCreateCallsDicToInstantinateMappedClass() {
-    $expectedObject = $this->getMockBuilder(\Mqtt\Protocol\IPacket::class)->
+    $expectedObject = $this->getMockBuilder(\Mqtt\Protocol\Packet\IType::class)->
       getMock();
 
     $this->dicMock->
@@ -46,7 +46,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase {
 
     $actualObject = $this->object->create(2);
     $this->assertEquals($expectedObject, $actualObject);
-    $this->assertInstanceOf(\Mqtt\Protocol\IPacket::class, $actualObject);
+    $this->assertInstanceOf(\Mqtt\Protocol\Packet\IType::class, $actualObject);
   }
 
 }

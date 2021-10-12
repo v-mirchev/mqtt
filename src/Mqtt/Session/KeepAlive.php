@@ -83,10 +83,10 @@ class KeepAlive implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateCh
   }
 
   /**
-   * @param \Mqtt\Protocol\IPacket $packet
+   * @param \Mqtt\Protocol\Packet\IType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
     $this->sessionState->onPacketReceived($packet);
   }
 

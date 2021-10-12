@@ -28,25 +28,25 @@ return [
     return $container->get(\Mqtt\Protocol\Protocol::class);
   },
 
-  \Mqtt\PacketIdProvider\IPacketIdProvider::class => function (\Psr\Container\ContainerInterface $container) {
-    return $container->get(\Mqtt\PacketIdProvider\Sequential::class);
+  \Mqtt\Protocol\Packet\Id\IProvider::class => function (\Psr\Container\ContainerInterface $container) {
+    return $container->get(\Mqtt\Protocol\Packet\Id\Sequential::class);
   },
 
   'mqtt.classmap' => [
-    \Mqtt\Protocol\IPacket::CONNECT => \Mqtt\Protocol\Packet\Connect::class,
-    \Mqtt\Protocol\IPacket::CONNACK => \Mqtt\Protocol\Packet\ConnAck::class,
-    \Mqtt\Protocol\IPacket::PINGREQ => \Mqtt\Protocol\Packet\PingReq::class,
-    \Mqtt\Protocol\IPacket::PINGRESP => \Mqtt\Protocol\Packet\PingResp::class,
-    \Mqtt\Protocol\IPacket::DISCONNECT => \Mqtt\Protocol\Packet\Disconnect::class,
-    \Mqtt\Protocol\IPacket::PUBLISH => \Mqtt\Protocol\Packet\Publish::class,
-    \Mqtt\Protocol\IPacket::PUBACK => \Mqtt\Protocol\Packet\PubAck::class,
-    \Mqtt\Protocol\IPacket::PUBCOMP => \Mqtt\Protocol\Packet\PubComp::class,
-    \Mqtt\Protocol\IPacket::PUBREC => \Mqtt\Protocol\Packet\PubRec::class,
-    \Mqtt\Protocol\IPacket::PUBREL => \Mqtt\Protocol\Packet\PubRel::class,
-    \Mqtt\Protocol\IPacket::SUBSCRIBE => \Mqtt\Protocol\Packet\Subscribe::class,
-    \Mqtt\Protocol\IPacket::SUBACK=> \Mqtt\Protocol\Packet\SubAck::class,
-    \Mqtt\Protocol\IPacket::UNSUBSCRIBE=> \Mqtt\Protocol\Packet\Unsubscribe::class,
-    \Mqtt\Protocol\IPacket::UNSUBACK=> \Mqtt\Protocol\Packet\UnsubAck::class,
+    \Mqtt\Protocol\Packet\IType::CONNECT => \Mqtt\Protocol\Packet\Type\Connect::class,
+    \Mqtt\Protocol\Packet\IType::CONNACK => \Mqtt\Protocol\Packet\Type\ConnAck::class,
+    \Mqtt\Protocol\Packet\IType::PINGREQ => \Mqtt\Protocol\Packet\Type\PingReq::class,
+    \Mqtt\Protocol\Packet\IType::PINGRESP => \Mqtt\Protocol\Packet\Type\PingResp::class,
+    \Mqtt\Protocol\Packet\IType::DISCONNECT => \Mqtt\Protocol\Packet\Type\Disconnect::class,
+    \Mqtt\Protocol\Packet\IType::PUBLISH => \Mqtt\Protocol\Packet\Type\Publish::class,
+    \Mqtt\Protocol\Packet\IType::PUBACK => \Mqtt\Protocol\Packet\Type\PubAck::class,
+    \Mqtt\Protocol\Packet\IType::PUBCOMP => \Mqtt\Protocol\Packet\Type\PubComp::class,
+    \Mqtt\Protocol\Packet\IType::PUBREC => \Mqtt\Protocol\Packet\Type\PubRec::class,
+    \Mqtt\Protocol\Packet\IType::PUBREL => \Mqtt\Protocol\Packet\Type\PubRel::class,
+    \Mqtt\Protocol\Packet\IType::SUBSCRIBE => \Mqtt\Protocol\Packet\Type\Subscribe::class,
+    \Mqtt\Protocol\Packet\IType::SUBACK=> \Mqtt\Protocol\Packet\Type\SubAck::class,
+    \Mqtt\Protocol\Packet\IType::UNSUBSCRIBE=> \Mqtt\Protocol\Packet\Type\Unsubscribe::class,
+    \Mqtt\Protocol\Packet\IType::UNSUBACK=> \Mqtt\Protocol\Packet\Type\UnsubAck::class,
   ],
 
 ];

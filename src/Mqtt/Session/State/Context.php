@@ -20,13 +20,13 @@ class Context implements \Mqtt\Session\ISessionContext {
   protected $stateFactory;
 
   /**
-   * @var \Mqtt\PacketIdProvider\IPacketIdProvider
+   * @var \Mqtt\Protocol\Packet\Id\IProvider
    */
   protected $idProvider;
 
   /**
    * @param \Mqtt\Protocol\IProtocol $protocol
-   * @param \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider
+   * @param \Mqtt\Protocol\Packet\Id\IProvider $idProvider
    * @param \Mqtt\Session\State\Factory $stateFactory
    * @param \Mqtt\Entity\Configuration\Session $sessionConfiguration
    * @param \Mqtt\Entity\Configuration\Authentication $authentication
@@ -34,7 +34,7 @@ class Context implements \Mqtt\Session\ISessionContext {
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
-    \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider,
+    \Mqtt\Protocol\Packet\Id\IProvider $idProvider,
     \Mqtt\Session\State\Factory $stateFactory,
     \Mqtt\Entity\Configuration\Session $sessionConfiguration
   ) {
@@ -53,9 +53,9 @@ class Context implements \Mqtt\Session\ISessionContext {
   }
 
   /**
-   * @return \Mqtt\IPacketIdProvider
+   * @return \Mqtt\Protocol\Packet\Id\IProvider
    */
-  public function getIdProvider(): \Mqtt\IPacketIdProvider {
+  public function getIdProvider(): \Mqtt\Protocol\Packet\Id\IProvider {
     return $this->idProvider;
   }
 

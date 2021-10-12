@@ -113,8 +113,8 @@ class FixedHeaderTest extends \PHPUnit\Framework\TestCase {
 
     $permutations = [];
     for (
-      $packetType = \Mqtt\Protocol\IPacket::CONNECT;
-      $packetType <= \Mqtt\Protocol\IPacket::DISCONNECT;
+      $packetType = \Mqtt\Protocol\Packet\IType::CONNECT;
+      $packetType <= \Mqtt\Protocol\Packet\IType::DISCONNECT;
       $packetType ++) {
         $packetPermutation = [];
         foreach ($flagPermutations as $flagPermutation) {

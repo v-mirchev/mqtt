@@ -13,14 +13,14 @@ interface IProtocol {
   public function disconnect() : void;
 
   /**
-   * @param \Mqtt\Protocol\IPacket $packet
+   * @param \Mqtt\Protocol\Packet\IType $packet
    */
-  public function writePacket(\Mqtt\Protocol\IPacket $packet) : void;
+  public function writePacket(\Mqtt\Protocol\Packet\IType $packet) : void;
 
   /**
    * @param int $type
-   * @return \Mqtt\Protocol\IPacket
+   * @return \Mqtt\Protocol\Packet\IType
    */
-  public function createPacket(int $type) : \Mqtt\Protocol\IPacket;
+  public function createPacket(int $type) : \Mqtt\Protocol\Packet\IType;
 
 }

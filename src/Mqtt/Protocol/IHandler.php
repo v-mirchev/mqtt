@@ -20,15 +20,15 @@ interface IHandler {
   public function onTick() : void;
 
   /**
-   * @param \Mqtt\Protocol\IPacket $packet
+   * @param \Mqtt\Protocol\Packet\IType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet) : void;
+  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet) : void;
 
   /**
-   * @param \Mqtt\Protocol\IPacket $packet
+   * @param \Mqtt\Protocol\Packet\IType $packet
    * @return void
    */
-  public function onPacketSent(\Mqtt\Protocol\IPacket $packet) : void;
+  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet) : void;
 
 }

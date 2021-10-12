@@ -29,7 +29,7 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
 
   public function onProtocolConnect(): void {
     $sessionConfiguration = $this->context->getSessionConfiguration();
-    $connectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacket::CONNECT);
+    $connectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::CONNECT);
     $connectPacket->cleanSession = !$sessionConfiguration->isPersistent;
     $connectPacket->keepAliveInterval = $sessionConfiguration->keepAliveInterval;
     $connectPacket->will = $sessionConfiguration->will;
@@ -42,8 +42,8 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
   public function onProtocolDisconnect(): void {
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {
-    if (!$packet->is(\Mqtt\Protocol\IPacket::CONNACK)) {
+  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+    if (!$packet->is(\Mqtt\Protocol\Packet\IType::CONNACK)) {
       throw new \Exception('CONNACK packet expected');
     }
 

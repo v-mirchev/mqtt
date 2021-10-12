@@ -25,19 +25,19 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChan
   protected $context;
 
   /**
-   * @var \Mqtt\PacketIdProvider\IPacketIdProvider
+   * @var \Mqtt\Protocol\Packet\Id\IProvider
    */
   protected $idProvider;
 
   /**
    * @param \Mqtt\Protocol\IProtocol $protocol
-   * @param \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider
+   * @param \Mqtt\Protocol\Packet\Id\IProvider $idProvider
    * @param \Mqtt\Session\State\Factory $stateFactory
    * @param \Mqtt\Session\ISessionContext $context
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
-    \Mqtt\PacketIdProvider\IPacketIdProvider $idProvider,
+    \Mqtt\Protocol\Packet\Id\IProvider $idProvider,
     \Mqtt\Session\State\Factory $stateFactory,
     \Mqtt\Session\ISessionContext $context
   ) {
@@ -80,14 +80,14 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChan
   }
 
   /**
-   * @param \Mqtt\Protocol\IPacket $packet
+   * @param \Mqtt\Protocol\Packet\IType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
     $this->sessionState->onPacketReceived($packet);
   }
 
-  public function onPacketSent(\Mqtt\Protocol\IPacket $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
     $this->sessionState->onPacketSent($packet);
   }
 

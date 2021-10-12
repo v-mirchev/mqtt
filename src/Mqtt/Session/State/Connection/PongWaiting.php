@@ -23,8 +23,8 @@ class PongWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHa
 
   public function onProtocolDisconnect(): void {}
 
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {
-    if ($packet->is(\Mqtt\Protocol\IPacket::PINGRESP)) {
+  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\Packet\IType::PINGRESP)) {
       $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::PING_WAIT);
     }
   }

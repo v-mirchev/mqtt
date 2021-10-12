@@ -14,15 +14,14 @@ trait TSession  {
 
   public function unsubscribe() : void {}
 
-  public function onProtocolConnect(): void {
-  }
+  public function onProtocolConnect(): void {}
 
   public function onProtocolDisconnect(): void {}
 
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {}
+  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {}
 
   public function onTick(): void {}
 
-  public function onPacketSent(\Mqtt\Protocol\IPacket $packet): void {}
+  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {}
 
 }

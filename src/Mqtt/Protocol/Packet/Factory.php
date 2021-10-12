@@ -25,9 +25,9 @@ class Factory {
 
   /**
    * @param int $packetType
-   * @return \Mqtt\Protocol\IPacket
+   * @return \Mqtt\Protocol\Packet\IType
    */
-  public function create(int $packetType) : \Mqtt\Protocol\IPacket {
+  public function create(int $packetType) : \Mqtt\Protocol\Packet\IType {
     if (!isset($this->classMap[$packetType])) {
       throw new \Exception('Packet type <' . $packetType . '> not registered');
     }

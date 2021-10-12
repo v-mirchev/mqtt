@@ -32,7 +32,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderByte() {
-    $this->object->setPacketType(\Mqtt\Protocol\IPacket::PINGREQ);
+    $this->object->setPacketType(\Mqtt\Protocol\Packet\IType::PINGREQ);
     $this->object->setAsDup();
     $this->object->addByte(5);
     $this->assertEquals($this->stringToStringStream('c80105'), (string) $this->object);
@@ -76,13 +76,13 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   public function testDecodeReadsDupPacketTypeProperlyFixedHeaderOnly() {
     $this->object->decode($this->toArrayStream(0x28, 0x00));
     $this->assertTrue($this->object->isDup());
-    $this->assertEquals(\Mqtt\Protocol\IPacket::CONNACK, $this->object->getPacketType());
+    $this->assertEquals(\Mqtt\Protocol\Packet\IType::CONNACK, $this->object->getPacketType());
   }
 
   public function testDecodeReadsDupPacketTypeProperlySingleVariableString() {
     $this->object->decode($this->toArrayStream(0x28, 0x05, 0x00, 0x03, 0x41, 0x42, 0x43));
     $this->assertTrue($this->object->isDup());
-    $this->assertEquals(\Mqtt\Protocol\IPacket::CONNACK, $this->object->getPacketType());
+    $this->assertEquals(\Mqtt\Protocol\Packet\IType::CONNACK, $this->object->getPacketType());
     $this->assertEquals('ABC', $this->object->getString());
   }
 

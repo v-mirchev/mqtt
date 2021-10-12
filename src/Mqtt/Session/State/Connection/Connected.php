@@ -23,7 +23,7 @@ class Connected implements \Mqtt\Session\State\ISessionState {
   public function stop() : void {
     $this->keepAlive->stop();
 
-    $disconnectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacket::DISCONNECT);
+    $disconnectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::DISCONNECT);
     $this->context->getProtocol()->writePacket($disconnectPacket);
     $this->context->getProtocol()->disconnect();
   }
@@ -45,7 +45,7 @@ class Connected implements \Mqtt\Session\State\ISessionState {
     $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::DISCONNECTED);
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\IPacket $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
     $this->keepAlive->onPacketReceived($packet);
   }
 
@@ -57,7 +57,7 @@ class Connected implements \Mqtt\Session\State\ISessionState {
     $this->keepAlive->onTick();
   }
 
-  public function onPacketSent(\Mqtt\Protocol\IPacket $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
 
   }
 
