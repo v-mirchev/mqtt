@@ -15,6 +15,11 @@ class PingRespTest extends \PHPUnit\Framework\TestCase {
     $this->object = new PingResp();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::PINGRESP));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testDecodeSuccess() {
     $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
       disableOriginalConstructor()->

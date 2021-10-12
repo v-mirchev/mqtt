@@ -24,6 +24,11 @@ class UnsubscribeTest extends \PHPUnit\Framework\TestCase {
     $this->object = new Unsubscribe();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::UNSUBSCRIBE));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testEncodeAddsToFrameWithProperOrder() {
 
     $this->object->id = 112;

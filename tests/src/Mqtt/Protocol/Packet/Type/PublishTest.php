@@ -26,6 +26,11 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
     $this->callSequence()->start();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::PUBLISH));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testEncodeAddsToFrameWithProperOrderWhenQosSetToAtMostOnce() {
 
     $this->object->topic = '#topic';

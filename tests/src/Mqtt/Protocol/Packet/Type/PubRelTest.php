@@ -15,6 +15,11 @@ class PubRelTest extends \PHPUnit\Framework\TestCase {
     $this->object = new PubRel();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::PUBREL));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testEncodeSetsProperPacketType() {
     $this->object->id = 1134;
 

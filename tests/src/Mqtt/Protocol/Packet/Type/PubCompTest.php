@@ -13,6 +13,11 @@ class PubCompTest extends \PHPUnit\Framework\TestCase {
     $this->object = new PubComp();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::PUBCOMP));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testDecodeSetsProperPacketType() {
     $actualId = 111;
 

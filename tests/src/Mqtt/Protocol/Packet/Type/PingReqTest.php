@@ -15,6 +15,11 @@ class PingReqTest extends \PHPUnit\Framework\TestCase {
     $this->object = new PingReq();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::PINGREQ));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testEncodeSetsProperPacketType() {
     $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
       disableOriginalConstructor()->

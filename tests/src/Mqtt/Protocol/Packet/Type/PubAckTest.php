@@ -13,6 +13,11 @@ class PubAckTest extends \PHPUnit\Framework\TestCase {
     $this->object = new PubAck();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::PUBACK));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testDecodeSetsProperPacketType() {
     $actualId = 111;
 

@@ -24,6 +24,11 @@ class SubscribeTest extends \PHPUnit\Framework\TestCase {
     $this->object = new Subscribe();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::SUBSCRIBE));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testEncodeAddsToFrameWithProperOrder() {
 
     $this->object->id = 112;

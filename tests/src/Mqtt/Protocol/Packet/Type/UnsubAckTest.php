@@ -13,6 +13,11 @@ class UnsubAckTest extends \PHPUnit\Framework\TestCase {
     $this->object = new UnsubAck();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::UNSUBACK));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testDecodeSetsProperPacketType() {
     $actualId = 111;
 

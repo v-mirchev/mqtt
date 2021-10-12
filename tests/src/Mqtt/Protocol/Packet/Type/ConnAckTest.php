@@ -24,6 +24,11 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
     $this->object = new ConnAck($this->flagsMock);
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::CONNACK));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testDecodeProxiesFrameBodyToFlags() {
     $body = 0x0001;
 

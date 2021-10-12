@@ -13,6 +13,11 @@ class SubAckTest extends \PHPUnit\Framework\TestCase {
     $this->object = new SubAck();
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::SUBACK));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testDecodeSetsProperPacketType() {
     $actualId = 111;
 

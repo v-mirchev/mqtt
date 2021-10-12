@@ -45,6 +45,11 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
     $this->object = new Connect($this->sessionParameters, $this->flagsMock);
   }
 
+  public function testIsA() {
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::CONNECT));
+    $this->assertFalse($this->object->is(0));
+  }
+
   public function testEncodeResetsFlags() {
     $this->flagsMock->
       expects($this->once())->
