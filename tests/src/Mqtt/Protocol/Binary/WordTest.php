@@ -5,7 +5,7 @@ namespace Mqtt\Protocol\Binary;
 class WordTest extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var Byte
+   * @var Word
    */
   protected $object;
 

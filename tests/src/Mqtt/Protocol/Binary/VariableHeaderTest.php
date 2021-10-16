@@ -2,6 +2,10 @@
 
 namespace Mqtt\Protocol\Binary;
 
+/**
+ * @Inject $container
+ * @property \Psr\Container\ContainerInterface $___container
+ */
 class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\Binary;
@@ -12,7 +16,7 @@ class VariableHeaderTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new VariableHeader(new \Mqtt\Protocol\Binary\Word(new \Mqtt\Protocol\Binary\Byte()));
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Binary\VariableHeader::class);
   }
 
   public function testCloneResetsInstance() {
