@@ -25,26 +25,18 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChan
   protected $context;
 
   /**
-   * @var \Mqtt\Protocol\Packet\Id\IProvider
-   */
-  protected $idProvider;
-
-  /**
    * @param \Mqtt\Protocol\IProtocol $protocol
-   * @param \Mqtt\Protocol\Packet\Id\IProvider $idProvider
    * @param \Mqtt\Session\State\Factory $stateFactory
    * @param \Mqtt\Session\ISessionContext $context
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
-    \Mqtt\Protocol\Packet\Id\IProvider $idProvider,
     \Mqtt\Session\State\Factory $stateFactory,
     \Mqtt\Session\ISessionContext $context
   ) {
     $this->protocol = $protocol;
     $this->protocol->setSession($this);
 
-    $this->idProvider = $idProvider;
     $this->stateFactory = $stateFactory;
     $this->context = $context;
     $this->context->setSession($this);

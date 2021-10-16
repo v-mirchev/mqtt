@@ -110,7 +110,6 @@ return [
   \Mqtt\Session\Session::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Session\Session(
       $container->get(\Mqtt\Protocol\IProtocol::class),
-      $container->get(\Mqtt\Protocol\Packet\Id\IProvider::class),
       $container->get(\Mqtt\Session\State\Factory::class),
       $container->get(\Mqtt\Session\State\Context::class)
     ));
