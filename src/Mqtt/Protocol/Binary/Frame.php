@@ -101,7 +101,7 @@ class Frame {
    * @param int $byte
    * @return $this
    */
-  public function addByte(string $byte): \Mqtt\Protocol\Binary\Frame {
+  public function addByte(int $byte): \Mqtt\Protocol\Binary\Frame {
     $this->variableHeaders[] = $this->variableHeader->createByte($byte);
     return $this;
   }

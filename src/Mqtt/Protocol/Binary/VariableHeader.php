@@ -20,10 +20,6 @@ class VariableHeader {
   protected $body;
 
   /**
-   * @var bool
-   */
-
-  /**
    * @param \Mqtt\Protocol\Binary\Word $word
    */
   public function __construct(\Mqtt\Protocol\Binary\Word $word) {
@@ -55,9 +51,9 @@ class VariableHeader {
   }
 
   /**
-   * @param string $byte
+   * @param int $byte
    */
-  public function createByte(string $byte) {
+  public function createByte(int $byte) {
     $instance = clone $this;
     $instance->word = null;
     $instance->content = chr($byte);
