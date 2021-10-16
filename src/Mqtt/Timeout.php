@@ -31,9 +31,11 @@ class Timeout  {
 
   /**
    * @param \Mqtt\ITimeoutHandler $handler
+   * @return $this
    */
-  public function subscribe(\Mqtt\ITimeoutHandler $handler) {
+  public function subscribe(\Mqtt\ITimeoutHandler $handler): \Mqtt\Timeout {
     $this->handler = $handler;
+    return $this;
   }
 
   /**
