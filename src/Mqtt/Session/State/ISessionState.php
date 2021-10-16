@@ -5,6 +5,7 @@ namespace Mqtt\Session\State;
 interface ISessionState extends \Mqtt\Session\ISession {
 
   const CONNECTED = 'connected';
+  const CONNECTING = 'connecting';
   const DISCONNECTED = 'disconnected';
   const PING_WAIT = 'ping.wait';
   const PONG_WAIT = 'pong.wait';

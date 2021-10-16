@@ -15,6 +15,11 @@ class Session {
   public $keepAliveInterval = 60;
 
   /**
+   * @var int
+   */
+  public $connectAcknowledgeTimeout = 10;
+
+  /**
    * @var bool
    */
   public $isPersistent;
@@ -65,16 +70,27 @@ class Session {
     $this->useWill = false;
   }
 
+  /**
+   * @param bool $useAuthentication
+   * @return \Mqtt\Entity\Configuration\Authentication
+   */
   public function authentication($useAuthentication = true) : \Mqtt\Entity\Configuration\Authentication {
     $this->useAuthentication = $useAuthentication;
     return $this->authentication;
   }
 
+  /**
+   * @param bool $useWill
+   * @return \Mqtt\Entity\Configuration\Will
+   */
   public function will($useWill = true) : \Mqtt\Entity\Configuration\Will {
     $this->useWill = $useWill;
     return $this->will;
   }
 
+  /**
+   * @return \Mqtt\Entity\Configuration\Protocol
+   */
   public function protocol() : \Mqtt\Entity\Configuration\Protocol {
     return $this->protocol;
   }
@@ -94,6 +110,15 @@ class Session {
    */
   public function keepAliveInterval(int $keepAliveInterval) : \Mqtt\Entity\Configuration\Session {
     $this->keepAliveInterval = $keepAliveInterval;
+    return $this;
+  }
+
+  /**
+   * @param int $connectAcknowledgeTimeout
+   * @return \Mqtt\Entity\Configuration\Session
+   */
+  public function connectAcknowledgeTimeout(int $connectAcknowledgeTimeout) : \Mqtt\Entity\Configuration\Session {
+    $this->connectAcknowledgeTimeout = $connectAcknowledgeTimeout;
     return $this;
   }
 

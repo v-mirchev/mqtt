@@ -43,6 +43,12 @@ class ServerTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals($connectTimeout, $this->object->connectTimeout);
   }
 
+  public function testSetSelectTimeoutSetsProperty() {
+    $selectTimeout = 2000;
+    $this->object->selectTimeout($selectTimeout);
+    $this->assertEquals($selectTimeout, $this->object->selectTimeout);
+  }
+
   public function testSetHostFluentlySetsHost() {
     $this->assertSame($this->object, $this->object->host(''));
   }
@@ -61,6 +67,10 @@ class ServerTest extends \PHPUnit\Framework\TestCase {
 
   public function testSetTimeoutFluentlySetsTimeout() {
     $this->assertSame($this->object, $this->object->timeout(1234));
+  }
+
+  public function testSetSelectTimeoutFluentlySetsTimeout() {
+    $this->assertSame($this->object, $this->object->selectTimeout(1234));
   }
 
 }

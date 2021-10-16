@@ -37,25 +37,8 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
     $connectPacket->username = $sessionConfiguration->authentication->username;
     $connectPacket->password = $sessionConfiguration->authentication->password;
     $this->context->getProtocol()->writePacket($connectPacket);
-  }
 
-  public function onProtocolDisconnect(): void {
-  }
-
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if (!$packet->is(\Mqtt\Protocol\Packet\IType::CONNACK)) {
-      throw new \Exception('CONNACK packet expected');
-    }
-
-    if ($packet->getReturnCode() !== 0) {
-      throw new \Exception($packet->getReturnCodeMessage() .', error code ' . $packet->getReturnCode());
-    }
-
-    $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::CONNECTED);
-  }
-
-  public function onTick(): void {
-
+    $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::CONNECTING);
   }
 
 }

@@ -10,11 +10,11 @@ $container = require_once __DIR__ . '/bootstrap/bootstrap.php';
 $client = $container->get(\Mqtt\Client::class);
 //
 //$client->
-//  onDisconnect()->
-//  reconnect();
+//  onDisconnectBehaviour()->
+//  keepReconnecting();
 //// OR $client->
-////  onDisconnect()->
-////  disconnect();
+////  onDisconnectBehaviour()->
+////  stayDisconnected();
 //
 //$client->
 //  supscription()->

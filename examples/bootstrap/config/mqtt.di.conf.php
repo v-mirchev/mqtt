@@ -159,6 +159,7 @@ return [
 
   'mqtt.session.state.classmap' => [
     \Mqtt\Session\State\ISessionState::CONNECTED => \Mqtt\Session\State\Connection\Connected::class,
+    \Mqtt\Session\State\ISessionState::CONNECTING => \Mqtt\Session\State\Connection\Connecting::class,
     \Mqtt\Session\State\ISessionState::DISCONNECTED => \Mqtt\Session\State\Connection\Disconnected::class,
     \Mqtt\Session\State\ISessionState::PING_WAIT => \Mqtt\Session\State\Connection\PingWaiting::class,
     \Mqtt\Session\State\ISessionState::PONG_WAIT => \Mqtt\Session\State\Connection\PongWaiting::class,
