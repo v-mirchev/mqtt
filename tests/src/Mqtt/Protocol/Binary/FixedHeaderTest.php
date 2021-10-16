@@ -165,4 +165,38 @@ class FixedHeaderTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals($this->toStringStream($encodedBytes), (string)$this->object);
   }
 
+  public function testGetSetDup() {
+    $this->object->setAsDup();
+    $this->assertTrue($this->object->isDup());
+    $this->object->setAsDup(false);
+    $this->assertFalse($this->object->isDup());
+  }
+
+  public function testGetSetRetain() {
+    $this->object->setAsRetain();
+    $this->assertTrue($this->object->isRetain());
+    $this->object->setAsRetain(false);
+    $this->assertFalse($this->object->isRetain());
+  }
+
+  public function testGetSetQoS() {
+    $this->object->setQoS(0);
+    $this->assertEquals(0, $this->object->getQoS());
+    $this->object->setQoS(1);
+    $this->assertEquals(1, $this->object->getQoS());
+    $this->object->setQoS(2);
+    $this->assertEquals(2, $this->object->getQoS());
+  }
+
+  public function testGetSetPacketType() {
+    $this->object->setPacketType(0);
+    $this->assertEquals(0, $this->object->getPacketType());
+    $this->object->setPacketType(1);
+    $this->assertEquals(1, $this->object->getPacketType());
+    $this->object->setPacketType(2);
+    $this->assertEquals(2, $this->object->getPacketType());
+    $this->object->setPacketType(3);
+    $this->assertEquals(3, $this->object->getPacketType());
+  }
+
 }

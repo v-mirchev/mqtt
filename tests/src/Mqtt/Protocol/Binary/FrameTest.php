@@ -26,9 +26,14 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals($this->stringToStringStream('0000'), (string) $object);
   }
 
-  public function testEncodingFixedHeaderOnly() {
+  public function testEncodingFixedHeaderDupOnly() {
     $this->object->setAsDup();
     $this->assertEquals($this->stringToStringStream('0800'), (string) $this->object);
+  }
+
+  public function testEncodingFixedHeaderRetainOnly() {
+    $this->object->setAsRetain();
+    $this->assertEquals($this->stringToStringStream('0100'), (string) $this->object);
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderByte() {
@@ -73,17 +78,23 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->assertTrue($this->object->isDup());
   }
 
-  public function testDecodeReadsDupPacketTypeProperlyFixedHeaderOnly() {
+  public function testDecodeReadsDupProperlyFixedHeaderOnly() {
     $this->object->decode($this->toArrayStream(0x28, 0x00));
     $this->assertTrue($this->object->isDup());
     $this->assertEquals(\Mqtt\Protocol\Packet\IType::CONNACK, $this->object->getPacketType());
   }
 
-  public function testDecodeReadsDupPacketTypeProperlySingleVariableString() {
+  public function testDecodeReadsDupProperlySingleVariableString() {
     $this->object->decode($this->toArrayStream(0x28, 0x05, 0x00, 0x03, 0x41, 0x42, 0x43));
     $this->assertTrue($this->object->isDup());
     $this->assertEquals(\Mqtt\Protocol\Packet\IType::CONNACK, $this->object->getPacketType());
     $this->assertEquals('ABC', $this->object->getString());
+  }
+
+  public function testDecodeReadsRetainProperlyFixedHeaderOnly() {
+    $this->object->decode($this->toArrayStream(0x21, 0x0));
+    $this->assertTrue($this->object->isRetain());
+    $this->assertEquals(\Mqtt\Protocol\Packet\IType::CONNACK, $this->object->getPacketType());
   }
 
 }
