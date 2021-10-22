@@ -5,19 +5,24 @@ namespace Mqtt\Protocol\Packet\Flow;
 class Context implements \Mqtt\Protocol\Packet\Flow\IContext {
 
   /**
+   * @var \Mqtt\Protocol\IProtocol
+   */
+  protected $protocol;
+
+  /**
    * @var \Mqtt\Session\IStateChanger
    */
   protected $sessionStateChanger;
 
   /**
-   * @var \Mqtt\Entity\Configuration\Session
-   */
-  protected $sessionConfiguration;
-
-  /**
    * @var \Mqtt\Protocol\Packet\Id\IProvider
    */
   protected $idProvider;
+
+  /**
+   * @var \Mqtt\Entity\Configuration\Session
+   */
+  protected $sessionConfiguration;
 
   /**
    * @param \Mqtt\Protocol\IProtocol $protocol
@@ -49,13 +54,6 @@ class Context implements \Mqtt\Protocol\Packet\Flow\IContext {
    */
   public function getIdProvider(): \Mqtt\Protocol\Packet\Id\IProvider {
     return $this->idProvider;
-  }
-
-  /**
-   * @param \Mqtt\Protocol\Packet\Flow\ISession $session
-   */
-  public function setSession(\Mqtt\Protocol\Packet\Flow\ISession $session) {
-    $this->sessionStateChanger = $session;
   }
 
   /**
