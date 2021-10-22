@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Session;
+namespace Mqtt\Protocol\Packet\Flow;
 
-interface ISessionStateChanger {
+interface IStateChanger {
 
   public function setState(string $sessionState) : void;
 

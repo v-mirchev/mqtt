@@ -8,6 +8,8 @@ trait TSession  {
 
   public function stop() : void {}
 
+  public function started() : void {}
+
   public function publish() : void {}
 
   public function subscribe() : void {}

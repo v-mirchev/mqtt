@@ -1,23 +1,18 @@
 <?php
 
-namespace Mqtt\Session\State;
+namespace Mqtt\Protocol\Packet\Flow;
 
-class Context implements \Mqtt\Session\ISessionContext {
+class Context implements \Mqtt\Protocol\Packet\Flow\IContext {
 
   /**
-   * @var \Mqtt\Session\ISession
+   * @var \Mqtt\Session\IStateChanger
    */
-  protected $session;
+  protected $sessionStateChanger;
 
   /**
    * @var \Mqtt\Entity\Configuration\Session
    */
   protected $sessionConfiguration;
-
-  /**
-   * @var \Mqtt\Session\State\Factory
-   */
-  protected $stateFactory;
 
   /**
    * @var \Mqtt\Protocol\Packet\Id\IProvider
@@ -26,22 +21,19 @@ class Context implements \Mqtt\Session\ISessionContext {
 
   /**
    * @param \Mqtt\Protocol\IProtocol $protocol
+   * @param \Mqtt\Session\IStateChanger $sessionStateChanger
    * @param \Mqtt\Protocol\Packet\Id\IProvider $idProvider
-   * @param \Mqtt\Session\State\Factory $stateFactory
    * @param \Mqtt\Entity\Configuration\Session $sessionConfiguration
-   * @param \Mqtt\Entity\Configuration\Authentication $authentication
-   * @param \Mqtt\Entity\Configuration\Will $will
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
+    \Mqtt\Session\IStateChanger $sessionStateChanger,
     \Mqtt\Protocol\Packet\Id\IProvider $idProvider,
-    \Mqtt\Session\State\Factory $stateFactory,
     \Mqtt\Entity\Configuration\Session $sessionConfiguration
   ) {
     $this->protocol = $protocol;
+    $this->sessionStateChanger = $sessionStateChanger;
     $this->idProvider = $idProvider;
-    $this->stateFactory = $stateFactory;
-
     $this->sessionConfiguration = $sessionConfiguration;
   }
 
@@ -60,17 +52,17 @@ class Context implements \Mqtt\Session\ISessionContext {
   }
 
   /**
-   * @param \Mqtt\Session\ISession $session
+   * @param \Mqtt\Protocol\Packet\Flow\ISession $session
    */
-  public function setSession(\Mqtt\Session\ISession $session) {
-    $this->session = $session;
+  public function setSession(\Mqtt\Protocol\Packet\Flow\ISession $session) {
+    $this->sessionStateChanger = $session;
   }
 
   /**
-   * @return \Mqtt\Session\ISession
+   * @return \Mqtt\Session\IStateChanger
    */
-  public function getSession(): \Mqtt\Session\ISession {
-    return $this->session;
+  public function getSessionStateChanger(): \Mqtt\Session\IStateChanger {
+    return $this->sessionStateChanger;
   }
 
   /**

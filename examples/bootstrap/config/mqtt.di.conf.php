@@ -110,22 +110,15 @@ return [
   \Mqtt\Session\Session::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Session\Session(
       $container->get(\Mqtt\Protocol\IProtocol::class),
-      $container->get(\Mqtt\Session\State\Factory::class),
-      $container->get(\Mqtt\Session\State\Context::class)
-    ));
-  },
-
-  \Mqtt\Session\KeepAlive::class => function (\Psr\Container\ContainerInterface $container) {
-    return (new \Mqtt\Session\KeepAlive(
-      $container->get(\Mqtt\Entity\Configuration\Session::class),
-      $container->get(\Mqtt\Protocol\IProtocol::class),
-      $container->get(\Mqtt\Session\Session::class),
-      $container->get(\Mqtt\Session\State\Factory::class),
-      $container->get(\Mqtt\Session\State\Context::class)
+      $container->get(\Mqtt\Session\StateFactory::class)
     ));
   },
 
   \Mqtt\Session\ISession::class => function (\Psr\Container\ContainerInterface $container) {
+    return $container->get(\Mqtt\Session\Session::class);
+  },
+
+  \Mqtt\Session\IStateChanger::class => function (\Psr\Container\ContainerInterface $container) {
     return $container->get(\Mqtt\Session\Session::class);
   },
 
@@ -157,16 +150,41 @@ return [
   },
 
   'mqtt.session.state.classmap' => [
-    \Mqtt\Session\State\ISessionState::CONNECTED => \Mqtt\Session\State\Connection\Connected::class,
-    \Mqtt\Session\State\ISessionState::CONNECTING => \Mqtt\Session\State\Connection\Connecting::class,
-    \Mqtt\Session\State\ISessionState::DISCONNECTED => \Mqtt\Session\State\Connection\Disconnected::class,
-    \Mqtt\Session\State\ISessionState::PING_WAIT => \Mqtt\Session\State\Connection\PingWaiting::class,
-    \Mqtt\Session\State\ISessionState::PONG_WAIT => \Mqtt\Session\State\Connection\PongWaiting::class,
-    \Mqtt\Session\State\ISessionState::KEEP_ALIVE_DISABLED => \Mqtt\Session\State\Connection\KeepAliveDisabled::class,
+    \Mqtt\Session\State\IState::NOT_CONNECTED => \Mqtt\Session\State\NotConnected::class,
+    \Mqtt\Session\State\IState::CONNECTED => \Mqtt\Session\State\Connected::class,
+    \Mqtt\Session\State\IState::CONNECTING => \Mqtt\Session\State\Connecting::class,
+    \Mqtt\Session\State\IState::DISCONNECTING => \Mqtt\Session\State\Disconnecting::class,
+    \Mqtt\Session\State\IState::DISCONNECTED => \Mqtt\Session\State\Disconnected::class,
+    \Mqtt\Session\State\IState::STARTED => \Mqtt\Session\State\Started::class,
   ],
 
-  \Mqtt\Session\State\Factory::class => function (\Psr\Container\ContainerInterface $container) {
-    return new \Mqtt\Session\State\Factory($container, $container->get('mqtt.session.state.classmap'));
+  \Mqtt\Session\StateFactory::class => function (\Psr\Container\ContainerInterface $container) {
+    return new \Mqtt\Session\StateFactory($container, $container->get('mqtt.session.state.classmap'));
+  },
+
+  \Mqtt\Protocol\Packet\Flow\IContext::class => function (\Psr\Container\ContainerInterface $container) {
+    return $container->get(\Mqtt\Protocol\Packet\Flow\Context::class);
+  },
+
+  'mqtt.protocol.packet.flow.state.classmap' => [
+    \Mqtt\Protocol\Packet\Flow\IState::NOT_CONNECTED => \Mqtt\Protocol\Packet\Flow\Connection\State\NotConnected::class,
+    \Mqtt\Protocol\Packet\Flow\IState::CONNECTING => \Mqtt\Protocol\Packet\Flow\Connection\State\Connecting::class,
+    \Mqtt\Protocol\Packet\Flow\IState::CONNECTED => \Mqtt\Protocol\Packet\Flow\Connection\State\Connected::class,
+    \Mqtt\Protocol\Packet\Flow\IState::DISCONNECTED => \Mqtt\Protocol\Packet\Flow\Connection\State\Disconnected::class,
+
+    \Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_CONFIGURE => \Mqtt\Protocol\Packet\Flow\KeepAlive\State\Configure::class,
+    \Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_ENABLED => \Mqtt\Protocol\Packet\Flow\KeepAlive\State\Enabled::class,
+    \Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_DISABLED => \Mqtt\Protocol\Packet\Flow\KeepAlive\State\Disabled::class,
+    \Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_PING_WAIT => \Mqtt\Protocol\Packet\Flow\KeepAlive\State\PingWaiting::class,
+    \Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_PONG_WAIT => \Mqtt\Protocol\Packet\Flow\KeepAlive\State\PongWaiting::class,
+  ],
+
+  \Mqtt\Protocol\Packet\Flow\Factory::class => function (\Psr\Container\ContainerInterface $container) {
+    return new \Mqtt\Protocol\Packet\Flow\Factory(
+      $container,
+      $container->get('mqtt.protocol.packet.flow.state.classmap'),
+      $container->get(\Mqtt\Protocol\Packet\Flow\IContext::class)
+    );
   },
 
 ];

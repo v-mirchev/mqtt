@@ -2,7 +2,7 @@
 
 namespace Mqtt\Session;
 
-class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChanger {
+class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
 
   /**
    * @var \Mqtt\Protocol\IProtocol
@@ -10,40 +10,31 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChan
   protected $protocol;
 
   /**
-   * @var \Mqtt\Session\State\ISessionState
+   * @var \Mqtt\Session\State\IState
    */
   protected $sessionState;
 
   /**
-   * @var \Mqtt\Session\State\Factory
+   * @var \Mqtt\Session\StateFactory
    */
   protected $stateFactory;
 
   /**
-   * @var \Mqtt\Session\ISessionContext
-   */
-  protected $context;
-
-  /**
    * @param \Mqtt\Protocol\IProtocol $protocol
-   * @param \Mqtt\Session\State\Factory $stateFactory
-   * @param \Mqtt\Session\ISessionContext $context
+   * @param \Mqtt\Session\StateFactory $stateFactory
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
-    \Mqtt\Session\State\Factory $stateFactory,
-    \Mqtt\Session\ISessionContext $context
+    \Mqtt\Session\StateFactory $stateFactory
   ) {
     $this->protocol = $protocol;
     $this->protocol->setSession($this);
 
     $this->stateFactory = $stateFactory;
-    $this->context = $context;
-    $this->context->setSession($this);
   }
 
   public function start() : void {
-    $this->setState(\Mqtt\Session\State\ISessionState::DISCONNECTED);
+    $this->setState(\Mqtt\Session\State\IState::NOT_CONNECTED);
     $this->sessionState->start();
   }
 
@@ -92,10 +83,10 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\ISessionStateChan
    * @return void
    */
   public function setState(string $sessionState) : void {
+    error_log('SESSION::' . $sessionState);
     $previous = $this->sessionState;
-    $this->sessionState = $this->stateFactory->create($sessionState);
+    $this->sessionState = $this->stateFactory->create($sessionState, $this->protocol);
     $this->sessionState->setStateChanger($this);
-    $this->sessionState->setContext($this->context);
     $this->sessionState->onStateEnter();
     unset($previous);
   }

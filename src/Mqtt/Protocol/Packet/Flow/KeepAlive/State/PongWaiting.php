@@ -1,11 +1,11 @@
 <?php declare(ticks = 1);
 
-namespace Mqtt\Session\State\Connection;
+namespace Mqtt\Protocol\Packet\Flow\KeepAlive\State;
 
-class PongWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHandler {
+class PongWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHandler {
 
   use \Mqtt\Session\TSession;
-  use \Mqtt\Session\State\Connection\TState;
+  use \Mqtt\Protocol\Packet\Flow\TState;
 
   /**
    * @var \Mqtt\Timeout
@@ -19,13 +19,9 @@ class PongWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHa
     $this->timeout = clone $timeout;
   }
 
-  public function onProtocolConnect(): void {}
-
-  public function onProtocolDisconnect(): void {}
-
   public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
     if ($packet->is(\Mqtt\Protocol\Packet\IType::PINGRESP)) {
-      $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::PING_WAIT);
+      $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_PING_WAIT);
     }
   }
 
@@ -40,7 +36,12 @@ class PongWaiting implements \Mqtt\Session\State\ISessionState, \Mqtt\ITimeoutHa
   }
 
   public function onTimeout(): void {
-    $this->context->getSession()->stop();
+    $this->context->getSessionStateChanger()->setState(\Mqtt\Session\State\IState::DISCONNECTING);
+  }
+
+  public function __destruct() {
+    $this->timeout->stop();
+    unset($this->timeout);
   }
 
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Session\State;
+namespace Mqtt\Session;
 
-class Factory {
+class StateFactory {
 
   /**
    * @var \Psr\Container\ContainerInterface
@@ -25,14 +25,22 @@ class Factory {
 
   /**
    * @param string $stateName
-   * @return \Mqtt\Session\State\ISessionState
+   * @param \Mqtt\Protocol\Protocol $protocol
+   * @return \Mqtt\Session\State\IState
+   * @throws \Exception
    */
-  public function create(string $stateName) : \Mqtt\Session\State\ISessionState {
+  public function create(
+    string $stateName,
+    \Mqtt\Protocol\Protocol $protocol
+  ) : \Mqtt\Session\State\IState {
     if (!isset($this->classMap[$stateName])) {
       throw new \Exception('Session state type <' . $stateName . '> not registered');
     }
 
-    return clone $this->dic->get($this->classMap[$stateName]);
+    $state = clone $this->dic->get($this->classMap[$stateName]);
+    $state->setProtocol($protocol);
+
+    return $state;
   }
 
 }

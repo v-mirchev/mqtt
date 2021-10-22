@@ -1,14 +1,13 @@
 <?php declare(ticks = 1);
 
-namespace Mqtt\Session\State\Connection;
+namespace Mqtt\Protocol\Packet\Flow\Connection\State;
 
-class Disconnected implements \Mqtt\Session\State\ISessionState {
+class NotConnected implements \Mqtt\Protocol\Packet\Flow\IState {
 
   use \Mqtt\Session\TSession;
-  use \Mqtt\Session\State\Connection\TState;
+  use \Mqtt\Protocol\Packet\Flow\TState;
 
   public function start() : void {
-    $this->context->getProtocol()->connect();
   }
 
   public function stop() : void {
@@ -28,6 +27,10 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
   }
 
   public function onProtocolConnect(): void {
+
+  }
+
+  public function onStateEnter(): void {
     $sessionConfiguration = $this->context->getSessionConfiguration();
     $connectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::CONNECT);
     $connectPacket->cleanSession = !$sessionConfiguration->isPersistent;
@@ -38,7 +41,7 @@ class Disconnected implements \Mqtt\Session\State\ISessionState {
     $connectPacket->password = $sessionConfiguration->authentication->password;
     $this->context->getProtocol()->writePacket($connectPacket);
 
-    $this->stateChanger->setState(\Mqtt\Session\State\ISessionState::CONNECTING);
+    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::CONNECTING);
   }
 
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Session;
+namespace Mqtt\Protocol\Packet\Flow;
 
-interface ISessionContext {
+interface IContext {
 
   /**
    * @return \Mqtt\Entity\Configuration\Session
@@ -10,14 +10,9 @@ interface ISessionContext {
   public function getSessionConfiguration() : \Mqtt\Entity\Configuration\Session;
 
   /**
-   * @return \Mqtt\Session\ISession
+   * @return \Mqtt\Session\IStateChanger
    */
-  public function getSession() : \Mqtt\Session\ISession;
-
-  /**
-   * @param \Mqtt\Session\ISession $session
-   */
-  public function setSession(\Mqtt\Session\ISession $session);
+  public function getSessionStateChanger() : \Mqtt\Session\IStateChanger;
 
   /**
    * @return \Mqtt\Protocol\Packet\Id\IProvider
