@@ -24,7 +24,7 @@ class Connecting implements \Mqtt\Session\State\IState, \Mqtt\ITimeoutHandler {
   }
 
   public function stop() : void {
-    $this->protocol->disconnect();
+    $this->context->getProtocol()->disconnect();
   }
 
   public function publish() : void {
@@ -49,7 +49,7 @@ class Connecting implements \Mqtt\Session\State\IState, \Mqtt\ITimeoutHandler {
     $this->timeout->subscribe($this);
     $this->timeout->setInterval(5);
     $this->timeout->start();
-    $this->protocol->connect();
+    $this->context->getProtocol()->connect();
   }
 
   public function __destruct() {

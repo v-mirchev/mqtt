@@ -15,30 +15,38 @@ class StateFactory {
   protected $classMap;
 
   /**
+   * @var \Mqtt\Session\Context
+   */
+  protected $context;
+
+  /**
    * @param \Psr\Container\ContainerInterface $dic
    * @param array $classMap
+   * @param \Mqtt\Session\Context $context
    */
-  public function __construct(\Psr\Container\ContainerInterface $dic, array $classMap) {
+  public function __construct(
+    \Psr\Container\ContainerInterface $dic,
+    array $classMap,
+    \Mqtt\Session\Context $context
+  ) {
     $this->dic = $dic;
     $this->classMap = $classMap;
+    $this->context = $context;
   }
 
   /**
    * @param string $stateName
-   * @param \Mqtt\Protocol\Protocol $protocol
    * @return \Mqtt\Session\State\IState
    * @throws \Exception
    */
-  public function create(
-    string $stateName,
-    \Mqtt\Protocol\Protocol $protocol
-  ) : \Mqtt\Session\State\IState {
+  public function create(string $stateName) : \Mqtt\Session\State\IState {
     if (!isset($this->classMap[$stateName])) {
       throw new \Exception('Session state type <' . $stateName . '> not registered');
     }
 
+    /* @var $state \Mqtt\Session\State\IState */
     $state = clone $this->dic->get($this->classMap[$stateName]);
-    $state->setProtocol($protocol);
+    $state->setContext($this->context);
 
     return $state;
   }

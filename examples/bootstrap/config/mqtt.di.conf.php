@@ -89,20 +89,6 @@ return [
     return $will;
   },
 
-  \Mqtt\Session\State\Connection\Disconnected::class => function (\Psr\Container\ContainerInterface $container) {
-    return (new \Mqtt\Session\State\Connection\Disconnected(
-      $container->get(\Mqtt\Entity\Configuration\Session::class),
-      $container->get(\Mqtt\Entity\Configuration\Authentication::class),
-      $container->get(\Mqtt\Entity\Configuration\Will::class)
-    ));
-  },
-
-  \Mqtt\Session\State\Connection\Connected::class => function (\Psr\Container\ContainerInterface $container) {
-    return (new \Mqtt\Session\State\Connection\Connected(
-      $container->get(\Mqtt\Session\KeepAlive::class)
-    ));
-  },
-
   \Mqtt\Protocol\Packet\Id\IProvider::class => function (\Psr\Container\ContainerInterface $container) {
     return $container->get(\Mqtt\Protocol\Packet\Id\Sequential::class);
   },
@@ -158,8 +144,19 @@ return [
     \Mqtt\Session\State\IState::STARTED => \Mqtt\Session\State\Started::class,
   ],
 
+  \Mqtt\Session\IContext::class => function (\Psr\Container\ContainerInterface $container) {
+    return new \Mqtt\Session\Context(
+      $container->get(\Mqtt\Protocol\IProtocol::class),
+      $container->get(\Mqtt\Entity\Configuration\Session::class)
+    );
+  },
+
   \Mqtt\Session\StateFactory::class => function (\Psr\Container\ContainerInterface $container) {
-    return new \Mqtt\Session\StateFactory($container, $container->get('mqtt.session.state.classmap'));
+    return new \Mqtt\Session\StateFactory(
+      $container,
+      $container->get('mqtt.session.state.classmap'),
+      $container->get(Mqtt\Session\IContext::class)
+    );
   },
 
   \Mqtt\Protocol\Packet\Flow\IContext::class => function (\Psr\Container\ContainerInterface $container) {

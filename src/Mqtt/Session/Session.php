@@ -85,7 +85,7 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
   public function setState(string $sessionState) : void {
     error_log('SESSION::' . $sessionState);
     $previous = $this->sessionState;
-    $this->sessionState = $this->stateFactory->create($sessionState, $this->protocol);
+    $this->sessionState = $this->stateFactory->create($sessionState);
     $this->sessionState->setStateChanger($this);
     $this->sessionState->onStateEnter();
     unset($previous);

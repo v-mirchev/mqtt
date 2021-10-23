@@ -22,8 +22,8 @@ interface IState extends \Mqtt\Session\ISession {
   public function setStateChanger(\Mqtt\Session\IStateChanger $stateChanger) : void;
 
   /**
-   * @param \Mqtt\Protocol\Protocol $protocol
+   * @param \Mqtt\Session\IContext $context
    * @return $this
    */
-  public function setProtocol(\Mqtt\Protocol\Protocol $protocol);
+  public function setContext(\Mqtt\Session\IContext $context);
 }

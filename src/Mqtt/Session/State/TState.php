@@ -10,9 +10,9 @@ trait TState  {
   protected $stateChanger;
 
   /**
-   * @var \Mqtt\Protocol\Protocol
+   * @var \Mqtt\Session\IContext
    */
-  protected $protocol;
+  protected $context;
 
   public function onStateEnter() : void {}
 
@@ -25,11 +25,11 @@ trait TState  {
   }
 
   /**
-   * @param \Mqtt\Protocol\Protocol $protocol
+   * @param \Mqtt\Session\IContext $context
    * @return $this
    */
-  public function setProtocol(\Mqtt\Protocol\Protocol $protocol) {
-    $this->protocol = $protocol;
+  public function setContext(\Mqtt\Session\IContext $context) {
+    $this->context = $context;
     return $this;
   }
 
