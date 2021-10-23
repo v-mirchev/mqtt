@@ -108,6 +108,11 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
+      method('setReserved')->
+      with($this->equalTo(0x0));
+
+    $frameMock->
+      expects($this->callSequence()->next())->
       method('addString')->
       with($this->equalTo($this->sessionParameters->protocol->protocol));
 
@@ -179,6 +184,11 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
+      method('setReserved')->
+      with($this->equalTo(0x0));
+
+    $frameMock->
+      expects($this->callSequence()->next())->
       method('addString')->
       with($this->equalTo($this->sessionParameters->protocol->protocol));
 
@@ -237,6 +247,11 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
       expects($this->callSequence()->next())->
       method('setPacketType')->
       with($this->equalTo(\Mqtt\Protocol\Packet\IType::CONNECT));
+
+    $frameMock->
+      expects($this->callSequence()->next())->
+      method('setReserved')->
+      with($this->equalTo(0x0));
 
     $frameMock->
       expects($this->callSequence()->next())->

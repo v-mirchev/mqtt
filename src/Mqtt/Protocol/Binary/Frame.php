@@ -124,11 +124,20 @@ class Frame {
   }
 
   /**
-   * @param type $type
+   * @param int $type
    * @return $this
    */
-  public function setPacketType(int $type): \Mqtt\Protocol\Binary\Frame {
+  public function setPacketType(int $type) : \Mqtt\Protocol\Binary\Frame {
     $this->fixedHeader->setPacketType($type);
+    return $this;
+  }
+
+  /**
+   * @param int $value
+   * @return $this
+   */
+  public function setReserved(int $value) : \Mqtt\Protocol\Binary\Frame {
+    $this->fixedHeader->setReserved($value);
     return $this;
   }
 

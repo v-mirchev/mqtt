@@ -16,6 +16,7 @@ class PubRel implements \Mqtt\Protocol\Packet\IType {
    */
   public function encode(\Mqtt\Protocol\Binary\Frame $frame) {
     $frame->setPacketType(\Mqtt\Protocol\Packet\IType::PUBREL);
+    $frame->setReserved(0x2);
     $frame->addWord($this->id);
   }
 

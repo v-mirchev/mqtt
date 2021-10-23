@@ -44,6 +44,15 @@ class FixedHeader implements IFixedHeader {
   }
 
   /**
+   * @param type $value
+   * @return $this
+   */
+  public function setReserved(int $value) : IFixedHeader {
+    $this->byte->setSub(IFixedHeader::BIT_RESERVED_LS, IFixedHeader::BIT_RESERVED_MS, $value);
+    return $this;
+  }
+
+  /**
    * @return int
    */
   public function getQoS() : int {

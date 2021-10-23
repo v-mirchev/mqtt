@@ -6,7 +6,7 @@ class Subscribe implements \Mqtt\Protocol\Packet\IType {
 
   use \Mqtt\Protocol\Packet\Type\TType;
 
- /**
+  /**
   * @var int
   */
   public $id;
@@ -18,6 +18,7 @@ class Subscribe implements \Mqtt\Protocol\Packet\IType {
 
   public function encode(\Mqtt\Protocol\Binary\Frame $frame) {
     $frame->setPacketType(\Mqtt\Protocol\Packet\IType::SUBSCRIBE);
+    $frame->setReserved(0x2);
     $frame->addWord($this->id);
 
     foreach ($this->topics as $topic) {

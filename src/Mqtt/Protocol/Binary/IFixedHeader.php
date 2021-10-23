@@ -12,6 +12,8 @@ interface IFixedHeader {
   const BIT_DUP = 3;
   const BIT_TYPE_LS = 4;
   const BIT_TYPE_MS = 7;
+  const BIT_RESERVED_LS = 0;
+  const BIT_RESERVED_MS = 3;
 
   /**
   /**
@@ -24,6 +26,12 @@ interface IFixedHeader {
    * @return $this
    */
   public function setPacketType(int $type) : IFixedHeader;
+
+  /**
+   * @param type $value
+   * @return $this
+   */
+  public function setReserved(int $value) : IFixedHeader;
 
   /**
    * @return int

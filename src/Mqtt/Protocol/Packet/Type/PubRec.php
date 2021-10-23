@@ -9,20 +9,22 @@ class PubRec implements \Mqtt\Protocol\Packet\IType {
   /**
    * @var int
    */
-  protected $id;
+  public $id;
+
+  /**
+   * @param \Mqtt\Protocol\Binary\Frame $frame
+   */
+  public function encode(\Mqtt\Protocol\Binary\Frame $frame) {
+    $frame->setPacketType(\Mqtt\Protocol\Packet\IType::PUBREC);
+    $frame->setReserved(0x0);
+    $frame->addWord($this->id);
+  }
 
   /**
    * @param \Mqtt\Protocol\Binary\Frame $frame
    */
   public function decode(\Mqtt\Protocol\Binary\Frame $frame) {
     $this->id = $frame->getWord();
-  }
-
-  /**
-   * @return int
-   */
-  public function getId(): int {
-    return $this->id;
   }
 
   /**

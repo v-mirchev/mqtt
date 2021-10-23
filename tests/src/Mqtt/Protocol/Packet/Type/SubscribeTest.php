@@ -51,6 +51,11 @@ class SubscribeTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
+      method('setReserved')->
+      with($this->equalTo(0x2));
+
+    $frameMock->
+      expects($this->callSequence()->next())->
       method('addWord')->
       with($this->equalTo($this->object->id));
 

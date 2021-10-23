@@ -28,6 +28,11 @@ class DisconnectTest extends \PHPUnit\Framework\TestCase {
       method('setPacketType')->
       with($this->equalTo(\Mqtt\Protocol\Packet\IType::DISCONNECT));
 
+    $frameMock->
+      expects($this->once())->
+      method('setReserved')->
+      with($this->equalTo(0x2));
+
     $this->object->encode($frameMock);
   }
 

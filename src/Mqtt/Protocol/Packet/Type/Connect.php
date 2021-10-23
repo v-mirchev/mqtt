@@ -46,6 +46,7 @@ class Connect implements \Mqtt\Protocol\Packet\IType {
     }
 
     $frame->setPacketType(\Mqtt\Protocol\Packet\IType::CONNECT);
+    $frame->setReserved(0x0);
     $frame->addString($this->sessionParameters->protocol->protocol);
     $frame->addByte($this->sessionParameters->protocol->version);
     $frame->addByte($this->flags->get());
