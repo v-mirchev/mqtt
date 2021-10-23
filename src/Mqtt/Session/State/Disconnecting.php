@@ -7,12 +7,6 @@ class Disconnecting implements \Mqtt\Session\State\IState {
   use \Mqtt\Session\TSession;
   use \Mqtt\Session\State\TState;
 
-  public function onStateEnter(): void {
-    $disconnectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::DISCONNECT);
-    $this->context->getProtocol()->writePacket($disconnectPacket);
-    $this->context->getProtocol()->disconnect();
-  }
-
   public function start() : void {
     throw new \Exception('Not allowed in this state');
   }

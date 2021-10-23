@@ -12,6 +12,7 @@ class Connected implements \Mqtt\Protocol\Packet\Flow\IState {
   }
 
   public function stop() : void {
+    $this->context->getSessionStateChanger()->setState(\Mqtt\Session\State\IState::DISCONNECTING);
     $disconnectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::DISCONNECT);
     $this->context->getProtocol()->writePacket($disconnectPacket);
     $this->context->getProtocol()->disconnect();
