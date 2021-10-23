@@ -1,4 +1,4 @@
-<?php declare(ticks = 1);
+<?php
 
 namespace Mqtt\Protocol\Packet\Flow\KeepAlive;
 

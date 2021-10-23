@@ -1,4 +1,4 @@
-<?php declare(ticks = 1);
+<?php
 
 namespace Mqtt\Session\State;
 
@@ -54,6 +54,7 @@ class Connecting implements \Mqtt\Session\State\IState, \Mqtt\ITimeoutHandler {
 
   public function __destruct() {
     $this->timeout->stop();
+    unset($this->timeout);
   }
 
   public function onTimeout(): void {
