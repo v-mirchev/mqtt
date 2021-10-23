@@ -14,7 +14,7 @@ class Byte {
    * @return $this
    */
   public function set($value) : \Mqtt\Protocol\Binary\Byte {
-    $this->value = is_string($value) ? \ord($value) : (0xFF & (int)$value);
+    $this->value = is_string($value) ? \ord($value[0]) : (0xFF & (int)$value);
     return $this;
   }
 
