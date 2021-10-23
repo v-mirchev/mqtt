@@ -25,10 +25,6 @@ class Connected implements \Mqtt\Session\State\IState {
     throw new \Exception('Not allowed in this state');
   }
 
-  public function started() : void {
-    $this->stateChanger->setState(\Mqtt\Session\State\IState::STARTED);
-  }
-
   public function stop() : void {
     $this->stateChanger->setState(\Mqtt\Session\State\IState::DISCONNECTED);
   }
