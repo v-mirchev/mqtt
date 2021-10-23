@@ -52,6 +52,17 @@ class Publish implements \Mqtt\Protocol\Packet\IType {
   }
 
   /**
+   * @param \Mqtt\Protocol\Binary\Frame $frame
+   */
+  public function decode(\Mqtt\Protocol\Binary\Frame $frame) {
+    $this->dup = $frame->isDup();
+    $this->retain = $frame->isRetain();
+    $this->qos = $frame->getQoS();
+    $this->topic = $frame->getString();
+    $this->content = $frame->getPayload();
+  }
+
+  /**
    * @param int $packetId
    * @return bool
    */
