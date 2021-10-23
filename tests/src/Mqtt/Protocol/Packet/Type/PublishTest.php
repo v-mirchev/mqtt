@@ -60,6 +60,11 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
 
     $frameMock->
       expects($this->callSequence()->next())->
+      method('setAsDup')->
+      with($this->equalTo($this->object->dup));
+
+    $frameMock->
+      expects($this->callSequence()->next())->
       method('addString')->
       with($this->equalTo($this->object->topic));
 
@@ -101,6 +106,11 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
       expects($this->callSequence()->next())->
       method('setAsRetain')->
       with($this->equalTo($this->object->retain));
+
+    $frameMock->
+      expects($this->callSequence()->next())->
+      method('setAsDup')->
+      with($this->equalTo($this->object->dup));
 
     $frameMock->
       expects($this->callSequence()->next())->
@@ -146,6 +156,11 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
       expects($this->callSequence()->next())->
       method('setAsRetain')->
       with($this->equalTo($this->object->retain));
+
+    $frameMock->
+      expects($this->callSequence()->next())->
+      method('setAsDup')->
+      with($this->equalTo($this->object->dup));
 
     $frameMock->
       expects($this->callSequence()->next())->

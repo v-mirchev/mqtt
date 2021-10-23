@@ -31,6 +31,11 @@ class Publish implements \Mqtt\Protocol\Packet\IType {
   */
   public $retain = false;
 
+ /**
+  * @var bool
+  */
+  public $dup = false;
+
   /**
    * @param \Mqtt\Protocol\Binary\Frame $frame
    */
@@ -38,6 +43,7 @@ class Publish implements \Mqtt\Protocol\Packet\IType {
     $frame->setPacketType(\Mqtt\Protocol\Packet\IType::PUBLISH);
     $frame->setQoS($this->qos);
     $frame->setAsRetain($this->retain);
+    $frame->setAsDup($this->dup);
     $frame->addString($this->topic);
     if ($this->qos > \Mqtt\Entity\IQoS::AT_MOST_ONCE) {
       $frame->addWord($this->id);
