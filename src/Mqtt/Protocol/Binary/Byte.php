@@ -9,18 +9,6 @@ class Byte {
    */
   protected $value;
 
-  public function setFromMsb(int $value) {
-    $this->set($value >> 8);
-  }
-
-  public function setFromLsb(int $value) {
-    $this->set($value);
-  }
-
-  public function msb(int $msb) : int {
-    return $this->get() + ($msb << 8);
-  }
-
   /**
    * @param type $value
    * @return $this
