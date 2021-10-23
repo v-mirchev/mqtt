@@ -26,7 +26,7 @@ class Connected implements \Mqtt\Session\State\IState {
   }
 
   public function stop() : void {
-    $this->stateChanger->setState(\Mqtt\Session\State\IState::DISCONNECTED);
+    $this->protocol->disconnect();
   }
 
   public function publish() : void {
