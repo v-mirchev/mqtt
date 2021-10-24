@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Binary;
+namespace Mqtt\Protocol\Binary\Operator;
 
 class Buffer {
 

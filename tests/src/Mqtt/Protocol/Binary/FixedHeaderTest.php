@@ -12,7 +12,7 @@ class FixedHeaderTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new FixedHeader(new Byte());
+    $this->object = new FixedHeader(new \Mqtt\Protocol\Binary\Operator\Byte());
   }
 
   public function testClonedIsCleanObject() {
@@ -22,7 +22,7 @@ class FixedHeaderTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function firstByteDataProvider() {
-    $object = new FixedHeader(new Byte());
+    $object = new FixedHeader(new \Mqtt\Protocol\Binary\Operator\Byte());
     $flagPermutations = [
       [
         (clone $object)->

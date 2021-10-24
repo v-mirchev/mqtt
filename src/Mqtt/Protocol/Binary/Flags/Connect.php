@@ -5,7 +5,7 @@ namespace Mqtt\Protocol\Binary\Flags;
 class Connect {
 
   /**
-   * @var \Mqtt\Protocol\Binary\Byte
+   * @var \Mqtt\Protocol\Binary\Operator\Byte
    */
   protected $byte;
 
@@ -22,7 +22,7 @@ class Connect {
    */
   protected $useCleanSession;
 
-  public function __construct(\Mqtt\Protocol\Binary\Byte $byte) {
+  public function __construct(\Mqtt\Protocol\Binary\Operator\Byte $byte) {
     $this->byte = clone $byte;
   }
 

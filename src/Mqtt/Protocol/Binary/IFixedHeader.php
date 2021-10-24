@@ -78,7 +78,7 @@ interface IFixedHeader {
   public function decode(\Iterator $stream) : IFixedHeader;
 
   /**
-   * @return \Mqtt\Protocol\Binary\Byte
+   * @return \Mqtt\Protocol\Binary\Operator\Byte
    */
   public function encode() : array;
 

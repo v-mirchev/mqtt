@@ -57,7 +57,7 @@ return [
 
   \Mqtt\Protocol\Binary\IFixedHeader::class => function (\Psr\Container\ContainerInterface $container) {
     return (new \Mqtt\Protocol\Binary\FixedHeader(
-      $container->get(\Mqtt\Protocol\Binary\Byte::class)
+      $container->get(\Mqtt\Protocol\Binary\Operator\Byte::class)
     ));
   },
 

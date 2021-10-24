@@ -1,20 +1,20 @@
 <?php
 
-namespace Mqtt\Protocol\Binary;
+namespace Mqtt\Protocol\Binary\Operator;
 
 class Word {
 
   /**
-   * @var \Mqtt\Protocol\Binary\Byte
+   * @var \Mqtt\Protocol\Binary\Operator\Byte
    */
   protected $lsb;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Byte
+   * @var \Mqtt\Protocol\Binary\Operator\Byte
    */
   protected $msb;
 
-  public function __construct(\Mqtt\Protocol\Binary\Byte $byte) {
+  public function __construct(\Mqtt\Protocol\Binary\Operator\Byte $byte) {
     $this->lsb = clone $byte;
     $this->msb = clone $byte;
   }
@@ -35,7 +35,7 @@ class Word {
 
   /**
    * @param int $value
-   * @return \Mqtt\Protocol\Binary\Word
+   * @return \Mqtt\Protocol\Binary\Operator\Word
    */
   public function set(int $value) : Word {
     $this->msb->set($value >> 8);
@@ -46,7 +46,7 @@ class Word {
   /**
    * @param mixed $msb
    * @param mixed $lsb
-   * @return \Mqtt\Protocol\Binary\Word
+   * @return \Mqtt\Protocol\Binary\Operator\Word
    */
   public function setBytes($msb, $lsb) : Word {
     $this->msb->set($msb);
