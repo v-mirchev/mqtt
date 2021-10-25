@@ -20,6 +20,9 @@ class PingWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHa
   }
 
   public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\Packet\IType::PINGRESP)) {
+      throw new \Exception('PONG packet not expected');
+    }
     $this->timeout->reset();
   }
 
