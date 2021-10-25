@@ -31,7 +31,7 @@ class SubAckTest extends \PHPUnit\Framework\TestCase {
       will($this->returnValue($actualId));
 
     $this->object->decode($frameMock);
-    $this->assertEquals($actualId, $this->object->getId());
+    $this->assertEquals($actualId, $this->object->id);
   }
 
   public function testDecodeSetsProperlyReturnCodes() {

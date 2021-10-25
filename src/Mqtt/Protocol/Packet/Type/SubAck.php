@@ -21,7 +21,7 @@ class SubAck implements \Mqtt\Protocol\Packet\IType {
   /**
    * @var int
    */
-  protected $id;
+  public $id;
 
   /**
    * @var int[]
@@ -35,13 +35,6 @@ class SubAck implements \Mqtt\Protocol\Packet\IType {
     $this->id = $frame->getWord();
     $this->returnCodes = $frame->getPayloadBytes();
  }
-
-  /**
-   * @return int
-   */
-  public function getId(): int {
-    return $this->id;
-  }
 
   /**
    * @return int[]
