@@ -40,7 +40,7 @@ class Factory {
    */
   public function create(string $stateName) : \Mqtt\Protocol\Packet\Flow\IState {
     if (!isset($this->classMap[$stateName])) {
-      throw new \Exception('Session state type <' . $stateName . '> not registered');
+      throw new \Exception('Packet flow state type <' . $stateName . '> not registered');
     }
 
     /* @var $state \Mqtt\Protocol\Packet\Flow\IState */

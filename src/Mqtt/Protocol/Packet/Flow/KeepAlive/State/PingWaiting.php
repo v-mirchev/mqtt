@@ -19,12 +19,6 @@ class PingWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHa
     $this->timeout = clone $timeout;
   }
 
-  public function onProtocolConnect(): void {}
-
-  public function onProtocolDisconnect(): void {}
-
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {}
-
   public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
     $this->timeout->reset();
   }
