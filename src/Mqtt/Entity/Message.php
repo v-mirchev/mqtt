@@ -5,11 +5,6 @@ namespace Mqtt\Entity;
 class Message implements \Mqtt\Entity\IQoS {
 
   /**
-   * @var int
-   */
-  public $id;
-
-  /**
    * @var \Mqtt\Entity\QoS
    */
   public $qos;
@@ -28,6 +23,11 @@ class Message implements \Mqtt\Entity\IQoS {
    * @var bool
    */
   public $isRetain;
+
+  /**
+   * @var bool
+   */
+  public $isDup;
 
   /**
    * @param \Mqtt\Entity\QoS $qos
@@ -82,6 +82,15 @@ class Message implements \Mqtt\Entity\IQoS {
    */
   public function retain(bool $isRetain = true) : \Mqtt\Entity\Message {
     $this->isRetain = $isRetain;
+    return $this;
+  }
+
+  /**
+   * @param bool $isDup
+   * @return \Mqtt\Entity\Message
+   */
+  public function dup(bool $isDup = true) : \Mqtt\Entity\Message {
+    $this->isDup = $isDup;
     return $this;
   }
 

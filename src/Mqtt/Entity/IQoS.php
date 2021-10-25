@@ -9,19 +9,19 @@ interface IQoS {
   const EXACTLY_ONCE = 2;
 
   /**
-   * @return \Mqtt\Entity\Message
+   * @return \Mqtt\Entity\IQoS
    */
-  public function atMostOnce() : IQoS;
+  public function atMostOnce() : \Mqtt\Entity\IQoS;
 
   /**
    * @return \Mqtt\Entity\IQoS
    */
-  public function atLeastOnce() : IQoS;
+  public function atLeastOnce() : \Mqtt\Entity\IQoS;
 
   /**
    * @return \Mqtt\Entity\IQoS
    */
-  public function exactlyOnce() : IQoS;
+  public function exactlyOnce() : \Mqtt\Entity\IQoS;
 
 
 }
