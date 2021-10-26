@@ -4,13 +4,22 @@ namespace Mqtt\Session;
 
 trait TSession  {
 
+  /**
+   * @var \Mqtt\IClient
+   */
+  protected $client;
+
+  public function setClient(\Mqtt\Client\IClient $client): void {
+    $this->client = $client;
+  }
+
   public function start() : void {}
 
   public function stop() : void {}
 
   public function publish() : void {}
 
-  public function subscribe() : void {}
+  public function subscribe(array $subscriptions) : void {}
 
   public function unsubscribe() : void {}
 

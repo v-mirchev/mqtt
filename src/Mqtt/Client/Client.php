@@ -1,8 +1,8 @@
 <?php declare(ticks = 1);
 
-namespace Mqtt;
+namespace Mqtt\Client;
 
-class Client {
+class Client implements \Mqtt\Session\IHandler, \Mqtt\Client\IClient {
 
   /**
    * @var \Mqtt\Session\ISession
@@ -10,14 +10,31 @@ class Client {
   protected $session;
 
   /**
+   * @var \Mqtt\IConsumer
+   */
+  protected $consumer;
+
+  /**
+   * @var \Mqtt\Entity\Subsription[]
+   */
+  protected $subscriptions;
+
+  /**
    * @param \Mqtt\Session\ISession $session
    */
   public function __construct(\Mqtt\Session\ISession $session) {
     $this->session = $session;
+    $this->session->setClient($this);
+
     $this->registerSignalHandlers();
   }
 
-  public function start() {
+  public function setConsumer(\Mqtt\IConsumer $consumer) : \Mqtt\Client\Client {
+    $this->consumer = $consumer;
+    return $this;
+  }
+
+  public function start() : void {
     $this->session->start();
   }
 
@@ -30,7 +47,12 @@ class Client {
   }
 
   public function subscribe() : void {
-    $this->session->subscribe();
+    $this->session->subscribe($this->subscriptions);
+  }
+
+  public function subscription() : \Mqtt\Entity\Subsription {
+    $this->subscriptions[] = new \Mqtt\Entity\Subsription(new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS()));
+    return end($this->subscriptions);
   }
 
   public function unsubscribe(): void {
@@ -38,12 +60,15 @@ class Client {
   }
 
   public function onTick(): void {
+    $this->consumer->onTick($this);
   }
 
   public function onConnect(): void {
+    $this->consumer->onStart($this);
   }
 
   public function onDisconnect(): void {
+    $this->consumer->onStop($this);
   }
 
   public function registerSignalHandlers() {

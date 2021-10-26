@@ -20,6 +20,11 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
   protected $stateFactory;
 
   /**
+   * @var \Mqtt\IClient
+   */
+  protected $client;
+
+  /**
    * @param \Mqtt\Protocol\IProtocol $protocol
    * @param \Mqtt\Session\StateFactory $stateFactory
    */
@@ -76,6 +81,7 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
 
   public function onTick(): void {
     $this->sessionState->onTick();
+    $this->client->onTick();
   }
 
   /**
@@ -87,8 +93,17 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
     $previous = $this->sessionState;
     $this->sessionState = $this->stateFactory->create($sessionState);
     $this->sessionState->setStateChanger($this);
+    $this->sessionState->setClient($this->client);
     $this->sessionState->onStateEnter();
     unset($previous);
+  }
+
+  /**
+   * @param \Mqtt\Client\IClient $client
+   * @return void
+   */
+  public function setClient(\Mqtt\Client\IClient $client): void {
+    $this->client = $client;
   }
 
 }

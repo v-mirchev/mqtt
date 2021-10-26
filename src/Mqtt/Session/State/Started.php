@@ -64,6 +64,7 @@ class Started implements \Mqtt\Session\State\IState {
 
   public function onStateEnter(): void {
     $this->keepAliveFlow->start();
+    $this->client->onConnect();
   }
 
   public function onTick(): void {

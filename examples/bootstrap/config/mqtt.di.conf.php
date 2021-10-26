@@ -108,8 +108,8 @@ return [
     return $container->get(\Mqtt\Session\Session::class);
   },
 
-  \Mqtt\Client::class => function (\Psr\Container\ContainerInterface $container) {
-    return (new \Mqtt\Client(
+  \Mqtt\Client\IClient::class => function (\Psr\Container\ContainerInterface $container) {
+    return (new \Mqtt\Client\Client(
       $container->get(\Mqtt\Session\ISession::class)
     ));
   },

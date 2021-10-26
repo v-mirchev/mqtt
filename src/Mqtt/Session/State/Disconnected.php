@@ -28,6 +28,7 @@ class Disconnected implements \Mqtt\Session\State\IState {
   }
 
   public function onProtocolDisconnect(): void {
+    $this->client->onDisconnect();
     $this->stateChanger->setState(\Mqtt\Session\State\IState::NOT_CONNECTED);
   }
 
