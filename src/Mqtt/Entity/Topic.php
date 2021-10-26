@@ -52,4 +52,17 @@ class Topic implements \Mqtt\Entity\IQoS {
     return $this;
   }
 
+  /**
+   * @param string $filter
+   * @return bool
+   */
+  public function isMatching(string $filter) : bool {
+    $regex =
+      '/^' .
+      str_replace(['^', '$', '/', '+', '#'], ['\^', '\$', '\/', '[^\/]*', '.*'], $filter) .
+      '$/';
+
+    return boolval(preg_match($regex, $this->name));
+  }
+
 }
