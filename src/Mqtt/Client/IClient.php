@@ -14,7 +14,7 @@ interface IClient {
 
   public function subscribe() : void;
 
-  public function subscription() : \Mqtt\Entity\Subsription;
+  public function subscription() : \Mqtt\Entity\Subscription;
 
   public function unsubscribe(): void;
 

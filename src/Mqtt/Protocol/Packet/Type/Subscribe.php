@@ -12,7 +12,7 @@ class Subscribe implements \Mqtt\Protocol\Packet\IType {
   public $id;
 
   /**
-   * @var \Mqtt\Entity\Subsription[]
+   * @var \Mqtt\Entity\Subscription[]
    */
   public $subscriptions;
 
@@ -22,7 +22,7 @@ class Subscribe implements \Mqtt\Protocol\Packet\IType {
     $frame->addWord($this->id);
 
     foreach ($this->subscriptions as $subscription) {
-      /* @var $subscription \Mqtt\Entity\Subsription */
+      /* @var $subscription \Mqtt\Entity\Subscription */
       $frame->addString($subscription->topic->name);
       $frame->addByte($subscription->topic->qos->qos);
     }
