@@ -32,10 +32,10 @@ class SubscribeTest extends \PHPUnit\Framework\TestCase {
   public function testEncodeAddsToFrameWithProperOrder() {
 
     $this->object->id = 112;
-    $this->object->topics = [
-      (new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS()))->atMostOnce()->name('#topic1'),
-      (new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS()))->atLeastOnce()->name('#topic2'),
-      (new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS()))->exactlyOnce()->name('#topic3'),
+    $this->object->subscriptions = [
+      (new \Mqtt\Entity\Subsription(new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS())))->atMostOnce()->topic('#topic1'),
+      (new \Mqtt\Entity\Subsription(new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS())))->atLeastOnce()->topic('#topic2'),
+      (new \Mqtt\Entity\Subsription(new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS())))->exactlyOnce()->topic('#topic3'),
     ];
 
     $this->callSequence()->start();
@@ -59,16 +59,16 @@ class SubscribeTest extends \PHPUnit\Framework\TestCase {
       method('addWord')->
       with($this->equalTo($this->object->id));
 
-    foreach ($this->object->topics as $topic) {
+    foreach ($this->object->subscriptions as $subscription) {
       $frameMock->
         expects($this->callSequence()->next())->
         method('addString')->
-        with($this->equalTo($topic->name));
+        with($this->equalTo($subscription->topic->name));
 
       $frameMock->
         expects($this->callSequence()->next())->
         method('addByte')->
-        with($this->equalTo($topic->qos->qos));
+        with($this->equalTo($subscription->topic->qos->qos));
     }
 
     $this->object->encode($frameMock);

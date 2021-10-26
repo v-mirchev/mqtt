@@ -12,19 +12,19 @@ class Subscribe implements \Mqtt\Protocol\Packet\IType {
   public $id;
 
   /**
-   * @var \Mqtt\Entity\Topic[]
+   * @var \Mqtt\Entity\Subsription[]
    */
-  public $topics;
+  public $subscriptions;
 
   public function encode(\Mqtt\Protocol\Binary\Frame $frame) {
     $frame->setPacketType(\Mqtt\Protocol\Packet\IType::SUBSCRIBE);
     $frame->setReserved(0x2);
     $frame->addWord($this->id);
 
-    foreach ($this->topics as $topic) {
-      /* @var $topic \Mqtt\Entity\Topic */
-      $frame->addString($topic->name);
-      $frame->addByte($topic->qos->qos);
+    foreach ($this->subscriptions as $subscription) {
+      /* @var $subscription \Mqtt\Entity\Subsription */
+      $frame->addString($subscription->topic->name);
+      $frame->addByte($subscription->topic->qos->qos);
     }
   }
 
