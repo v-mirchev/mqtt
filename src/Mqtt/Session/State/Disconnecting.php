@@ -23,7 +23,7 @@ class Disconnecting implements \Mqtt\Session\State\IState {
     throw new \Exception('Not allowed in this state');
   }
 
-  public function unsubscribe() : void {
+  public function unsubscribe(array $subscriptions) : void {
     throw new \Exception('Not allowed in this state');
   }
 

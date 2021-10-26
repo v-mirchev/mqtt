@@ -8,19 +8,31 @@ interface ISubscription {
    * @param \Mqtt\Entity\Topic $topic
    * @return void
    */
-  public function onAcknowledged(\Mqtt\Entity\Topic $topic) : void;
+  public function onSubscribeAcknowledged(\Mqtt\Entity\Topic $topic) : void;
 
   /**
    * @param \Mqtt\Entity\Topic $topic
    * @return void
    */
-  public function onUnacknowledged(\Mqtt\Entity\Topic $topic) : void;
+  public function onSubscribeUnacknowledged(\Mqtt\Entity\Topic $topic) : void;
 
   /**
    * @param \Mqtt\Entity\Topic $topic
    * @return void
    */
-  public function onFailed(\Mqtt\Entity\Topic $topic) : void;
+  public function onUnsubscribeUnacknowledged(\Mqtt\Entity\Topic $topic) : void;
+
+  /**
+   * @param \Mqtt\Entity\Topic $topic
+   * @return void
+   */
+  public function onUnsubscribeAcknowledged(\Mqtt\Entity\Topic $topic) : void;
+
+  /**
+   * @param \Mqtt\Entity\Topic $topic
+   * @return void
+   */
+  public function onSubscribeFailed(\Mqtt\Entity\Topic $topic) : void;
 
   /**
    * @param \Mqtt\Entity\Topic $topic

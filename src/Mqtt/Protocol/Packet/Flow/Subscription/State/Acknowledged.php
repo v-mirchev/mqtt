@@ -19,12 +19,14 @@ class Acknowledged implements \Mqtt\Protocol\Packet\Flow\IState {
     $this->context->getSubscriptionsFlowQueue()->remove($subscribePacket->id);
 
     foreach ($subscribePacket->subscriptions as $subscriptionIndex => $subscription) {
-      $subscription->handler->onAcknowledged($subscription->topic);
-      /* @var $topic \Mqtt\Entity\Subsription */
+      $subscription->handler->onSubscribeAcknowledged($subscription->topic);
+      /* @var $topic \Mqtt\Entity\Subscription */
       $topicReturnCodes = $subAckPacket->getReturnCodes();
       if ($topicReturnCodes[$subscriptionIndex] === static::ERROR) {
-        $subscription->handler->onFailed($subscription->topic);
+        $subscription->setAsSubscribed(false);
+        $subscription->handler->onSubscribeFailed($subscription->topic);
       } else {
+        $subscription->setAsSubscribed();
         $subscription->handler->onSubscribed($subscription->topic);
       }
     }

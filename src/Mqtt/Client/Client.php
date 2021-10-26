@@ -15,16 +15,22 @@ class Client implements \Mqtt\Session\IHandler, \Mqtt\Client\IClient {
   protected $consumer;
 
   /**
-   * @var \Mqtt\Entity\Subsription[]
+   * @var \Mqtt\Client\Subscriptions
    */
   protected $subscriptions;
 
   /**
    * @param \Mqtt\Session\ISession $session
+   * @param \Mqtt\Client\Subscriptions $subscriptions
    */
-  public function __construct(\Mqtt\Session\ISession $session) {
+  public function __construct(
+    \Mqtt\Session\ISession $session,
+    \Mqtt\Client\Subscriptions $subscriptions
+  ) {
     $this->session = $session;
     $this->session->setClient($this);
+
+    $this->subscriptions = $subscriptions;
 
     $this->registerSignalHandlers();
   }
@@ -47,16 +53,24 @@ class Client implements \Mqtt\Session\IHandler, \Mqtt\Client\IClient {
   }
 
   public function subscribe() : void {
-    $this->session->subscribe($this->subscriptions);
+    $this->session->subscribe($this->subscriptions->getAllUnsubscribed());
   }
 
-  public function subscription() : \Mqtt\Entity\Subsription {
-    $this->subscriptions[] = new \Mqtt\Entity\Subsription(new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS()));
-    return end($this->subscriptions);
+  public function subscription() : \Mqtt\Entity\Subscription {
+    $subscription = $this->subscriptions->create();
+    $this->subscriptions->add($subscription);
+    return $subscription;
+  }
+
+  public function unsubscription(\Mqtt\Entity\Subscription $subscription) : \Mqtt\Client\IClient {
+    if ($subscription->isSubscribed()) {
+      $subscription->setAsSubscribed(false);
+    }
+    return $this;
   }
 
   public function unsubscribe(): void {
-    $this->session->unsubscribe();
+    $this->session->unsubscribe($this->subscriptions->getAllUnsubscribed());
   }
 
   public function onTick(): void {

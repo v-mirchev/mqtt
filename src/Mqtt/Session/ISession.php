@@ -18,6 +18,6 @@ interface ISession extends \Mqtt\Protocol\IHandler  {
 
   public function subscribe(array $subscriptions) : void;
 
-  public function unsubscribe() : void;
+  public function unsubscribe(array $subscriptions) : void;
 
 }

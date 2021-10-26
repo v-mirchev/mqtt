@@ -19,6 +19,10 @@ class NotConnected implements \Mqtt\Session\State\IState {
     throw new \Exception('Not allowed in this state');
   }
 
+  public function unsubscribe(array $subscriptions) : void {
+    throw new \Exception('Not allowed in this state');
+  }
+
   public function publish() : void {
     throw new \Exception('Not allowed in this state');
   }
@@ -32,6 +36,14 @@ class NotConnected implements \Mqtt\Session\State\IState {
   }
 
   public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+    throw new \Exception('Not allowed in this state');
+  }
+
+  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+    throw new \Exception('Not allowed in this state');
+  }
+
+  public function onTick(): void {
     throw new \Exception('Not allowed in this state');
   }
 

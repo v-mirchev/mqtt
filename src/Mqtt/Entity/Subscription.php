@@ -26,9 +26,25 @@ class Subscription implements IQoS {
       public function onSubscribed(\Mqtt\Entity\Topic $topic): void {}
       public function onSubscribeUnacknowledged(\Mqtt\Entity\Topic $topic): void {}
       public function onUnsubscribeUnacknowledged(Topic $topic): void {}
+      public function onUnsubscribeAcknowledged(Topic $topic): void {}
     };
     $this->topic = clone $topic;
     $this->topic->qos->setRelated($this);
+    $this->isSubscribed = false;
+  }
+
+  public function __clone() {
+    $this->handler = new class implements \Mqtt\Client\Handler\ISubscription {
+      public function onSubscribeAcknowledged(\Mqtt\Entity\Topic $topic): void {}
+      public function onSubscribeFailed(\Mqtt\Entity\Topic $topic): void {}
+      public function onSubscribed(\Mqtt\Entity\Topic $topic): void {}
+      public function onSubscribeUnacknowledged(\Mqtt\Entity\Topic $topic): void {}
+      public function onUnsubscribeUnacknowledged(Topic $topic): void {}
+      public function onUnsubscribeAcknowledged(Topic $topic): void {}
+    };
+    $this->topic = clone $this->topic;
+    $this->topic->qos->setRelated($this);
+    $this->isSubscribed = false;
   }
 
   /**

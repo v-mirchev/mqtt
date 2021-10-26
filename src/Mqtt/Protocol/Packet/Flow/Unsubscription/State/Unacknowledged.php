@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Packet\Flow\Subscription\State;
+namespace Mqtt\Protocol\Packet\Flow\Unsubscription\State;
 
 class Unacknowledged implements \Mqtt\Protocol\Packet\Flow\IState {
 
@@ -11,12 +11,11 @@ class Unacknowledged implements \Mqtt\Protocol\Packet\Flow\IState {
     /* @var $subscribePacket \Mqtt\Protocol\Packet\Type\Subscribe */
     $subscribePacket = $this->flowContext->getOutgoingPacket();
 
-    $this->context->getSubscriptionsFlowQueue()->remove($subscribePacket->id);
+    $this->context->getUnsubscriptionsFlowQueue()->remove($subscribePacket->id);
 
-    foreach ($subscribePacket->subscriptions as $subscriptionIndex => $subscription) {
+    foreach ($subscribePacket->subscriptions as $subscription) {
       /* @var $subscription \Mqtt\Entity\Subscription */
-      $subscription->setAsSubscribed(false);
-      $subscription->handler->onSubscribeUnacknowledged($subscription->topic);
+      $subscription->handler->onUnsubscribeUnacknowledged($subscription->topic);
     }
 
   }

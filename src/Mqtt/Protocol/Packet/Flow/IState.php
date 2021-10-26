@@ -15,10 +15,18 @@ interface IState extends \Mqtt\Protocol\IHandler {
   const KEEP_ALIVE_PING_WAIT = 'keepalive.ping.wait';
   const KEEP_ALIVE_PONG_WAIT = 'keepalive.pong.wait';
 
-  const SUBSCRIBE_SUSBCRIBING = 'subscribe.subscribing';
+  const SUBSCRIBE_SUBSCRIBING = 'subscribe.subscribing';
   const SUBSCRIBE_ACK_WAITING = 'subscribe.ack.waiting';
   const SUBSCRIBE_ACKNOWLEDGED = 'subscribe.acknowledged';
   const SUBSCRIBE_UNACKNOWLEDGED = 'subscribe.unacknowledged';
+
+  const UNSUBSCRIBE_UNSUBSCRIBING = 'unsubscribe.unsubscribing';
+  const UNSUBSCRIBE_ACK_WAITING = 'unsubscribe.ack.waiting';
+  const UNSUBSCRIBE_ACKNOWLEDGED = 'unsubscribe.acknowledged';
+  const UNSUBSCRIBE_UNACKNOWLEDGED = 'unsubscribe.unacknowledged';
+
+  public function start() : void;
+  public function stop() : void;
 
   public function onStateEnter() : void;
 

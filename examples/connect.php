@@ -6,27 +6,57 @@ set_time_limit(0);
 $container = require_once __DIR__ . '/bootstrap/bootstrap.php';
 
 
-$consumer = new class implements \Mqtt\IConsumer {
+$consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
+
+  /**
+   * @var \Mqtt\Timeout
+   */
+  protected $timeout;
+
+  /**
+   * @var \Mqtt\Client\IClient
+   */
+  protected $client;
+
+  /**
+   * @var \Mqtt\Entity\Subscription
+   */
+  protected $subscription;
+
+  public function __construct() {
+    $this->timeout = (new \Mqtt\Timeout())->setInterval(2)->subscribe($this);
+  }
 
   public function onStart(\Mqtt\Client\Client $client): void {
-    $client->subscription()->
+    $this->client = $client;
+
+    $this->subscription = $client->subscription()->
       atMostOnce()->
       topic('tele/tasmota_switch/STATE')->
       handler(new class implements \Mqtt\Client\Handler\ISubscription {
-        public function onAcknowledged(\Mqtt\Entity\Topic $topic): void { error_log('ACK' . $topic->name); }
-        public function onFailed(\Mqtt\Entity\Topic $topic): void {}
+        public function onSubscribeAcknowledged(\Mqtt\Entity\Topic $topic): void { error_log('ACK' . $topic->name); }
+        public function onSubscribeFailed(\Mqtt\Entity\Topic $topic): void {}
         public function onSubscribed(\Mqtt\Entity\Topic $topic): void {}
-        public function onUnacknowledged(\Mqtt\Entity\Topic $topic): void {}
+        public function onSubscribeUnacknowledged(\Mqtt\Entity\Topic $topic): void {}
+        public function onUnsubscribeUnacknowledged(\Mqtt\Entity\Topic $topic): void {}
+        public function onUnsubscribeAcknowledged(\Mqtt\Entity\Topic $topic): void {}
     });
     $client->subscribe();
+    $this->timeout->start();
   }
 
   public function onStop(\Mqtt\Client\Client $client): void {
   }
 
   public function onTick(\Mqtt\Client\Client $client): void {
+    $this->timeout->tick();
   }
 
+  public function onTimeout(): void {
+    $this->timeout->stop();
+    $this->client->unsubscription($this->subscription)->
+      unsubscribe();
+  }
 };
 
 /* @var $client \Mqtt\Client\Client */

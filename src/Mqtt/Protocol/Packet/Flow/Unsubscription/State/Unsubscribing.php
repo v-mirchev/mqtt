@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Packet\Flow\Subscription\State;
+namespace Mqtt\Protocol\Packet\Flow\Unsubscription\State;
 
-class Subscribing implements \Mqtt\Protocol\Packet\Flow\IState {
+class Unsubscribing implements \Mqtt\Protocol\Packet\Flow\IState {
 
   use \Mqtt\Session\TSession;
   use \Mqtt\Protocol\Packet\Flow\TState;
@@ -15,7 +15,7 @@ class Subscribing implements \Mqtt\Protocol\Packet\Flow\IState {
     $packet->id = $this->context->getIdProvider()->get();
 
     $this->flowContext->setOutgoingPacket($packet);
-    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::SUBSCRIBE_ACK_WAITING);
+    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::UNSUBSCRIBE_ACK_WAITING);
   }
 
 }

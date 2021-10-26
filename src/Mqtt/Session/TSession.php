@@ -21,7 +21,7 @@ trait TSession  {
 
   public function subscribe(array $subscriptions) : void {}
 
-  public function unsubscribe() : void {}
+  public function unsubscribe(array $subscriptions) : void {}
 
   public function onProtocolConnect(): void {}
 

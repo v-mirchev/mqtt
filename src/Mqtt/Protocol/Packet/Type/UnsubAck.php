@@ -9,20 +9,13 @@ class UnsubAck implements \Mqtt\Protocol\Packet\IType {
   /**
    * @var int
    */
-  protected $id;
+  public $id;
 
   /**
    * @param \Mqtt\Protocol\Binary\Frame $frame
    */
   public function decode(\Mqtt\Protocol\Binary\Frame $frame) {
     $this->id = $frame->getWord();
-  }
-
-  /**
-   * @return int
-   */
-  public function getId(): int {
-    return $this->id;
   }
 
   /**

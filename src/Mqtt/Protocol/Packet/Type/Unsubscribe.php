@@ -11,12 +11,18 @@ class Unsubscribe implements \Mqtt\Protocol\Packet\IType {
   */
   public $id;
 
+  /**
+   * @var \Mqtt\Entity\Subscription[]
+   */
+  public $subscriptions;
+
   public function encode(\Mqtt\Protocol\Binary\Frame $frame) {
     $frame->setPacketType(\Mqtt\Protocol\Packet\IType::UNSUBSCRIBE);
+    $frame->setReserved(0x2);
     $frame->addWord($this->id);
 
-    foreach ($this->topics as $topic) {
-      $frame->addString($topic->name);
+    foreach ($this->subscriptions as $subscription) {
+      $frame->addString($subscription->topic->name);
     }
   }
 

@@ -27,7 +27,7 @@ class Queue implements \Mqtt\Protocol\Packet\Flow\IQueue {
    */
   public function add(int $id, \Mqtt\Session\ISession $flow) : void {
     if (isset($this->queue[$id])) {
-      throw new \Exception('Queue ID already exists');
+      throw new \Exception('Queue ID <' . $id . '> already exists');
     }
     $this->queue[$id] = $flow;
   }
@@ -37,7 +37,7 @@ class Queue implements \Mqtt\Protocol\Packet\Flow\IQueue {
    */
   public function remove(int $id) : void {
     if (!isset($this->queue[$id])) {
-      throw new \Exception('Queue ID does not exist');
+      throw new \Exception('Queue ID <' . $id . '> does not exist');
     }
     unset($this->queue[$id]);
   }
@@ -48,7 +48,7 @@ class Queue implements \Mqtt\Protocol\Packet\Flow\IQueue {
    */
   public function get(int $id): \Mqtt\Session\ISession {
     if (!isset($this->queue[$id])) {
-      throw new \Exception('Queue ID does not exist');
+      throw new \Exception('Queue ID <' . $id . '> does not exist');
     }
     return $this->queue[$id];
   }

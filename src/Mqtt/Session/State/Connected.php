@@ -37,6 +37,10 @@ class Connected implements \Mqtt\Session\State\IState {
     throw new \Exception('Not allowed in this state');
   }
 
+  public function unsubscribe(array $subscriptions) : void {
+    throw new \Exception('Not allowed in this state');
+  }
+
   public function onProtocolConnect(): void {
     throw new \Exception('Not allowed in this state');
   }

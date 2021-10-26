@@ -55,8 +55,8 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
     $this->sessionState->subscribe($subscriptions);
   }
 
-  public function unsubscribe(): void {
-    $this->sessionState->unsubscribe();
+  public function unsubscribe(array $subscriptions) : void {
+    $this->sessionState->unsubscribe($subscriptions);
   }
 
   public function onProtocolConnect(): void {

@@ -29,4 +29,9 @@ interface ISessionContext {
    */
   public function getSubscriptionsFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue;
 
+  /**
+   * @return \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  public function getUnsubscriptionsFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue;
+
 }

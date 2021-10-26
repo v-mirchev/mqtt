@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Packet\Flow\Subscription;
+namespace Mqtt\Protocol\Packet\Flow\Unsubscription;
 
-class Subscription implements
+class Unsubscription implements
   \Mqtt\Session\ISession,
   \Mqtt\Protocol\Packet\Flow\IStateChanger,
   \Mqtt\Protocol\Packet\Flow\IFlowContext
@@ -40,7 +40,7 @@ class Subscription implements
   }
 
   public function start() : void {
-    $this->setState(\Mqtt\Protocol\Packet\Flow\IState::SUBSCRIBE_SUBSCRIBING);
+    $this->setState(\Mqtt\Protocol\Packet\Flow\IState::UNSUBSCRIBE_UNSUBSCRIBING);
   }
 
   /**
