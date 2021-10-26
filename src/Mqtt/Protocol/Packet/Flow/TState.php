@@ -14,6 +14,11 @@ trait TState  {
    */
   protected $context;
 
+  /**
+   * @var \Mqtt\Protocol\Packet\Flow\IFlowContext
+   */
+  protected $flowContext;
+
   public function onStateEnter() : void {}
 
   /**
@@ -25,11 +30,19 @@ trait TState  {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\Flow\IContext $context
+   * @param \Mqtt\Protocol\Packet\Flow\ISessionContext $context
    * @return void
    */
-  public function setContext(\Mqtt\Protocol\Packet\Flow\IContext $context) : void {
+  public function setContext(\Mqtt\Protocol\Packet\Flow\ISessionContext $context) : void {
     $this->context = $context;
   }
 
+
+  /**
+   * @param \Mqtt\Protocol\Packet\Flow\IFlowContext $flowContext
+   * @return void
+   */
+  public function setSubcontext(\Mqtt\Protocol\Packet\Flow\IFlowContext $flowContext) : void {
+    $this->flowContext = $flowContext;
+  }
 }

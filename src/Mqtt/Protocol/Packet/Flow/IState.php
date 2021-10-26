@@ -15,6 +15,11 @@ interface IState extends \Mqtt\Protocol\IHandler {
   const KEEP_ALIVE_PING_WAIT = 'keepalive.ping.wait';
   const KEEP_ALIVE_PONG_WAIT = 'keepalive.pong.wait';
 
+  const SUBSCRIBE_SUSBCRIBING = 'subscribe.subscribing';
+  const SUBSCRIBE_ACK_WAITING = 'subscribe.ack.waiting';
+  const SUBSCRIBE_ACKNOWLEDGED = 'subscribe.acknowledged';
+  const SUBSCRIBE_UNACKNOWLEDGED = 'subscribe.unacknowledged';
+
   public function onStateEnter() : void;
 
   /**
@@ -24,9 +29,16 @@ interface IState extends \Mqtt\Protocol\IHandler {
   public function setStateChanger(\Mqtt\Protocol\Packet\Flow\IStateChanger $stateChanger) : void;
 
   /**
-   * @param \Mqtt\Protocol\Packet\Flow\IContext $context
+   * @param \Mqtt\Protocol\Packet\Flow\ISessionContext $context
    * @return void
    */
-  public function setContext(\Mqtt\Protocol\Packet\Flow\IContext $context) : void;
+  public function setContext(\Mqtt\Protocol\Packet\Flow\ISessionContext $context) : void;
+
+
+  /**
+   * @param \Mqtt\Protocol\Packet\Flow\IFlowContext $context
+   * @return void
+   */
+  public function setSubcontext(\Mqtt\Protocol\Packet\Flow\IFlowContext $context) : void;
 
 }
