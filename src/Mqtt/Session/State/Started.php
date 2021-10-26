@@ -39,7 +39,6 @@ class Started implements \Mqtt\Session\State\IState {
   }
 
   public function publish() : void {
-    throw new \Exception('Not allowed in this state');
   }
 
   public function subscribe() : void {

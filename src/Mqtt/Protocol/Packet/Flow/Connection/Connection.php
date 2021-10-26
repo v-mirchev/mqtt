@@ -35,18 +35,6 @@ class Connection implements \Mqtt\Session\ISession, \Mqtt\Protocol\Packet\Flow\I
     $this->flowState->stop();
   }
 
-  public function publish() : void {
-    $this->flowState->publish();
-  }
-
-  public function subscribe() : void {
-    $this->flowState->subscribe();
-  }
-
-  public function unsubscribe(): void {
-    $this->flowState->unsubscribe();
-  }
-
   public function onProtocolConnect(): void {
     $this->flowState->onProtocolConnect();
   }
