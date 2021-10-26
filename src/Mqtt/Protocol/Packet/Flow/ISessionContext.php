@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Packet\Flow;
 
-interface IContext {
+interface ISessionContext {
 
   /**
    * @return \Mqtt\Entity\Configuration\Session
@@ -23,5 +23,10 @@ interface IContext {
    * @return \Mqtt\Protocol\IProtocol
    */
   public function getProtocol() : \Mqtt\Protocol\IProtocol;
+
+  /**
+   * @return \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  public function getSubscriptionsFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue;
 
 }

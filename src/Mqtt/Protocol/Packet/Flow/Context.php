@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Packet\Flow;
 
-class Context implements \Mqtt\Protocol\Packet\Flow\IContext {
+class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
 
   /**
    * @var \Mqtt\Protocol\IProtocol
@@ -25,21 +25,37 @@ class Context implements \Mqtt\Protocol\Packet\Flow\IContext {
   protected $sessionConfiguration;
 
   /**
+   * @var \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  protected $subscriptionsFlowQueue;
+
+  /**
    * @param \Mqtt\Protocol\IProtocol $protocol
    * @param \Mqtt\Session\IStateChanger $sessionStateChanger
    * @param \Mqtt\Protocol\Packet\Id\IProvider $idProvider
    * @param \Mqtt\Entity\Configuration\Session $sessionConfiguration
+   * @param \Mqtt\Protocol\Packet\Flow\IQueue $queuePrototype
    */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
     \Mqtt\Session\IStateChanger $sessionStateChanger,
     \Mqtt\Protocol\Packet\Id\IProvider $idProvider,
-    \Mqtt\Entity\Configuration\Session $sessionConfiguration
+    \Mqtt\Entity\Configuration\Session $sessionConfiguration,
+    \Mqtt\Protocol\Packet\Flow\IQueue $queuePrototype
   ) {
     $this->protocol = $protocol;
     $this->sessionStateChanger = $sessionStateChanger;
     $this->idProvider = $idProvider;
     $this->sessionConfiguration = $sessionConfiguration;
+
+    $this->subscriptionsFlowQueue = clone $queuePrototype;
+  }
+
+  /**
+   * @return \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  public function getSubscriptionsFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue {
+    return $this->subscriptionsFlowQueue;
   }
 
   /**

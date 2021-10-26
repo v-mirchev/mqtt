@@ -15,19 +15,19 @@ class Factory {
   protected $classMap;
 
   /**
-   * @var \Mqtt\Protocol\Packet\Flow\IContext
+   * @var \Mqtt\Protocol\Packet\Flow\ISessionContext
    */
   protected $context;
 
   /**
    * @param \Psr\Container\ContainerInterface $dic
    * @param array $classMap
-   * @param \Mqtt\Protocol\Packet\Flow\IContext $context
+   * @param \Mqtt\Protocol\Packet\Flow\ISessionContext $context
    */
   public function __construct(
     \Psr\Container\ContainerInterface $dic,
     array $classMap,
-    \Mqtt\Protocol\Packet\Flow\IContext $context
+    \Mqtt\Protocol\Packet\Flow\ISessionContext $context
   ) {
     $this->dic = $dic;
     $this->classMap = $classMap;

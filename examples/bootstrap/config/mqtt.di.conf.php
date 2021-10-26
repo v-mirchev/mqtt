@@ -159,7 +159,7 @@ return [
     );
   },
 
-  \Mqtt\Protocol\Packet\Flow\IContext::class => function (\Psr\Container\ContainerInterface $container) {
+  \Mqtt\Protocol\Packet\Flow\ISessionContext::class => function (\Psr\Container\ContainerInterface $container) {
     return $container->get(\Mqtt\Protocol\Packet\Flow\Context::class);
   },
 
@@ -180,7 +180,7 @@ return [
     return new \Mqtt\Protocol\Packet\Flow\Factory(
       $container,
       $container->get('mqtt.protocol.packet.flow.state.classmap'),
-      $container->get(\Mqtt\Protocol\Packet\Flow\IContext::class)
+      $container->get(\Mqtt\Protocol\Packet\Flow\ISessionContext::class)
     );
   },
 

@@ -10,7 +10,7 @@ trait TState  {
   protected $stateChanger;
 
   /**
-   * @var \Mqtt\Protocol\Packet\Flow\IContext
+   * @var \Mqtt\Protocol\Packet\Flow\ISessionContext
    */
   protected $context;
 
