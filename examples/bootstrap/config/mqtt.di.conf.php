@@ -184,4 +184,8 @@ return [
     );
   },
 
+  \Mqtt\Protocol\Packet\Flow\IQueue::class => function (\Psr\Container\ContainerInterface $container) {
+    return $container->get(\Mqtt\Protocol\Packet\Flow\Queue::class);
+  },
+
 ];
