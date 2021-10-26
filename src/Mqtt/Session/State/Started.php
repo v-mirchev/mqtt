@@ -51,9 +51,9 @@ class Started implements \Mqtt\Session\State\IState {
   }
 
   public function subscribe(array $subscriptions) : void {
-    $sub = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::SUBSCRIBE);
-    $sub->subscriptions = $subscriptions;
-    $this->context->getProtocol()->writePacket($sub);
+    $subscribePacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::SUBSCRIBE);
+    $subscribePacket->subscriptions = $subscriptions;
+    $this->context->getProtocol()->writePacket($subscribePacket);
   }
 
   public function unsubscribe(): void {
