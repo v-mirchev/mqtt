@@ -51,8 +51,8 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
     $this->sessionState->publish();
   }
 
-  public function subscribe() : void {
-    $this->sessionState->subscribe();
+  public function subscribe(array $subscriptions) : void {
+    $this->sessionState->subscribe($subscriptions);
   }
 
   public function unsubscribe(): void {

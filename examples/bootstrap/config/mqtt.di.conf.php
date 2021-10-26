@@ -174,6 +174,11 @@ return [
     \Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_DISABLED => \Mqtt\Protocol\Packet\Flow\KeepAlive\State\Disabled::class,
     \Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_PING_WAIT => \Mqtt\Protocol\Packet\Flow\KeepAlive\State\PingWaiting::class,
     \Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_PONG_WAIT => \Mqtt\Protocol\Packet\Flow\KeepAlive\State\PongWaiting::class,
+
+    \Mqtt\Protocol\Packet\Flow\IState::SUBSCRIBE_SUSBCRIBING => \Mqtt\Protocol\Packet\Flow\Subscription\State\Subscribing::class,
+    \Mqtt\Protocol\Packet\Flow\IState::SUBSCRIBE_ACK_WAITING => \Mqtt\Protocol\Packet\Flow\Subscription\State\AckWaiting::class,
+    \Mqtt\Protocol\Packet\Flow\IState::SUBSCRIBE_ACKNOWLEDGED => \Mqtt\Protocol\Packet\Flow\Subscription\State\Acknowledged::class,
+    \Mqtt\Protocol\Packet\Flow\IState::SUBSCRIBE_UNACKNOWLEDGED => \Mqtt\Protocol\Packet\Flow\Subscription\State\Unacknowledged::class,
   ],
 
   \Mqtt\Protocol\Packet\Flow\Factory::class => function (\Psr\Container\ContainerInterface $container) {

@@ -16,7 +16,7 @@ interface ISession extends \Mqtt\Protocol\IHandler  {
 
   public function publish() : void;
 
-  public function subscribe() : void;
+  public function subscribe(array $subscriptions) : void;
 
   public function unsubscribe() : void;
 

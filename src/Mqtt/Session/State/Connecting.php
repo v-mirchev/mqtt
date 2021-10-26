@@ -31,6 +31,10 @@ class Connecting implements \Mqtt\Session\State\IState, \Mqtt\ITimeoutHandler {
     throw new \Exception('Not allowed in this state');
   }
 
+  public function subscribe(array $subscriptions) : void {
+    throw new \Exception('Not allowed in this state');
+  }
+
   public function onTick() : void {
     $this->timeout->tick();
   }

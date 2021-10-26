@@ -19,7 +19,7 @@ class Disconnected implements \Mqtt\Session\State\IState {
     throw new \Exception('Not allowed in this state');
   }
 
-  public function subscribe() : void {
+  public function subscribe(array $subscriptions) : void {
     throw new \Exception('Not allowed in this state');
   }
 
