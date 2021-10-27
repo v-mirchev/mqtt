@@ -31,7 +31,7 @@ class DisconnectTest extends \PHPUnit\Framework\TestCase {
     $frameMock->
       expects($this->once())->
       method('setReserved')->
-      with($this->equalTo(0x2));
+      with($this->equalTo(0x0));
 
     $this->object->encode($frameMock);
   }
