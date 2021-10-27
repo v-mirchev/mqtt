@@ -5,9 +5,9 @@ namespace Mqtt\Entity;
 class Subscription implements IQoS {
 
   /**
-   * @var \Mqtt\Entity\Topic
+   * @var \Mqtt\Entity\TopicFilter
    */
-  public $topic;
+  public $topicFilter;
 
   /**
    * @var  \Mqtt\Client\Handler\ISubscription
@@ -19,40 +19,40 @@ class Subscription implements IQoS {
    */
   protected $isSubscribed;
 
-  public function __construct(\Mqtt\Entity\Topic $topic) {
+  public function __construct(\Mqtt\Entity\TopicFilter $topicFilter) {
     $this->handler = new class implements \Mqtt\Client\Handler\ISubscription {
-      public function onSubscribeAcknowledged(\Mqtt\Entity\Topic $topic): void {}
-      public function onSubscribeFailed(\Mqtt\Entity\Topic $topic): void {}
-      public function onSubscribed(\Mqtt\Entity\Topic $topic): void {}
-      public function onSubscribeUnacknowledged(\Mqtt\Entity\Topic $topic): void {}
-      public function onUnsubscribeUnacknowledged(Topic $topic): void {}
-      public function onUnsubscribeAcknowledged(Topic $topic): void {}
+      public function onSubscribeAcknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onSubscribeFailed(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onSubscribed(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onSubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onUnsubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onUnsubscribeAcknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
     };
-    $this->topic = clone $topic;
-    $this->topic->qos->setRelated($this);
+    $this->topicFilter = clone $topicFilter;
+    $this->topicFilter->qos->setRelated($this);
     $this->isSubscribed = false;
   }
 
   public function __clone() {
     $this->handler = new class implements \Mqtt\Client\Handler\ISubscription {
-      public function onSubscribeAcknowledged(\Mqtt\Entity\Topic $topic): void {}
-      public function onSubscribeFailed(\Mqtt\Entity\Topic $topic): void {}
-      public function onSubscribed(\Mqtt\Entity\Topic $topic): void {}
-      public function onSubscribeUnacknowledged(\Mqtt\Entity\Topic $topic): void {}
-      public function onUnsubscribeUnacknowledged(Topic $topic): void {}
-      public function onUnsubscribeAcknowledged(Topic $topic): void {}
+      public function onSubscribeAcknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onSubscribeFailed(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onSubscribed(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onSubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onUnsubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onUnsubscribeAcknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
     };
-    $this->topic = clone $this->topic;
-    $this->topic->qos->setRelated($this);
+    $this->topicFilter = clone $this->topicFilter;
+    $this->topicFilter->qos->setRelated($this);
     $this->isSubscribed = false;
   }
 
   /**
-   * @param string $name
+   * @param string $filter
    * @return \Mqtt\Entity\Subscription
    */
-  public function topic(string $name) : \Mqtt\Entity\Subscription {
-    $this->topic->name($name);
+  public function topicFilter(string $filter) : \Mqtt\Entity\Subscription {
+    $this->topicFilter->filter($filter);
     return $this;
   }
 
@@ -60,21 +60,21 @@ class Subscription implements IQoS {
    * @return \Mqtt\Entity\Subscription
    */
   public function atMostOnce() : \Mqtt\Entity\Subscription {
-    return $this->topic->qos->atMostOnce();
+    return $this->topicFilter->qos->atMostOnce();
   }
 
   /**
    * @return \Mqtt\Entity\Subscription
    */
   public function atLeastOnce() : \Mqtt\Entity\Subscription {
-    return $this->topic->qos->atLeastOnce();
+    return $this->topicFilter->qos->atLeastOnce();
   }
 
   /**
    * @return \Mqtt\Entity\Subscription
    */
   public function exactlyOnce() : \Mqtt\Entity\Subscription {
-    return $this->topic->qos->exactlyOnce();
+    return $this->topicFilter->qos->exactlyOnce();
   }
 
   /**

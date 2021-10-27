@@ -32,7 +32,7 @@ class Subscriptions {
    * @param \Mqtt\Entity\Subscription $subscription
    */
   public function add(\Mqtt\Entity\Subscription $subscription) {
-    $this->subscriptions[$subscription->topic->name] = $subscription;
+    $this->subscriptions[$subscription->topicFilter->filter] = $subscription;
     $subscription->setAsSubscribed(false);
   }
 
@@ -40,7 +40,7 @@ class Subscriptions {
    * @param \Mqtt\Entity\Subscription $subscription
    */
   public function remove(\Mqtt\Entity\Subscription $subscription) {
-    unset($this->subscriptions[$subscription->topic->name]);
+    unset($this->subscriptions[$subscription->topicFilter->filter]);
   }
 
   /**
@@ -50,7 +50,7 @@ class Subscriptions {
   public function getAllByTopicFilter(string $topicName) : array {
     $subscriptions = [];
     foreach ($this->subscriptions as $subscription) {
-      if ($subscription->topic->isMatching($topicName)) {
+      if ($subscription->topicFilter->isMatching($topicName)) {
         $subscriptions[] = $subscription;
       }
     }

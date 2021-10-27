@@ -24,65 +24,6 @@ class TopicTest extends \PHPUnit\Framework\TestCase {
     $this->object = new Topic($this->qosMock);
   }
 
-  public function testMatchingExactTopic() {
-    $topic = '/topic/1/2';
-    $this->object->name($topic);
-
-    $this->assertTrue($this->object->isMatching($topic));
-
-    $this->assertFalse($this->object->isMatching('/topic/1/2/3'));
-    $this->assertFalse($this->object->isMatching('/topic/1'));
-    $this->assertFalse($this->object->isMatching('/topic/'));
-    $this->assertFalse($this->object->isMatching('/'));
-  }
-
-  public function testMatchingMultilevelLevelTopic() {
-    $topic = '/topic/1/2/3/4';
-    $this->object->name($topic);
-
-    $this->assertTrue($this->object->isMatching('/topic/#/2/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/#/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/2/3/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/3/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/3/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/#/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#'));
-    $this->assertTrue($this->object->isMatching('#'));
-
-    $this->assertFalse($this->object->isMatching('/other-topic/#/2/3/4'));
-    $this->assertFalse($this->object->isMatching('/other-topic/#/3/4'));
-    $this->assertFalse($this->object->isMatching('/other-topic/#/4'));
-    $this->assertFalse($this->object->isMatching('/other-topic/#'));
-    $this->assertFalse($this->object->isMatching('/topic/#/#/3'));
-    $this->assertFalse($this->object->isMatching('/topic/#/3'));
-
-    $this->assertFalse($this->object->isMatching('/2/+/topic'));
-  }
-
-  public function testMatchingSingleLevelTopic() {
-    $topic = '/topic/1/2/3/4';
-    $this->object->name($topic);
-
-    $this->assertTrue($this->object->isMatching('/topic/+/2/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/+/+/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/+/+/+/4'));
-    $this->assertTrue($this->object->isMatching('/topic/+/+/+/+'));
-    $this->assertTrue($this->object->isMatching('/+/+/+/+/+'));
-
-    $this->assertFalse($this->object->isMatching('/topic/+/1/2/3/4'));
-    $this->assertFalse($this->object->isMatching('/topic/+/3/4'));
-    $this->assertFalse($this->object->isMatching('/topic/+/+/4'));
-    $this->assertFalse($this->object->isMatching('/topic/+/+/+'));
-    $this->assertFalse($this->object->isMatching('/+/+/+/+'));
-    $this->assertFalse($this->object->isMatching('/+/+/+/+/+/+'));
-  }
-
   public function testQosSetsOwner() {
     $this->qosMock->
       expects($this->once())->

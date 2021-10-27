@@ -23,8 +23,8 @@ class Subscribe implements \Mqtt\Protocol\Packet\IType {
 
     foreach ($this->subscriptions as $subscription) {
       /* @var $subscription \Mqtt\Entity\Subscription */
-      $frame->addString($subscription->topic->name);
-      $frame->addByte($subscription->topic->qos->qos);
+      $frame->addString($subscription->topicFilter->filter);
+      $frame->addByte($subscription->topicFilter->qos->qos);
     }
   }
 

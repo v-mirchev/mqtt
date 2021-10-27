@@ -33,9 +33,9 @@ class UnsubscribeTest extends \PHPUnit\Framework\TestCase {
 
     $this->object->id = 112;
     $this->object->subscriptions = [
-      (new \Mqtt\Entity\Subscription(new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS())))->atMostOnce()->topic('#topic1'),
-      (new \Mqtt\Entity\Subscription(new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS())))->atLeastOnce()->topic('#topic2'),
-      (new \Mqtt\Entity\Subscription(new \Mqtt\Entity\Topic(new \Mqtt\Entity\QoS())))->exactlyOnce()->topic('#topic3'),    ];
+      (new \Mqtt\Entity\Subscription(new \Mqtt\Entity\TopicFilter(new \Mqtt\Entity\QoS())))->atMostOnce()->topicFilter('#topic1'),
+      (new \Mqtt\Entity\Subscription(new \Mqtt\Entity\TopicFilter(new \Mqtt\Entity\QoS())))->atLeastOnce()->topicFilter('#topic2'),
+      (new \Mqtt\Entity\Subscription(new \Mqtt\Entity\TopicFilter(new \Mqtt\Entity\QoS())))->exactlyOnce()->topicFilter('#topic3'),    ];
 
     $this->callSequence()->start();
 
@@ -62,7 +62,7 @@ class UnsubscribeTest extends \PHPUnit\Framework\TestCase {
       $frameMock->
         expects($this->callSequence()->next())->
         method('addString')->
-        with($this->equalTo($subscription->topic->name));
+        with($this->equalTo($subscription->topicFilter->filter));
     }
 
     $this->object->encode($frameMock);

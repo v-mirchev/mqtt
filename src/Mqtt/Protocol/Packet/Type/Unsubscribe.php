@@ -22,7 +22,7 @@ class Unsubscribe implements \Mqtt\Protocol\Packet\IType {
     $frame->addWord($this->id);
 
     foreach ($this->subscriptions as $subscription) {
-      $frame->addString($subscription->topic->name);
+      $frame->addString($subscription->topicFilter->filter);
     }
   }
 

@@ -17,7 +17,7 @@ class Acknowledged implements \Mqtt\Protocol\Packet\Flow\IState {
       /* @var $subscription \Mqtt\Entity\Subscription */
       $subscription->setAsSubscribed(false);
       $this->context->getSubscriptions()->remove($subscription);
-      $subscription->handler->onUnsubscribeAcknowledged($subscription->topic);
+      $subscription->handler->onUnsubscribeAcknowledged($subscription->topicFilter);
     }
 
   }
