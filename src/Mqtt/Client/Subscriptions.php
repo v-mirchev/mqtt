@@ -37,14 +37,10 @@ class Subscriptions {
   }
 
   /**
-   * @param string $topicName
+   * @param \Mqtt\Entity\Subscription $subscription
    */
-  public function remove(string $topicName) {
-    foreach ($this->subscriptions as $subscriptionTopicName => $subscription) {
-      if ($subscription->topic->name === $topicName) {
-        unset($this->subscriptions[$subscriptionTopicName]);
-      }
-    }
+  public function remove(\Mqtt\Entity\Subscription $subscription) {
+    unset($this->subscriptions[$subscription->topic->name]);
   }
 
   /**

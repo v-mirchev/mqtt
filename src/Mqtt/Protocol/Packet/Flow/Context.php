@@ -30,18 +30,25 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
   protected $subscriptionsFlowQueue;
 
   /**
+   * @var \Mqtt\Client\Subscriptions
+   */
+  protected $subscriptions;
+
+  /**
    * @param \Mqtt\Protocol\IProtocol $protocol
    * @param \Mqtt\Session\IStateChanger $sessionStateChanger
    * @param \Mqtt\Protocol\Packet\Id\IProvider $idProvider
    * @param \Mqtt\Entity\Configuration\Session $sessionConfiguration
    * @param \Mqtt\Protocol\Packet\Flow\IQueue $queuePrototype
-   */
+   * @param \Mqtt\Client\Subscriptions $subscriptions
+     */
   public function __construct(
     \Mqtt\Protocol\IProtocol $protocol,
     \Mqtt\Session\IStateChanger $sessionStateChanger,
     \Mqtt\Protocol\Packet\Id\IProvider $idProvider,
     \Mqtt\Entity\Configuration\Session $sessionConfiguration,
-    \Mqtt\Protocol\Packet\Flow\IQueue $queuePrototype
+    \Mqtt\Protocol\Packet\Flow\IQueue $queuePrototype,
+    \Mqtt\Client\Subscriptions $subscriptions
   ) {
     $this->protocol = $protocol;
     $this->sessionStateChanger = $sessionStateChanger;
@@ -50,6 +57,7 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
 
     $this->subscriptionsFlowQueue = clone $queuePrototype;
     $this->unsubscriptionsFlowQueue = clone $queuePrototype;
+    $this->subscriptions = $subscriptions;
   }
 
   /**
@@ -92,6 +100,13 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
    */
   public function getSessionConfiguration(): \Mqtt\Entity\Configuration\Session {
     return $this->sessionConfiguration;
+  }
+
+  /**
+   * @return \Mqtt\Client\Subscriptions
+   */
+  public function getSubscriptions(): \Mqtt\Client\Subscriptions {
+    return $this->subscriptions;
   }
 
 }
