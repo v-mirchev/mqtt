@@ -8,12 +8,13 @@ class Unacknowledged implements \Mqtt\Protocol\Packet\Flow\IState {
   use \Mqtt\Protocol\Packet\Flow\TState;
 
   public function onStateEnter(): void {
-    /* @var $subscribePacket \Mqtt\Protocol\Packet\Type\Subscribe */
-    $subscribePacket = $this->flowContext->getOutgoingPacket();
+    /* @var $unsubscribePacket \Mqtt\Protocol\Packet\Type\Subscribe */
+    $unsubscribePacket = $this->flowContext->getOutgoingPacket();
 
-    $this->context->getUnsubscriptionsFlowQueue()->remove($subscribePacket->id);
+    $this->context->getIdProvider()->free($unsubscribePacket->id);
+    $this->context->getUnsubscriptionsFlowQueue()->remove($unsubscribePacket->id);
 
-    foreach ($subscribePacket->subscriptions as $subscription) {
+    foreach ($unsubscribePacket->subscriptions as $subscription) {
       /* @var $subscription \Mqtt\Entity\Subscription */
       $subscription->handler->onUnsubscribeUnacknowledged($subscription->topic);
     }

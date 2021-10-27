@@ -11,6 +11,7 @@ class Acknowledged implements \Mqtt\Protocol\Packet\Flow\IState {
     /* @var $unsubscribePacket \Mqtt\Protocol\Packet\Type\Subscribe */
     $unsubscribePacket = $this->flowContext->getOutgoingPacket();
 
+    $this->context->getIdProvider()->free($unsubscribePacket->id);
     $this->context->getUnsubscriptionsFlowQueue()->remove($unsubscribePacket->id);
 
     foreach ($unsubscribePacket->subscriptions as $subscription) {

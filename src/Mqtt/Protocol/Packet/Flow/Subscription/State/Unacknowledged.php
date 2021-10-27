@@ -11,6 +11,7 @@ class Unacknowledged implements \Mqtt\Protocol\Packet\Flow\IState {
     /* @var $subscribePacket \Mqtt\Protocol\Packet\Type\Subscribe */
     $subscribePacket = $this->flowContext->getOutgoingPacket();
 
+    $this->context->getIdProvider()->free($subscribePacket->id);
     $this->context->getSubscriptionsFlowQueue()->remove($subscribePacket->id);
 
     foreach ($subscribePacket->subscriptions as $subscriptionIndex => $subscription) {

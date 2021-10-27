@@ -16,6 +16,7 @@ class Acknowledged implements \Mqtt\Protocol\Packet\Flow\IState {
     /* @var $subAckPacket \Mqtt\Protocol\Packet\Type\SubAck */
     $subAckPacket = $this->flowContext->getIncomingPacket();
 
+    $this->context->getIdProvider()->free($subscribePacket->id);
     $this->context->getSubscriptionsFlowQueue()->remove($subscribePacket->id);
 
     foreach ($subscribePacket->subscriptions as $subscriptionIndex => $subscription) {
