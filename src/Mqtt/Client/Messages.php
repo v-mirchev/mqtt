@@ -2,7 +2,7 @@
 
 namespace Mqtt\Client;
 
-class Messages {
+class Messages implements \IteratorAggregate {
 
   /**
    * @var \Mqtt\Entity\Message[]
@@ -33,7 +33,6 @@ class Messages {
    */
   public function add(\Mqtt\Entity\Message $message) {
     $this->messages[] = $message;
-    $message->setAsSubscribed(false);
   }
 
   /**
@@ -41,6 +40,13 @@ class Messages {
    */
   public function remove(\Mqtt\Entity\Message $message) {
     unset($this->messages[0]);
+  }
+
+  /**
+   * @return \Traversable
+   */
+  public function getIterator(): \Traversable {
+    return new \ArrayIterator($this->messages);
   }
 
 }

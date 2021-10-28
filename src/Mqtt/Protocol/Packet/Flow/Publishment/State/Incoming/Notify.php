@@ -12,7 +12,7 @@ class Notify implements \Mqtt\Protocol\Packet\Flow\IState {
     $packet = $this->flowContext->getIncomingPacket();
 
     if ($packet->id) {
-      $this->context->getPublishmentFlowQueue()->remove($packet->id);
+      $this->context->getPublishmentIncomingFlowQueue()->remove($packet->id);
     }
 
     foreach ($this->context->getSubscriptions()->getAllByTopicFilter($packet->topic) as $subscription) {

@@ -38,8 +38,33 @@ class Message implements \Mqtt\Entity\IQoS {
    * @param \Mqtt\Entity\QoS $qos
    */
   public function __construct(\Mqtt\Entity\QoS $qos) {
-    $this->qos = $qos;
+    $this->qos = clone $qos;
     $this->qos->setRelated($this);
+
+    $this->isRetain = false;
+    $this->isDup = false;
+    $this->content = '';
+    $this->topic = '';
+    $this->handler = new class implements \Mqtt\Client\Handler\IMessage {
+      public function onMessageAcknowledged(Message $message): void {}
+      public function onMessageSent(Message $message): void {}
+      public function onMessageUnacknowledged(Message $message): void {}
+    };
+  }
+
+  public function __clone() {
+    $this->qos = clone $this->qos;
+    $this->qos->setRelated($this);
+
+    $this->isRetain = false;
+    $this->isDup = false;
+    $this->content = '';
+    $this->topic = '';
+    $this->handler = new class implements \Mqtt\Client\Handler\IMessage {
+      public function onMessageAcknowledged(Message $message): void {}
+      public function onMessageSent(Message $message): void {}
+      public function onMessageUnacknowledged(Message $message): void {}
+    };
   }
 
   /**

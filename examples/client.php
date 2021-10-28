@@ -45,7 +45,7 @@ $consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
         }
     });
     $client->subscribe();
-//    $this->timeout->start();
+    $this->timeout->start();
   }
 
   public function onStop(\Mqtt\Client\Client $client): void {
@@ -56,6 +56,24 @@ $consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
   }
 
   public function onTimeout(): void {
+    $this->timeout->stop();
+    $this->client->message()->
+      atMostOnce()->
+      topic('/test/topic/1')->
+      content('Publishing ...')->
+      handler(new class implements Mqtt\Client\Handler\IMessage {
+
+        public function onMessageAcknowledged(\Mqtt\Entity\Message $message): void {
+        }
+
+        public function onMessageSent(\Mqtt\Entity\Message $message): void {
+        }
+
+        public function onMessageUnacknowledged(\Mqtt\Entity\Message $message): void {
+        }
+    });
+    $this->client->publish();
+
 //    $this->timeout->stop();
 //    $this->client->unsubscription($this->subscription)->
 //      unsubscribe();

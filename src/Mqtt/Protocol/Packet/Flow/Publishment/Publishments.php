@@ -44,12 +44,12 @@ class Publishments implements \Mqtt\Session\ISession {
     if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBLISH)) {
       $publishmentFlow = clone $this->publishmentIncomingFlow;
       if (isset($packet->id)) {
-        $this->context->getPublishmentFlowQueue()->add($packet->id, $publishmentFlow);
+        $this->context->getPublishmentIncomingFlowQueue()->add($packet->id, $publishmentFlow);
       }
       $publishmentFlow->start();
       $publishmentFlow->onPacketReceived($packet);
     } elseif ($packet->is(\Mqtt\Protocol\Packet\IType::PUBREL)) {
-      $publishmentFlow = $this->context->getPublishmentFlowQueue()->get($packet->id);
+      $publishmentFlow = $this->context->getPublishmentIncomingFlowQueue()->get($packet->id);
       $publishmentFlow->onPacketReceived($packet);
     }
   }
@@ -64,13 +64,16 @@ class Publishments implements \Mqtt\Session\ISession {
       $publishmentFlow->start();
       $publishmentFlow->onPacketSent($packet);
       if (isset($packet->id)) {
-        $this->context->getPublishmentFlowQueue()->add($packet->id, $publishmentFlow);
+        $this->context->getPublishmentOutgoingFlowQueue()->add($packet->id, $publishmentFlow);
       }
     }
   }
 
   public function onTick(): void {
-    foreach ($this->context->getPublishmentFlowQueue() as $publishment) {
+    foreach ($this->context->getPublishmentIncomingFlowQueue() as $publishment) {
+      $publishment->onTick();
+    }
+    foreach ($this->context->getPublishmentOutgoingFlowQueue() as $publishment) {
       $publishment->onTick();
     }
   }

@@ -60,7 +60,9 @@ class Client implements \Mqtt\Session\IHandler, \Mqtt\Client\IClient {
    * @return \Mqtt\Entity\Message
    */
   public function message() : \Mqtt\Entity\Message {
-    return $this->messages->create();
+    $message = $this->messages->create();
+    $this->messages->add($message);
+    return $message;
   }
 
   public function publish() : void {

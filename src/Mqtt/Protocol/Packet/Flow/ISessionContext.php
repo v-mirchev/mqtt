@@ -37,7 +37,12 @@ interface ISessionContext {
   /**
    * @return \Mqtt\Protocol\Packet\Flow\IQueue
    */
-  public function getPublishmentFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue;
+  public function getPublishmentIncomingFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue;
+
+  /**
+   * @return \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  public function getPublishmentOutgoingFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue;
 
   /**
    * @return \Mqtt\Client\Subscriptions

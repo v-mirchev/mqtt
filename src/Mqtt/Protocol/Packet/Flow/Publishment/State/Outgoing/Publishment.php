@@ -40,7 +40,7 @@ class Publishment implements
   }
 
   public function start() : void {
-    $this->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_PUBLISHING);
+    $this->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_PUBLISHING);
   }
 
   /**

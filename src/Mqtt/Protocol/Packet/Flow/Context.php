@@ -32,7 +32,12 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
   /**
    * @var \Mqtt\Protocol\Packet\Flow\IQueue
    */
-  protected $publishmentsFlowQueue;
+  protected $publishmentsIncomingFlowQueue;
+
+  /**
+   * @var \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  protected $publishmentsOutgoingFlowQueue;
 
   /**
    * @var \Mqtt\Client\Subscriptions
@@ -62,7 +67,8 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
 
     $this->subscriptionsFlowQueue = clone $queuePrototype;
     $this->unsubscriptionsFlowQueue = clone $queuePrototype;
-    $this->publishmentsFlowQueue = clone $queuePrototype;
+    $this->publishmentsIncomingFlowQueue = clone $queuePrototype;
+    $this->publishmentsOutgoingFlowQueue = clone $queuePrototype;
     $this->subscriptions = $subscriptions;
   }
 
@@ -83,8 +89,15 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
   /**
    * @return \Mqtt\Protocol\Packet\Flow\IQueue
    */
-  public function getPublishmentFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue {
-    return $this->publishmentsFlowQueue;
+  public function getPublishmentIncomingFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue {
+    return $this->publishmentsIncomingFlowQueue;
+  }
+
+  /**
+   * @return \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  public function getPublishmentOutgoingFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue {
+    return $this->publishmentsOutgoingFlowQueue;
   }
 
   /**
