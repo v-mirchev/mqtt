@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Packet\Flow\Publishment\State\Outgoing\AtLeastOnce;
+namespace Mqtt\Protocol\Packet\Flow\Publishment\State\Outgoing\ExactlyOnce;
 
-class AckWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHandler {
+class ReceivedWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHandler {
 
   use \Mqtt\Session\TSession;
   use \Mqtt\Protocol\Packet\Flow\TState;
@@ -20,8 +20,7 @@ class AckWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHan
   }
 
   public function onStateEnter(): void {
-    $this->timeout = clone $this->timeout;
-    $this->timeout->setInterval($this->context->getSessionConfiguration()->publishAcknowledgeTimeout);
+    $this->timeout->setInterval($this->context->getSessionConfiguration()->publishReceiveTimeout);
     $this->timeout->subscribe($this);
     $this->timeout->start();
   }
@@ -31,8 +30,8 @@ class AckWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHan
    * @return void
    */
   public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBACK) && $packet->id === $this->flowContext->getOutgoingPacket()->id) {
-      $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_OUTGOING_ACKNOWLEDGED);
+    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBREC) && $packet->id === $this->flowContext->getOutgoingPacket()->id) {
+      $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_OUTGOING_RECEIVED);
     }
   }
 
@@ -41,7 +40,7 @@ class AckWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHan
   }
 
   public function onTimeout(): void {
-    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_OUTGOING_ACK_REPUBLISH);
+    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_OUTGOING_RECEIVED_REPUBLISH);
   }
 
   public function __destruct() {

@@ -40,6 +40,16 @@ class Session {
   public $publishReleaseTimeout = 10;
 
   /**
+   * @var int
+   */
+  public $publishReceiveTimeout = 10;
+
+  /**
+   * @var int
+   */
+  public $publishCompeteTimeout = 10;
+
+  /**
    * @var bool
    */
   public $isPersistent;

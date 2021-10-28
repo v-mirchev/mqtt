@@ -51,6 +51,12 @@ class Publishments implements \Mqtt\Session\ISession {
     } elseif ($packet->is(\Mqtt\Protocol\Packet\IType::PUBREL)) {
       $publishmentFlow = $this->context->getPublishmentIncomingFlowQueue()->get($packet->id);
       $publishmentFlow->onPacketReceived($packet);
+    } elseif (
+        $packet->is(\Mqtt\Protocol\Packet\IType::PUBACK) ||
+        $packet->is(\Mqtt\Protocol\Packet\IType::PUBREC) ||
+        $packet->is(\Mqtt\Protocol\Packet\IType::PUBCOMP)) {
+      $publishmentFlow = $this->context->getPublishmentOutgoingFlowQueue()->get($packet->id);
+      $publishmentFlow->onPacketReceived($packet);
     }
   }
 

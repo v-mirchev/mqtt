@@ -11,13 +11,13 @@ class Received implements \Mqtt\Protocol\Packet\Flow\IState {
     /* @var $packet \Mqtt\Protocol\Packet\Type\Publish */
     $packet = $this->flowContext->getOutgoingPacket();
 
-    /* @var $pubRecPacket \Mqtt\Protocol\Packet\Type\PubRec */
-    $pubRecPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::PUBREC);
-    $pubRecPacket->id = $packet->id;
+    /* @var $pubRelPacket \Mqtt\Protocol\Packet\Type\PubRel */
+    $pubRelPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::PUBREL);
+    $pubRelPacket->id = $packet->id;
 
-    $this->context->getProtocol()->writePacket($pubRecPacket);
+    $this->context->getProtocol()->writePacket($pubRelPacket);
 
-    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_RELEASE_WAITING);
+    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_OUTGOING_COMPLETED_WAITING);
   }
 
 }

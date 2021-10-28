@@ -20,6 +20,8 @@ class ReleaseWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeou
   }
 
   public function onStateEnter(): void {
+    $this->timeout = clone $this->timeout;
+
     $this->timeout->setInterval($this->context->getSessionConfiguration()->publishReleaseTimeout);
     $this->timeout->subscribe($this);
     $this->timeout->start();

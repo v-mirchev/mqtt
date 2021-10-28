@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Packet\Flow\Publishment\State\Outgoing\ExactlyOnce;
 
-class ReleaseWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHandler {
+class CompletedWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHandler {
 
   use \Mqtt\Session\TSession;
   use \Mqtt\Protocol\Packet\Flow\TState;
@@ -20,7 +20,8 @@ class ReleaseWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeou
   }
 
   public function onStateEnter(): void {
-    $this->timeout->setInterval($this->context->getSessionConfiguration()->publishReleaseTimeout);
+    $this->timeout = clone $this->timeout;
+    $this->timeout->setInterval($this->context->getSessionConfiguration()->publishCompeteTimeout);
     $this->timeout->subscribe($this);
     $this->timeout->start();
   }
@@ -30,8 +31,8 @@ class ReleaseWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeou
    * @return void
    */
   public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBREL) && $packet->id === $this->flowContext->getOutgoingPacket()->id) {
-      $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_COMPLETED);
+    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBCOMP) && $packet->id === $this->flowContext->getOutgoingPacket()->id) {
+      $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_OUTGOING_COMPLETED);
     }
   }
 
@@ -40,7 +41,7 @@ class ReleaseWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeou
   }
 
   public function onTimeout(): void {
-    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_RECEIVED);
+    $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_OUTGOING_RECEIVED);
   }
 
   public function __destruct() {
