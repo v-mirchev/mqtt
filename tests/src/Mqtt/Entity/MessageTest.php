@@ -4,57 +4,22 @@ namespace Mqtt\Entity;
 
 class MessageTest extends \PHPUnit\Framework\TestCase {
 
-  use \Test\Helpers\ProxyAssert;
-
   /**
-   * @var \PHPUnit\Framework\MockObject\MockObject
-   */
-  protected $qosMock;
-
-  /**
-   * @var Message
+   * @var \Mqtt\Entity\Message
    */
   protected $object;
 
   protected function setUp() {
-    $this->qosMock = $this->getMockBuilder(\Mqtt\Entity\QoS::class)->
-      disableOriginalConstructor()->
-      getMock();
-
-    $this->object = new Message($this->qosMock);
+    $this->object = new \Mqtt\Entity\Message(new \Mqtt\Entity\QoS());
   }
 
-  public function testQosSetsOwner() {
-    $this->qosMock->
-      expects($this->once())->
-      method('setRelated')->
-      with($this->equalTo($this->object));
-
-    $this->object = new Message($this->qosMock);
-  }
-
-  public function testAtMostOnceFluentlyProxiesCall() {
-    $this->proxy($this->object)->
-      with($this->qosMock)->
-      method('atMostOnce')->
-      proxyReturnValue($this->object)->
-      assert();
-  }
-
-  public function testAtLeastOnceFluentlyProxiesCall() {
-    $this->proxy($this->object)->
-      with($this->qosMock)->
-      method('atLeastOnce')->
-      proxyReturnValue($this->object)->
-      assert();
-  }
-
-  public function testExactlyOnceFluentlyProxiesCall() {
-    $this->proxy($this->object)->
-      with($this->qosMock)->
-      method('exactlyOnce')->
-      proxyReturnValue($this->object)->
-      assert();
+  public function testQoSFluentlyProxiesCall() {
+    $this->object->atMostOnce();
+    $this->assertEquals($this->object->qos->qos, QoS::AT_MOST_ONCE);
+    $this->object->atLeastOnce();
+    $this->assertEquals($this->object->qos->qos, QoS::AT_LEAST_ONCE);
+    $this->object->exactlyOnce();
+    $this->assertEquals($this->object->qos->qos, QoS::EXACTLY_ONCE);
   }
 
   public function testSetTopicChangesProperty() {
