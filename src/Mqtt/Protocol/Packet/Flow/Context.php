@@ -30,6 +30,11 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
   protected $subscriptionsFlowQueue;
 
   /**
+   * @var \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  protected $publishmentsFlowQueue;
+
+  /**
    * @var \Mqtt\Client\Subscriptions
    */
   protected $subscriptions;
@@ -57,6 +62,7 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
 
     $this->subscriptionsFlowQueue = clone $queuePrototype;
     $this->unsubscriptionsFlowQueue = clone $queuePrototype;
+    $this->publishmentsFlowQueue = clone $queuePrototype;
     $this->subscriptions = $subscriptions;
   }
 
@@ -72,6 +78,13 @@ class Context implements \Mqtt\Protocol\Packet\Flow\ISessionContext {
    */
   public function getUnsubscriptionsFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue {
     return $this->unsubscriptionsFlowQueue;
+  }
+
+  /**
+   * @return \Mqtt\Protocol\Packet\Flow\IQueue
+   */
+  public function getPublishmentFlowQueue(): \Mqtt\Protocol\Packet\Flow\IQueue {
+    return $this->publishmentsFlowQueue;
   }
 
   /**

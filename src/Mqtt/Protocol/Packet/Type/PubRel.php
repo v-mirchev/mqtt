@@ -21,6 +21,13 @@ class PubRel implements \Mqtt\Protocol\Packet\IType {
   }
 
   /**
+   * @param \Mqtt\Protocol\Binary\Frame $frame
+   */
+  public function decode(\Mqtt\Protocol\Binary\Frame $frame) {
+    $this->id = $frame->getWord();
+  }
+
+  /**
    * @param int $packetId
    * @return bool
    */

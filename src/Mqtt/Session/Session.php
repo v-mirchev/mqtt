@@ -47,14 +47,26 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
     $this->sessionState->stop();
   }
 
-  public function publish() : void {
-    $this->sessionState->publish();
+  /**
+   * @param \Mqtt\Entity\Message $message
+   * @return void
+   */
+  public function publish(\Mqtt\Entity\Message $message) : void {
+    $this->sessionState->publish($message);
   }
 
+  /**
+   * @param \Mqtt\Entity\Subscription[] $subscriptions
+   * @return void
+   */
   public function subscribe(array $subscriptions) : void {
     $this->sessionState->subscribe($subscriptions);
   }
 
+  /**
+   * @param \Mqtt\Entity\Subscription[] $subscriptions
+   * @return void
+   */
   public function unsubscribe(array $subscriptions) : void {
     $this->sessionState->unsubscribe($subscriptions);
   }
@@ -75,6 +87,10 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
     $this->sessionState->onPacketReceived($packet);
   }
 
+  /**
+   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @return void
+   */
   public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
     $this->sessionState->onPacketSent($packet);
   }

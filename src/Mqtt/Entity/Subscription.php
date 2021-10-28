@@ -27,6 +27,7 @@ class Subscription implements IQoS {
       public function onSubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
       public function onUnsubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
       public function onUnsubscribeAcknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onMessage(\Mqtt\Entity\Message $message): void {}
     };
     $this->topicFilter = clone $topicFilter;
     $this->topicFilter->qos->setRelated($this);
@@ -41,6 +42,7 @@ class Subscription implements IQoS {
       public function onSubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
       public function onUnsubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
       public function onUnsubscribeAcknowledged(\Mqtt\Entity\TopicFilter $topicFilter): void {}
+      public function onMessage(\Mqtt\Entity\Message $message): void {}
     };
     $this->topicFilter = clone $this->topicFilter;
     $this->topicFilter->qos->setRelated($this);
@@ -87,7 +89,7 @@ class Subscription implements IQoS {
   }
 
   /**
-   * @param type $subscribed
+   * @param bool $subscribed
    * @return void
    */
   public function setAsSubscribed($subscribed = true) : void {

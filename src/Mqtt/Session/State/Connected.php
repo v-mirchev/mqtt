@@ -29,7 +29,11 @@ class Connected implements \Mqtt\Session\State\IState {
     $this->context->getProtocol()->disconnect();
   }
 
-  public function publish() : void {
+  /**
+   * @param \Mqtt\Entity\Message $message
+   * @return void
+   */
+  public function publish(\Mqtt\Entity\Message $message) : void {
     throw new \Exception('Not allowed in this state');
   }
 

@@ -14,10 +14,22 @@ interface ISession extends \Mqtt\Protocol\IHandler  {
 
   public function stop() : void;
 
-  public function publish() : void;
+  /**
+   * @param \Mqtt\Entity\Message $message
+   * @return void
+   */
+  public function publish(\Mqtt\Entity\Message $message) : void;
 
+  /**
+   * @param \Mqtt\Entity\Subscription[] $subscriptions
+   * @return void
+   */
   public function subscribe(array $subscriptions) : void;
 
+  /**
+   * @param \Mqtt\Entity\Subscription[] $subscriptions
+   * @return void
+   */
   public function unsubscribe(array $subscriptions) : void;
 
 }

@@ -12,6 +12,8 @@ interface IClient {
 
   public function publish() : void;
 
+  public function message() : \Mqtt\Entity\Message;
+
   public function subscribe() : void;
 
   public function subscription() : \Mqtt\Entity\Subscription;

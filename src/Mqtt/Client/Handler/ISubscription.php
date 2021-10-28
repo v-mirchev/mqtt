@@ -40,4 +40,10 @@ interface ISubscription {
    */
   public function onSubscribed(\Mqtt\Entity\TopicFilter $topicFilter) : void;
 
+  /**
+   * @param \Mqtt\Entity\Message
+   * @return void
+   */
+  public function onMessage(\Mqtt\Entity\Message $message) : void;
+
 }

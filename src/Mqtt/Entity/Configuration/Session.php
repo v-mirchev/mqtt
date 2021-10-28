@@ -20,6 +20,26 @@ class Session {
   public $connectAcknowledgeTimeout = 10;
 
   /**
+   * @var int
+   */
+  public $subscribeAcknowledgeTimeout = 10;
+
+  /**
+   * @var int
+   */
+  public $unsubscribeAcknowledgeTimeout = 10;
+
+  /**
+   * @var int
+   */
+  public $publishAcknowledgeTimeout = 10;
+
+  /**
+   * @var int
+   */
+  public $publishReleaseTimeout = 10;
+
+  /**
    * @var bool
    */
   public $isPersistent;

@@ -31,8 +31,8 @@ $consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
     $this->client = $client;
 
     $this->subscription = $client->subscription()->
-      atMostOnce()->
-      topicFilter('tele/tasmota_switch/STATE')->
+      exactlyOnce()->
+      topicFilter('test/topic/1')->
       handler(new class implements \Mqtt\Client\Handler\ISubscription {
         public function onSubscribeAcknowledged(\Mqtt\Entity\TopicFilter $topic): void { error_log('ACK' . $topic->filter); }
         public function onSubscribeFailed(\Mqtt\Entity\TopicFilter $topic): void {}
@@ -40,9 +40,12 @@ $consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
         public function onSubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topic): void {}
         public function onUnsubscribeUnacknowledged(\Mqtt\Entity\TopicFilter $topic): void {}
         public function onUnsubscribeAcknowledged(\Mqtt\Entity\TopicFilter $topic): void {}
+        public function onMessage(\Mqtt\Entity\Message $message): void {
+          var_dump($message);
+        }
     });
     $client->subscribe();
-    $this->timeout->start();
+//    $this->timeout->start();
   }
 
   public function onStop(\Mqtt\Client\Client $client): void {
@@ -53,9 +56,9 @@ $consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
   }
 
   public function onTimeout(): void {
-    $this->timeout->stop();
-    $this->client->unsubscription($this->subscription)->
-      unsubscribe();
+//    $this->timeout->stop();
+//    $this->client->unsubscription($this->subscription)->
+//      unsubscribe();
   }
 };
 

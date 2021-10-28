@@ -30,6 +30,11 @@ class Message implements \Mqtt\Entity\IQoS {
   public $isDup;
 
   /**
+   * @var  \Mqtt\Client\Handler\IMessage
+   */
+  public $handler;
+
+  /**
    * @param \Mqtt\Entity\QoS $qos
    */
   public function __construct(\Mqtt\Entity\QoS $qos) {
@@ -91,6 +96,15 @@ class Message implements \Mqtt\Entity\IQoS {
    */
   public function dup(bool $isDup = true) : \Mqtt\Entity\Message {
     $this->isDup = $isDup;
+    return $this;
+  }
+
+  /**
+   * @param \Mqtt\Client\Handler\IMessage $handler
+   * @return \Mqtt\Entity\Message
+   */
+  public function handler(\Mqtt\Client\Handler\IMessage $handler) : \Mqtt\Entity\Message {
+    $this->handler = $handler;
     return $this;
   }
 

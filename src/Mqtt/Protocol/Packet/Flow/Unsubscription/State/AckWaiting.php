@@ -27,7 +27,7 @@ class AckWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHan
   }
 
   public function onStateEnter(): void {
-    $this->timeout->setInterval($this->context->getSessionConfiguration()->connectAcknowledgeTimeout);
+    $this->timeout->setInterval($this->context->getSessionConfiguration()->unsubscribeAcknowledgeTimeout);
     $this->timeout->subscribe($this);
     $this->timeout->start();
   }

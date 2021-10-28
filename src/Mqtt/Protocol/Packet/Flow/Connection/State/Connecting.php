@@ -23,7 +23,7 @@ class Connecting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHan
    * @return void
    */
   public function onStateEnter(): void {
-    $this->timeout->setInterval(60);
+    $this->timeout->setInterval($this->context->getSessionConfiguration()->connectAcknowledgeTimeout);
     $this->timeout->subscribe($this);
     $this->timeout->start();
   }

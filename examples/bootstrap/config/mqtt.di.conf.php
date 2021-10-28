@@ -184,6 +184,20 @@ return [
     \Mqtt\Protocol\Packet\Flow\IState::UNSUBSCRIBE_ACK_WAITING => \Mqtt\Protocol\Packet\Flow\Unsubscription\State\AckWaiting::class,
     \Mqtt\Protocol\Packet\Flow\IState::UNSUBSCRIBE_ACKNOWLEDGED => \Mqtt\Protocol\Packet\Flow\Unsubscription\State\Acknowledged::class,
     \Mqtt\Protocol\Packet\Flow\IState::UNSUBSCRIBE_UNACKNOWLEDGED => \Mqtt\Protocol\Packet\Flow\Unsubscription\State\Unacknowledged::class,
+
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_PUBLISHING => \Mqtt\Protocol\Packet\Flow\Publishment\State\Publishing::class,
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_PUBLISHING => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\Publishing::class,
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_PUBLISHING_AT_MOST_ONCE => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\AtMostOnce\Publishing::class,
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_PUBLISHING_AT_LEAST_ONCE => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\AtLeastOnce\Publishing::class,
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_PUBLISHING_EXACTLY_ONCE => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\ExactlyOnce\Publishing::class,
+
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_NOTIFY => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\Notify::class,
+
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_ACKNOWLEDGED => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\AtLeastOnce\Acknowledged::class,
+
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_RECEIVED => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\ExactlyOnce\Received::class,
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_RELEASE_WAITING => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\ExactlyOnce\ReleaseWaiting::class,
+    \Mqtt\Protocol\Packet\Flow\IState::PUBLISH_INCOMING_COMPLETED => \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\ExactlyOnce\Completed::class,
   ],
 
   \Mqtt\Protocol\Packet\Flow\Factory::class => function (\Psr\Container\ContainerInterface $container) {

@@ -15,7 +15,11 @@ class Disconnecting implements \Mqtt\Session\State\IState {
     throw new \Exception('Not allowed in this state');
   }
 
-  public function publish() : void {
+  /**
+   * @param \Mqtt\Entity\Message $message
+   * @return void
+   */
+  public function publish(\Mqtt\Entity\Message $message) : void {
     throw new \Exception('Not allowed in this state');
   }
 

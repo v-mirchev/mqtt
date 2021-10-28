@@ -28,21 +28,29 @@ class Started implements \Mqtt\Session\State\IState {
   protected $unsubscriptionFlows;
 
   /**
+   * @var \Mqtt\Protocol\Packet\Flow\Publishment\Publishments
+   */
+  protected $publishmentFlows;
+
+  /**
    * @param \Mqtt\Protocol\Packet\Flow\Connection\Connection $connectionFlow
    * @param \Mqtt\Protocol\Packet\Flow\KeepAlive\KeepAlive $keepAliveFlow
    * @param \Mqtt\Protocol\Packet\Flow\Subscription\Subscriptions $subscriptionFlows
    * @param \Mqtt\Protocol\Packet\Flow\Unsubscription\Unsubscriptions $unsubscriptionFlows
+   * @param \Mqtt\Protocol\Packet\Flow\Publishment\Publishments $publishmentFlows
    */
   public function __construct(
     \Mqtt\Protocol\Packet\Flow\Connection\Connection $connectionFlow,
     \Mqtt\Protocol\Packet\Flow\KeepAlive\KeepAlive $keepAliveFlow,
     \Mqtt\Protocol\Packet\Flow\Subscription\Subscriptions $subscriptionFlows,
-    \Mqtt\Protocol\Packet\Flow\Unsubscription\Unsubscriptions $unsubscriptionFlows
+    \Mqtt\Protocol\Packet\Flow\Unsubscription\Unsubscriptions $unsubscriptionFlows,
+    \Mqtt\Protocol\Packet\Flow\Publishment\Publishments $publishmentFlows
   ) {
     $this->connectionFlow = $connectionFlow;
     $this->keepAliveFlow = $keepAliveFlow;
     $this->subscriptionFlows = $subscriptionFlows;
     $this->unsubscriptionFlows = $unsubscriptionFlows;
+    $this->publishmentFlows = $publishmentFlows;
   }
 
   public function start() : void {
@@ -54,18 +62,33 @@ class Started implements \Mqtt\Session\State\IState {
     $this->connectionFlow->stop();
     $this->subscriptionFlows->stop();
     $this->unsubscriptionFlows->stop();
+    $this->publishmentFlows->stop();
   }
 
-  public function publish() : void {
+  /**
+   * @param \Mqtt\Entity\Message $message
+   * @return void
+   */
+  public function publish(\Mqtt\Entity\Message $message) : void {
+    /* @var $publishPacket \Mqtt\Protocol\Packet\Type\Publish */
+    $publishPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::PUBLISH);
+    $publishPacket->topic = $message->topic;
+    $publishPacket->content = $message->content;
+    $publishPacket->dup = false;
+    $publishPacket->retain = $message->isRetain;
+    $publishPacket->qos = $message->qos->qos;
+    $this->context->getProtocol()->writePacket($publishPacket);
   }
 
   public function subscribe(array $subscriptions) : void {
+    /* @var $subscribePacket \Mqtt\Protocol\Packet\Type\Subscribe */
     $subscribePacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::SUBSCRIBE);
     $subscribePacket->subscriptions = $subscriptions;
     $this->context->getProtocol()->writePacket($subscribePacket);
   }
 
   public function unsubscribe(array $subscriptions) : void {
+    /* @var $unsubscribePacket \Mqtt\Protocol\Packet\Type\Unsubscribe */
     $unsubscribePacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::UNSUBSCRIBE);
     $unsubscribePacket->subscriptions = $subscriptions;
     $this->context->getProtocol()->writePacket($unsubscribePacket);
@@ -86,7 +109,7 @@ class Started implements \Mqtt\Session\State\IState {
     $this->keepAliveFlow->onPacketReceived($packet);
     $this->subscriptionFlows->onPacketReceived($packet);
     $this->unsubscriptionFlows->onPacketReceived($packet);
-    print_r($packet);
+    $this->publishmentFlows->onPacketReceived($packet);
   }
 
   public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
@@ -94,13 +117,14 @@ class Started implements \Mqtt\Session\State\IState {
     $this->keepAliveFlow->onPacketSent($packet);
     $this->subscriptionFlows->onPacketSent($packet);
     $this->unsubscriptionFlows->onPacketSent($packet);
-    print_r($packet);
+    $this->publishmentFlows->onPacketSent($packet);
   }
 
   public function onStateEnter(): void {
     $this->keepAliveFlow->start();
     $this->subscriptionFlows->start();
     $this->unsubscriptionFlows->start();
+    $this->publishmentFlows->start();
     $this->client->onConnect();
   }
 
@@ -109,6 +133,7 @@ class Started implements \Mqtt\Session\State\IState {
     $this->keepAliveFlow->onTick();
     $this->subscriptionFlows->onTick();
     $this->unsubscriptionFlows->onTick();
+    $this->publishmentFlows->onTick();
   }
 
 }

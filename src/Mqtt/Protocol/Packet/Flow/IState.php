@@ -25,6 +25,18 @@ interface IState extends \Mqtt\Protocol\IHandler {
   const UNSUBSCRIBE_ACKNOWLEDGED = 'unsubscribe.acknowledged';
   const UNSUBSCRIBE_UNACKNOWLEDGED = 'unsubscribe.unacknowledged';
 
+  const PUBLISH_PUBLISHING = 'publish.publishing';
+
+  const PUBLISH_INCOMING_PUBLISHING = 'publish.publishing';
+  const PUBLISH_INCOMING_PUBLISHING_AT_MOST_ONCE = 'publish.incoming.publishing.at.most.once';
+  const PUBLISH_INCOMING_PUBLISHING_AT_LEAST_ONCE = 'publish.incoming.publishing.at.least.once';
+  const PUBLISH_INCOMING_PUBLISHING_EXACTLY_ONCE = 'publish.incoming.publishing.exactly.once';
+  const PUBLISH_INCOMING_ACKNOWLEDGED = 'publish.incoming.acknowldged';
+  const PUBLISH_INCOMING_RECEIVED = 'publish.incoming.received';
+  const PUBLISH_INCOMING_RELEASE_WAITING = 'publish.incoming.release.waiting';
+  const PUBLISH_INCOMING_COMPLETED = 'publish.incoming.completed';
+  const PUBLISH_INCOMING_NOTIFY = 'publish.notify';
+
   public function start() : void;
   public function stop() : void;
 
