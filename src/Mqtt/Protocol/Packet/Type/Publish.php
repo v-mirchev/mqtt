@@ -59,6 +59,9 @@ class Publish implements \Mqtt\Protocol\Packet\IType {
     $this->retain = $frame->isRetain();
     $this->qos = $frame->getQoS();
     $this->topic = $frame->getString();
+    if ($this->qos > \Mqtt\Entity\IQoS::AT_MOST_ONCE) {
+      $this->id = $frame->getWord();
+    }
     $this->content = $frame->getPayload();
   }
 
