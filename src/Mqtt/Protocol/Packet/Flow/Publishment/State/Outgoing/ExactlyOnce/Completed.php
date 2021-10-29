@@ -11,10 +11,8 @@ class Completed implements \Mqtt\Protocol\Packet\Flow\IState {
     /* @var $packet \Mqtt\Protocol\Packet\Type\Publish */
     $packet = $this->flowContext->getOutgoingPacket();
 
-    if ($packet->id) {
-      $this->context->getIdProvider()->free($packet->id);
-      $this->context->getPublishmentOutgoingFlowQueue()->remove($packet->id);
-    }
+    $this->context->getIdProvider()->free($packet->id);
+    $this->context->getPublishmentOutgoingFlowQueue()->remove($packet->id);
   }
 
 }
