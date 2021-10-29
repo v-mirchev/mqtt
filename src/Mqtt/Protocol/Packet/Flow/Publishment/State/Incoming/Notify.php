@@ -7,6 +7,18 @@ class Notify implements \Mqtt\Protocol\Packet\Flow\IState {
   use \Mqtt\Session\TSession;
   use \Mqtt\Protocol\Packet\Flow\TState;
 
+  /**
+   * @var \Mqtt\Entity\Message
+   */
+  protected $messagePrototype;
+
+  /**
+   * @param \Mqtt\Entity\Message $messagePrototype
+   */
+  public function __construct(\Mqtt\Entity\Message $messagePrototype) {
+    $this->messagePrototype = $messagePrototype;
+  }
+
   public function onStateEnter(): void {
     /* @var $packet \Mqtt\Protocol\Packet\Type\Publish */
     $packet = $this->flowContext->getIncomingPacket();
@@ -17,7 +29,7 @@ class Notify implements \Mqtt\Protocol\Packet\Flow\IState {
 
     foreach ($this->context->getSubscriptions()->getAllByTopicFilter($packet->topic) as $subscription) {
       /* @var $subscription \Mqtt\Entity\Subscription */
-      $message = new \Mqtt\Entity\Message(new \Mqtt\Entity\QoS());
+      $message = clone $this->messagePrototype;
       $message->content = $packet->content;
       $message->topic = $packet->topic;
       $subscription->handler->onMessage($message);
