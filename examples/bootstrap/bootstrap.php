@@ -2,12 +2,16 @@
 
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-$builder = new \DI\ContainerBuilder();
+return (function () {
 
-foreach (glob(__DIR__ . '/config/*.conf.php') as $subconfig) {
-  $builder->addDefinitions(require $subconfig);
-}
+  $builder = new \DI\ContainerBuilder();
+  $builder->addDefinitions((new \Mqtt\Bootstrap())->getDiDefinitions());
 
-$container = $builder->build();
+  foreach (glob(__DIR__ . '/config/*.conf.php') as $definition) {
+    $builder->addDefinitions(require $definition);
+  }
 
-return $container;
+  $container = $builder->build();
+
+  return $container;
+})();
