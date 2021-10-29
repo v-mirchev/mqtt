@@ -90,10 +90,11 @@ class Subscription implements IQoS {
 
   /**
    * @param bool $subscribed
-   * @return void
+   * @return \Mqtt\Entity\Subscription
    */
-  public function setAsSubscribed($subscribed = true) : void {
+  public function setAsSubscribed($subscribed = true) : \Mqtt\Entity\Subscription {
     $this->isSubscribed = $subscribed;
+    return $this;
   }
 
   /**
