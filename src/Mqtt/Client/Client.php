@@ -40,6 +40,12 @@ class Client implements \Mqtt\Session\IHandler, \Mqtt\Client\IClient {
     $this->subscriptions = $subscriptions;
     $this->messages = $messages;
 
+    $this->consumer = new class implements \Mqtt\IConsumer {
+      public function onStart(Client $client): void {}
+      public function onStop(Client $client): void {}
+      public function onTick(Client $client): void {}
+    };
+
     $this->registerSignalHandlers();
   }
 
