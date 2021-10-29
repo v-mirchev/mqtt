@@ -37,6 +37,11 @@ class Publish implements \Mqtt\Protocol\Packet\IType {
   public $dup = false;
 
   /**
+   * @var \Mqtt\Entity\Message
+   */
+  public $message;
+
+  /**
    * @param \Mqtt\Protocol\Binary\Frame $frame
    */
   public function encode(\Mqtt\Protocol\Binary\Frame $frame) {

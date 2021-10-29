@@ -13,6 +13,8 @@ class Completed implements \Mqtt\Protocol\Packet\Flow\IState {
 
     $this->context->getIdProvider()->free($packet->id);
     $this->context->getPublishmentOutgoingFlowQueue()->remove($packet->id);
+
+    $packet->message->handler->onMessageAcknowledged($packet->message);
   }
 
 }

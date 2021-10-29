@@ -13,6 +13,7 @@ class Publishing implements \Mqtt\Protocol\Packet\Flow\IState {
   public function onStateEnter(): void {
     /* @var $packet \Mqtt\Protocol\Packet\Type\Publish */
     $packet = $this->flowContext->getOutgoingPacket();
+    $packet->message->handler->onMessageSent($packet->message);
   }
 
 }

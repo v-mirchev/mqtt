@@ -77,6 +77,7 @@ class Started implements \Mqtt\Session\State\IState {
     $publishPacket->dup = false;
     $publishPacket->retain = $message->isRetain;
     $publishPacket->qos = $message->qos->qos;
+    $publishPacket->message = $message;
     $this->context->getProtocol()->writePacket($publishPacket);
   }
 
