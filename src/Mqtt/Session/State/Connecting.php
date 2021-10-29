@@ -70,7 +70,7 @@ class Connecting implements \Mqtt\Session\State\IState, \Mqtt\ITimeoutHandler {
   }
 
   public function onTimeout(): void {
-    throw new Exception('Could not connect');
+    throw new \Exception('Could not connect');
   }
 
   public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
