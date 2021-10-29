@@ -32,14 +32,14 @@ class Messages implements \IteratorAggregate {
    * @param \Mqtt\Entity\Message $message
    */
   public function add(\Mqtt\Entity\Message $message) {
-    $this->messages[] = $message;
+    $this->messages[spl_object_id($message)] = $message;
   }
 
   /**
    * @param \Mqtt\Entity\Message $message
    */
   public function remove(\Mqtt\Entity\Message $message) {
-    unset($this->messages[0]);
+    unset($this->messages[spl_object_id($message)]);
   }
 
   /**

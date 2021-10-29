@@ -68,6 +68,7 @@ class Client implements \Mqtt\Session\IHandler, \Mqtt\Client\IClient {
   public function publish() : void {
     foreach ($this->messages as $message) {
       $this->session->publish($message);
+      $this->messages->remove($message);
     }
   }
 
