@@ -17,7 +17,7 @@ class Socket {
   /**
    * @var string
    */
-  protected $byte;
+  protected $char;
 
   /**
    * @var int
@@ -117,21 +117,21 @@ class Socket {
   /**
    * @return string
    */
-  public function getByte() {
-    return $this->byte;
+  public function getChar() {
+    return $this->char;
   }
 
   public function read() : void {
-    $this->byte = null;
+    $this->char = null;
 
     $readStreams = [$this->socket];
     $streamChanged = @stream_select($readStreams, $writeStreams, $exceptionalStreams, 0, $this->server->selectTimeout);
     if ($streamChanged) {
-      $byte = stream_socket_recvfrom($this->socket, 1);
-      if ($byte === false) {
+      $char = stream_socket_recvfrom($this->socket, 1);
+      if ($char === false) {
         throw new \Exception('Could not read from socket');
-      } elseif (strlen($byte) > 0) {
-        $this->byte = $byte;
+      } elseif (strlen($char) > 0) {
+        $this->char = $char;
       }
     }
 

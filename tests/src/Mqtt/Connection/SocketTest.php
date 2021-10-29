@@ -179,11 +179,11 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
     $this->object->connect();
     static::serverWrite('SSH');
     $this->object->read();
-    $this->assertEquals('S', $this->object->getByte());
+    $this->assertEquals('S', $this->object->getChar());
     $this->object->read();
-    $this->assertEquals('S', $this->object->getByte());
+    $this->assertEquals('S', $this->object->getChar());
     $this->object->read();
-    $this->assertEquals('H', $this->object->getByte());
+    $this->assertEquals('H', $this->object->getChar());
     $this->object->disconnect();
 
     $this->pass();
@@ -192,7 +192,7 @@ class SocketTest extends \PHPUnit\Framework\TestCase {
   public function testReadEmptyData() {
     $this->object->connect();
     $this->object->read();
-    $this->assertNull($this->object->getByte());
+    $this->assertNull($this->object->getChar());
     $this->object->disconnect();
 
     $this->pass();

@@ -44,7 +44,7 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
       will($this->throwException(new \Exception()));
 
     $this->expectException(\Exception::class);
-    foreach ($this->object->stream() as $byte) {}
+    foreach ($this->object->stream() as $char) {}
   }
 
   public function testStreamWillReturnProperResult() {
@@ -59,11 +59,11 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
       will(call_user_func_array([$this, 'onConsecutiveCalls'], $isAliveValues));
 
     $this->socketMock->
-      method('getByte')->
+      method('getChar')->
       will($this->onConsecutiveCalls('A', 'B', 'C', null, null, 'D'));
 
-    foreach ($this->object->stream() as $byte) {
-      $this->assertEquals(array_shift($outputContent), $byte);
+    foreach ($this->object->stream() as $char) {
+      $this->assertEquals(array_shift($outputContent), $char);
     }
   }
 
@@ -107,7 +107,7 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
         expects($this->exactly($expectedCalls))->
         method('onTick');
 
-    foreach ($this->object->stream() as $byte) {}
+    foreach ($this->object->stream() as $char) {}
   }
 
   public function testProtocolReadCalledContinouslyWhileSocketIsAlive() {
@@ -124,13 +124,13 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testWriteUsesSocket() {
-    $bytes = '#BYTES';
+    $chars = '#BYTES';
     $this->socketMock->
       expects($this->once())->
       method('write')->
-      with($this->equalTo($bytes));
+      with($this->equalTo($chars));
 
-    $this->object->write($bytes);
+    $this->object->write($chars);
   }
 
   public function testDisconnectUsesSocket() {

@@ -43,9 +43,9 @@ class Connection implements \Mqtt\Connection\IConnection {
     while ($this->socket->isAlive()) {
       $this->protocol->onTick();
       $this->socket->read();
-      $byte = $this->socket->getByte();
-      if (!is_null($byte)) {
-        yield $byte;
+      $char = $this->socket->getChar();
+      if (!is_null($char)) {
+        yield $char;
       }
     }
   }
