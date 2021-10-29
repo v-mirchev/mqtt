@@ -58,6 +58,15 @@ class Frame {
   }
 
   /**
+   * @return string
+   */
+  public function encode() : string {
+    $variableHeaders = implode('', $this->variableHeaders);
+    $this->fixedHeader->setRemainingLength(strlen($variableHeaders) + strlen($this->payload));
+    return (string)$this->fixedHeader . $variableHeaders . $this->payload;
+  }
+
+  /**
    * @param int length
    * @return $this
    */
@@ -200,9 +209,7 @@ class Frame {
    * @return string
    */
   public function __toString() : string {
-    $variableHeaders = implode('', $this->variableHeaders);
-    $this->fixedHeader->setRemainingLength(strlen($variableHeaders) + strlen($this->payload));
-    return (string)$this->fixedHeader . $variableHeaders . $this->payload;
+    return $this->encode();
   }
 
   public function __clone() {
