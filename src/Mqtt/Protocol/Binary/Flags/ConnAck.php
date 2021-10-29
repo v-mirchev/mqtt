@@ -9,6 +9,8 @@ class ConnAck {
    */
   protected $word;
 
+  const BIT_SESSION_PRESENT = 9;
+
   public function __construct(\Mqtt\Protocol\Binary\Data\Word $word) {
     $this->word = clone $word;
   }
@@ -21,7 +23,7 @@ class ConnAck {
    * @return bool
    */
   public function getSessionPresent(): bool {
-    return $this->word->getMsb()->getBit(0);
+    return $this->word->getMsb()->getBit(static::BIT_SESSION_PRESENT);
   }
 
   /**
