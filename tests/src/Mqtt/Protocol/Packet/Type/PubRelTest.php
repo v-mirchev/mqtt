@@ -20,14 +20,37 @@ class PubRelTest extends \PHPUnit\Framework\TestCase {
     $this->assertFalse($this->object->is(0));
   }
 
-  public function testEncodeSetsProperPacketType() {
-    $this->object->id = 1134;
+  public function testDecodeSetsProperPacketType() {
+    $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
+      disableOriginalConstructor()->
+      getMock();
+
+    $this->object->decode($frameMock);
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::PUBREL));
+  }
+
+  public function testDecodeSetsProperId() {
+    $actualId = 111;
 
     $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
       disableOriginalConstructor()->
       getMock();
 
-    $this->callSequence()->start();
+    $frameMock->
+      expects($this->once())->
+      method('getWord')->
+      will($this->returnValue($actualId));
+
+    $this->object->decode($frameMock);
+    $this->assertEquals($actualId, $this->object->id);
+  }
+
+  public function testEncodeAddsToFrameWithProperOrder() {
+    $this->object->id = 111;
+
+    $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
+      disableOriginalConstructor()->
+      getMock();
 
     $frameMock->
       expects($this->callSequence()->next())->

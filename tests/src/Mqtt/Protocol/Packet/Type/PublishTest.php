@@ -31,6 +31,101 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
     $this->assertFalse($this->object->is(0));
   }
 
+  public function testDecodeSetsProperPacketType() {
+    $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
+      disableOriginalConstructor()->
+      getMock();
+
+    $this->object->decode($frameMock);
+    $this->assertTrue($this->object->is(\Mqtt\Protocol\Packet\IType::PUBLISH));
+  }
+
+  public function testDecodeSetsProperRetain() {
+    $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
+      disableOriginalConstructor()->
+      getMock();
+
+    $frameMock->
+      expects($this->any())->
+      method('isRetain')->
+      will($this->returnValue(true));
+
+
+    $this->object->decode($frameMock);
+    $this->assertTrue($this->object->retain);
+  }
+
+  public function testDecodeSetsProperDup() {
+    $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
+      disableOriginalConstructor()->
+      getMock();
+
+    $frameMock->
+      expects($this->any())->
+      method('isDup')->
+      will($this->returnValue(true));
+
+
+    $this->object->decode($frameMock);
+    $this->assertTrue($this->object->dup);
+  }
+
+  public function testDecodeSetsProperQos() {
+    $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
+      disableOriginalConstructor()->
+      getMock();
+
+    $qos = \Mqtt\Entity\IQoS::EXACTLY_ONCE;
+
+    $frameMock->
+      expects($this->any())->
+      method('getQos')->
+      will($this->returnValue($qos));
+
+
+    $this->object->decode($frameMock);
+    $this->assertEquals($qos, $this->object->qos);
+  }
+
+  public function testDecodeSetsProperId() {
+    $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
+      disableOriginalConstructor()->
+      getMock();
+
+    $qos = \Mqtt\Entity\IQoS::EXACTLY_ONCE;
+    $id = 117;
+
+    $frameMock->
+      expects($this->any())->
+      method('getQos')->
+      will($this->returnValue($qos));
+
+    $frameMock->
+      expects($this->any())->
+      method('getWord')->
+      will($this->returnValue($id));
+
+
+    $this->object->decode($frameMock);
+    $this->assertEquals($id, $this->object->id);
+  }
+
+  public function testDecodeSetsProperContent() {
+    $frameMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Frame::class)->
+      disableOriginalConstructor()->
+      getMock();
+
+    $payload = '#Payload';
+
+    $frameMock->
+      expects($this->any())->
+      method('getPayload')->
+      will($this->returnValue($payload));
+
+    $this->object->decode($frameMock);
+    $this->assertEquals($payload, $this->object->content);
+  }
+
   public function testEncodeAddsToFrameWithProperOrderWhenQosSetToAtMostOnce() {
 
     $this->object->topic = '#topic';

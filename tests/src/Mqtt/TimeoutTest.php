@@ -100,4 +100,19 @@ class TimeoutTest extends \PHPUnit\Framework\TestCase {
     $this->object->tick();
   }
 
+  public function testCloneResetsInstance() {
+    $this->object->setInterval(5);
+    $this->object->start();
+
+    $object = clone $this->object;
+    $this->currentTimeStubbed = 10;
+
+    $this->consumerMock->expects($this->never())->method('onTimeout');
+
+    $this->currentTimeStubbed = 15;
+    $object->tick();
+    $this->currentTimeStubbed = 20;
+    $object->tick();
+  }
+
 }

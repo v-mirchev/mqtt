@@ -8,7 +8,6 @@ namespace Mqtt\Protocol\Binary;
  */
 class FrameTest extends \PHPUnit\Framework\TestCase {
 
-  use \Test\Helpers\ProxyAssert;
   use \Test\Helpers\Binary;
 
   /**
@@ -34,6 +33,24 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   public function testEncodingFixedHeaderRetainOnly() {
     $this->object->setAsRetain();
     $this->assertEquals($this->stringToStringStream('0100'), (string) $this->object);
+  }
+
+  public function testEncodingFixedHeaderQoSOnly() {
+    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_LEAST_ONCE);
+    $this->assertEquals($this->stringToStringStream('0200'), (string) $this->object);
+    $this->object->setQoS(\Mqtt\Entity\IQoS::EXACTLY_ONCE);
+    $this->assertEquals($this->stringToStringStream('0400'), (string) $this->object);
+    $this->object->setQoS(\Mqtt\Entity\IQoS::AT_MOST_ONCE);
+    $this->assertEquals($this->stringToStringStream('0000'), (string) $this->object);
+  }
+
+  public function testEncodingFixedHeaderReservedOnly() {
+    $this->object->setReserved(0x2);
+    $this->assertEquals($this->stringToStringStream('0200'), (string) $this->object);
+    $this->object->setReserved(0x1);
+    $this->assertEquals($this->stringToStringStream('0100'), (string) $this->object);
+    $this->object->setReserved(0x0);
+    $this->assertEquals($this->stringToStringStream('0000'), (string) $this->object);
   }
 
   public function testEncodingFixedHeaderSingleVariableHeaderByte() {
@@ -73,6 +90,15 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals($this->stringToStringStream('000f0002414206002d235061796c6f6164'), (string)$this->object);
   }
 
+  public function testDecodingFixedHeaderQosOnly() {
+    $this->object->decode($this->toArrayStream(0x04, 0x00));
+    $this->assertEquals(\Mqtt\Entity\IQoS::EXACTLY_ONCE, $this->object->getQoS());
+    $this->object->decode($this->toArrayStream(0x02, 0x00));
+    $this->assertEquals(\Mqtt\Entity\IQoS::AT_LEAST_ONCE, $this->object->getQoS());
+    $this->object->decode($this->toArrayStream(0x00, 0x00));
+    $this->assertEquals(\Mqtt\Entity\IQoS::AT_MOST_ONCE, $this->object->getQoS());
+  }
+
   public function testDecodeReadsDupFixedHeaderOnly() {
     $this->object->decode($this->toArrayStream(0x08, 0x00));
     $this->assertTrue($this->object->isDup());
@@ -95,6 +121,41 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->object->decode($this->toArrayStream(0x21, 0x0));
     $this->assertTrue($this->object->isRetain());
     $this->assertEquals(\Mqtt\Protocol\Packet\IType::CONNACK, $this->object->getPacketType());
+  }
+
+  public function testDecodeFixedHeaderSingleVariableHeaderIdentifier() {
+    $this->object->decode($this->toArrayStream(0x08, 0x02, 0x00, 0x43));
+    $this->assertEquals(67, $this->object->getWord());
+  }
+
+  public function testDecodeFixedHeaderSingleVariableHeaderByte() {
+    $this->object->decode($this->toArrayStream(0xc8, 0x01, 0x05));
+    $this->assertEquals(5, $this->object->getByte());
+  }
+
+  public function testDecodePayloadAfterFetchingOtherVariables() {
+    $this->object->decode($this->toArrayStream(
+      0x00, 0x0f, 0x00, 0x02, 0x41, 0x42, 0x06, 0x00, 0x2d, 0x23, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64
+    ));
+
+    $this->object->getString();
+    $this->object->getByte();
+    $this->object->getWord();
+    $this->assertEquals('#Payload', $this->object->getPayload());
+  }
+
+  public function testDecodePayloadBytesAfterFetchingOtherVariables() {
+    $this->object->decode($this->toArrayStream(
+      0x00, 0x0f, 0x00, 0x02, 0x41, 0x42, 0x06, 0x00, 0x2d, 0x23, 0x50, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64
+    ));
+
+    $this->object->getString();
+    $this->object->getByte();
+    $this->object->getWord();
+    $this->assertEquals(
+      [ord('#'), ord('P'), ord('a'), ord('y'), ord('l'), ord('o'), ord('a'), ord('d')],
+      $this->object->getPayloadBytes()
+    );
   }
 
 }
