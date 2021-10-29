@@ -9,7 +9,7 @@ class ConnAck {
    */
   protected $word;
 
-  const BIT_SESSION_PRESENT = 9;
+  const BIT_SESSION_PRESENT = 0;
 
   public function __construct(\Mqtt\Protocol\Binary\Data\Word $word) {
     $this->word = clone $word;
