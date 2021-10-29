@@ -12,7 +12,7 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new Connect(new \Mqtt\Protocol\Binary\Operator\Byte);
+    $this->object = new Connect(new \Mqtt\Protocol\Binary\Data\Byte);
   }
 
   public function testCloneResetsInstance() {

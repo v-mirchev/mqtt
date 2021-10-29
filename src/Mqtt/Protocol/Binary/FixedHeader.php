@@ -5,12 +5,12 @@ namespace Mqtt\Protocol\Binary;
 class FixedHeader implements IFixedHeader {
 
   /**
-   * @var \Mqtt\Protocol\Binary\Operator\Byte
+   * @var \Mqtt\Protocol\Binary\Data\Byte
    */
   protected $byte;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Operator\Byte[]
+   * @var \Mqtt\Protocol\Binary\Data\Byte[]
    */
   protected $bytes;
 
@@ -20,9 +20,9 @@ class FixedHeader implements IFixedHeader {
   protected $remainingLength;
 
   /**
-   * @param \Mqtt\Protocol\Binary\Operator\Byte $byte
+   * @param \Mqtt\Protocol\Binary\Data\Byte $byte
    */
-  public function __construct(\Mqtt\Protocol\Binary\Operator\Byte $byte) {
+  public function __construct(\Mqtt\Protocol\Binary\Data\Byte $byte) {
     $this->byte = clone $byte;
     $this->bytes = [ clone $byte ];
   }
@@ -163,7 +163,7 @@ class FixedHeader implements IFixedHeader {
   }
 
   /**
-   * @return \Mqtt\Protocol\Binary\Operator\Byte[]
+   * @return \Mqtt\Protocol\Binary\Data\Byte[]
    */
   public function encode(): array {
     return array_merge([], [$this->byte], $this->bytes);

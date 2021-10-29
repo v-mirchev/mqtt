@@ -5,11 +5,11 @@ namespace Mqtt\Protocol\Binary\Flags;
 class ConnAck {
 
   /**
-   * @var \Mqtt\Protocol\Binary\Operator\Word
+   * @var \Mqtt\Protocol\Binary\Data\Word
    */
   protected $word;
 
-  public function __construct(\Mqtt\Protocol\Binary\Operator\Word $word) {
+  public function __construct(\Mqtt\Protocol\Binary\Data\Word $word) {
     $this->word = clone $word;
   }
 
