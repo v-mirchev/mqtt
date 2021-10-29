@@ -17,37 +17,37 @@ class Session {
   /**
    * @var int
    */
-  public $connectAcknowledgeTimeout = 10;
+  public $connectAcknowledgeTimeout = 2;
 
   /**
    * @var int
    */
-  public $subscribeAcknowledgeTimeout = 10;
+  public $subscribeAcknowledgeTimeout = 2;
 
   /**
    * @var int
    */
-  public $unsubscribeAcknowledgeTimeout = 10;
+  public $unsubscribeAcknowledgeTimeout = 2;
 
   /**
    * @var int
    */
-  public $publishAcknowledgeTimeout = 10;
+  public $publishAcknowledgeTimeout = 2;
 
   /**
    * @var int
    */
-  public $publishReleaseTimeout = 10;
+  public $publishReleaseTimeout = 2;
 
   /**
    * @var int
    */
-  public $publishReceiveTimeout = 10;
+  public $publishReceiveTimeout = 2;
 
   /**
    * @var int
    */
-  public $publishCompeteTimeout = 10;
+  public $publishCompeteTimeout = 2;
 
   /**
    * @var bool

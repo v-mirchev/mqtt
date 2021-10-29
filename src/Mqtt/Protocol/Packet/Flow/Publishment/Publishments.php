@@ -7,33 +7,25 @@ class Publishments implements \Mqtt\Session\ISession {
   use \Mqtt\Session\TSession;
 
   /**
-   * @var \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\Publishment
+   * @var \Mqtt\Protocol\Packet\Flow\Publishment\IncomingPublishments
    */
-  protected $publishmentIncomingFlow;
+  protected $incomingPublishments;
 
   /**
-   * @var \Mqtt\Protocol\Packet\Flow\Publishment\State\Outgoing\Publishment
+   * @var \Mqtt\Protocol\Packet\Flow\Publishment\OutgoingPublishments
    */
-  protected $publishmentOutgoingFlow;
+  protected $outgoingPublishments;
 
   /**
-   * @var \Mqtt\Protocol\Packet\Flow\ISessionContext
-   */
-  protected $context;
-
-  /**
-   * @param \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\Publishment $publishmentIncomingFlow
-   * @param \Mqtt\Protocol\Packet\Flow\Publishment\State\Outgoing\Publishment $publishmentOutgoingFlow
-   * @param \Mqtt\Protocol\Packet\Flow\ISessionContext $context
+   * @param \Mqtt\Protocol\Packet\Flow\Publishment\IncomingPublishments $incomingPublishments
+   * @param \Mqtt\Protocol\Packet\Flow\Publishment\OutgoingPublishments $outgoingPublishments
    */
   public function __construct(
-   \Mqtt\Protocol\Packet\Flow\Publishment\State\Incoming\Publishment $publishmentIncomingFlow,
-   \Mqtt\Protocol\Packet\Flow\Publishment\State\Outgoing\Publishment $publishmentOutgoingFlow,
-    \Mqtt\Protocol\Packet\Flow\ISessionContext $context
+    \Mqtt\Protocol\Packet\Flow\Publishment\IncomingPublishments $incomingPublishments,
+    \Mqtt\Protocol\Packet\Flow\Publishment\OutgoingPublishments $outgoingPublishments
   ) {
-    $this->publishmentIncomingFlow = clone $publishmentIncomingFlow;
-    $this->publishmentOutgoingFlow = clone $publishmentOutgoingFlow;
-    $this->context = $context;
+    $this->incomingPublishments = $incomingPublishments;
+    $this->outgoingPublishments = $outgoingPublishments;
   }
 
   /**
@@ -41,23 +33,8 @@ class Publishments implements \Mqtt\Session\ISession {
    * @return void
    */
   public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBLISH)) {
-      $publishmentFlow = clone $this->publishmentIncomingFlow;
-      if (isset($packet->id)) {
-        $this->context->getPublishmentIncomingFlowQueue()->add($packet->id, $publishmentFlow);
-      }
-      $publishmentFlow->start();
-      $publishmentFlow->onPacketReceived($packet);
-    } elseif ($packet->is(\Mqtt\Protocol\Packet\IType::PUBREL)) {
-      $publishmentFlow = $this->context->getPublishmentIncomingFlowQueue()->get($packet->id);
-      $publishmentFlow->onPacketReceived($packet);
-    } elseif (
-        $packet->is(\Mqtt\Protocol\Packet\IType::PUBACK) ||
-        $packet->is(\Mqtt\Protocol\Packet\IType::PUBREC) ||
-        $packet->is(\Mqtt\Protocol\Packet\IType::PUBCOMP)) {
-      $publishmentFlow = $this->context->getPublishmentOutgoingFlowQueue()->get($packet->id);
-      $publishmentFlow->onPacketReceived($packet);
-    }
+    $this->incomingPublishments->onPacketReceived($packet);
+    $this->outgoingPublishments->onPacketReceived($packet);
   }
 
   /**
@@ -65,23 +42,13 @@ class Publishments implements \Mqtt\Session\ISession {
    * @return void
    */
   public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBLISH)) {
-      $publishmentFlow = clone $this->publishmentOutgoingFlow;
-      $publishmentFlow->start();
-      $publishmentFlow->onPacketSent($packet);
-      if (isset($packet->id)) {
-        $this->context->getPublishmentOutgoingFlowQueue()->add($packet->id, $publishmentFlow);
-      }
-    }
+    $this->incomingPublishments->onPacketSent($packet);
+    $this->outgoingPublishments->onPacketSent($packet);
   }
 
   public function onTick(): void {
-    foreach ($this->context->getPublishmentIncomingFlowQueue() as $publishment) {
-      $publishment->onTick();
-    }
-    foreach ($this->context->getPublishmentOutgoingFlowQueue() as $publishment) {
-      $publishment->onTick();
-    }
+    $this->incomingPublishments->onTick();
+    $this->outgoingPublishments->onTick();
   }
 
 }

@@ -24,7 +24,7 @@ $consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
   protected $subscription;
 
   public function __construct() {
-    $this->timeout = (new \Mqtt\Timeout())->setInterval(3)->subscribe($this);
+    $this->timeout = (new \Mqtt\Timeout())->setInterval(1)->subscribe($this);
   }
 
   public function onStart(\Mqtt\Client\Client $client): void {
@@ -58,9 +58,10 @@ $consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
   public function onTimeout(): void {
     $this->timeout->stop();
     $this->client->message()->
-      atMostOnce()->
+      exactlyOnce()->
       topic('/test/topic/1')->
       content('Publishing ...')->
+      retain()->
       handler(new class implements Mqtt\Client\Handler\IMessage {
 
         public function onMessageAcknowledged(\Mqtt\Entity\Message $message): void {
@@ -73,7 +74,6 @@ $consumer = new class implements \Mqtt\IConsumer, \Mqtt\ITimeoutHandler {
         }
     });
     $this->client->publish();
-
 //    $this->timeout->stop();
 //    $this->client->unsubscription($this->subscription)->
 //      unsubscribe();
