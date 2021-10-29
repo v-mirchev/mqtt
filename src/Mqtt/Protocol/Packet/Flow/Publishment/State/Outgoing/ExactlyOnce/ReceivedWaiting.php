@@ -20,6 +20,7 @@ class ReceivedWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeo
   }
 
   public function onStateEnter(): void {
+    $this->timeout = clone $this->timeout;
     $this->timeout->setInterval($this->context->getSessionConfiguration()->publishReceiveTimeout);
     $this->timeout->subscribe($this);
     $this->timeout->start();
