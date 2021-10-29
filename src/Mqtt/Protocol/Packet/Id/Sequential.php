@@ -22,13 +22,12 @@ class Sequential implements \Mqtt\Protocol\Packet\Id\IProvider {
   }
 
   public function free(int $id) {
-    $this->freeIdentificators[$id] = $id;
+    $this->freeIdentificators[] = $id;
   }
 
   public function get(): int {
     $freeId = array_shift($this->freeIdentificators);
     if ($freeId) {
-      unset($this->freeIdentificators[$freeId]);
       return $freeId;
     }
 
