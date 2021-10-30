@@ -171,7 +171,7 @@ class FixedHeader implements IFixedHeader {
    * @return \Mqtt\Protocol\Binary\Data\Byte[]
    */
   public function encode(): array {
-    return array_merge([], [$this->controlHeader], $this->packetLengthBytes);
+    return array_merge([$this->controlHeader], $this->packetLengthBytes);
   }
 
 }
