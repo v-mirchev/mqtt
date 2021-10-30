@@ -24,6 +24,13 @@ class TopicFilterTest extends \PHPUnit\Framework\TestCase {
     $this->object = new TopicFilter($this->qosMock);
   }
 
+  public function testMatchingTasmota() {
+    $this->object->filter('stat/tasmota_switch/+');
+    $this->object->filter('#');
+    $this->assertTrue($this->object->isMatching('stat/sas/sasa'));
+//    $this->assertTrue($this->object->isMatching('stat/tasmota_switch/RESULT'));
+  }
+
   public function testMatchingExactTopicFilter() {
     $topic = '/topic/1/2';
     $this->object->filter($topic);
@@ -38,49 +45,47 @@ class TopicFilterTest extends \PHPUnit\Framework\TestCase {
 
   public function testMatchingMultilevelLevelTopicFilter() {
     $topic = '/topic/1/2/3/4';
-    $this->object->filter($topic);
 
-    $this->assertTrue($this->object->isMatching('/topic/#/2/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/#/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/4'));
-    $this->assertTrue($this->object->isMatching('/topic/#/2/3/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/3/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/3/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/#/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#/#'));
-    $this->assertTrue($this->object->isMatching('/topic/#'));
-    $this->assertTrue($this->object->isMatching('#'));
+    $this->assertTrue($this->object->filter('/topic/#/2/3/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/#/3/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/3/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/#/#/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/#/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/2/3/#')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/#/3/#')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/3/#')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/#/#/#')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/#/#')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#/#')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/#')->isMatching($topic));
+    $this->assertTrue($this->object->filter('#')->isMatching($topic));
 
-    $this->assertFalse($this->object->isMatching('/other-topic/#/2/3/4'));
-    $this->assertFalse($this->object->isMatching('/other-topic/#/3/4'));
-    $this->assertFalse($this->object->isMatching('/other-topic/#/4'));
-    $this->assertFalse($this->object->isMatching('/other-topic/#'));
-    $this->assertFalse($this->object->isMatching('/topic/#/#/3'));
-    $this->assertFalse($this->object->isMatching('/topic/#/3'));
+    $this->assertFalse($this->object->filter('/other-topic/#/2/3/4')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/other-topic/#/3/4')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/other-topic/#/4')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/other-topic/#')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/topic/#/#/3')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/topic/#/3')->isMatching($topic));
 
-    $this->assertFalse($this->object->isMatching('/2/+/topic'));
+    $this->assertFalse($this->object->filter('/2/+/topic')->isMatching($topic));
   }
 
   public function testMatchingSingleLevelTopicFilter() {
     $topic = '/topic/1/2/3/4';
-    $this->object->filter($topic);
 
-    $this->assertTrue($this->object->isMatching('/topic/+/2/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/+/+/3/4'));
-    $this->assertTrue($this->object->isMatching('/topic/+/+/+/4'));
-    $this->assertTrue($this->object->isMatching('/topic/+/+/+/+'));
-    $this->assertTrue($this->object->isMatching('/+/+/+/+/+'));
+    $this->assertTrue($this->object->filter('/topic/+/2/3/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/+/+/3/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/+/+/+/4')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/topic/+/+/+/+')->isMatching($topic));
+    $this->assertTrue($this->object->filter('/+/+/+/+/+')->isMatching($topic));
 
-    $this->assertFalse($this->object->isMatching('/topic/+/1/2/3/4'));
-    $this->assertFalse($this->object->isMatching('/topic/+/3/4'));
-    $this->assertFalse($this->object->isMatching('/topic/+/+/4'));
-    $this->assertFalse($this->object->isMatching('/topic/+/+/+'));
-    $this->assertFalse($this->object->isMatching('/+/+/+/+'));
-    $this->assertFalse($this->object->isMatching('/+/+/+/+/+/+'));
+    $this->assertFalse($this->object->filter('/topic/+/1/2/3/4')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/topic/+/3/4')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/topic/+/+/4')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/topic/+/+/+')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/+/+/+/+')->isMatching($topic));
+    $this->assertFalse($this->object->filter('/+/+/+/+/+/+')->isMatching($topic));
   }
 
   public function testQosSetsOwner() {

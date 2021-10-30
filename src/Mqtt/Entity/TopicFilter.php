@@ -53,16 +53,16 @@ class TopicFilter implements \Mqtt\Entity\IQoS {
   }
 
   /**
-   * @param string $filter
+   * @param string $topic
    * @return bool
    */
-  public function isMatching(string $filter) : bool {
+  public function isMatching(string $topic) : bool {
     $regex =
       '/^' .
-      str_replace(['^', '$', '/', '+', '#'], ['\^', '\$', '\/', '[^\/]*', '.*'], $filter) .
+      str_replace(['^', '$', '/', '+', '#'], ['\^', '\$', '\/', '[^\/]*', '.*'], $this->filter) .
       '$/';
 
-    return boolval(preg_match($regex, $this->filter));
+    return boolval(preg_match($regex, $topic));
   }
 
 }
