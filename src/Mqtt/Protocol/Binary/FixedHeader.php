@@ -10,11 +10,16 @@ class FixedHeader implements IFixedHeader {
   protected $byte;
 
   /**
+   * @var \Mqtt\Protocol\Binary\Data\Byte
+   */
+  protected $controlHeader;
+
+  /**
    * @var \Mqtt\Protocol\Binary\Data\Byte[]
    */
-  protected $bytes;
+  protected $packetLengthBytes;
 
- /**
+  /**
    * @var int
    */
   protected $remainingLength;
@@ -24,14 +29,15 @@ class FixedHeader implements IFixedHeader {
    */
   public function __construct(\Mqtt\Protocol\Binary\Data\Byte $byte) {
     $this->byte = clone $byte;
-    $this->bytes = [ clone $byte ];
+    $this->controlHeader = clone $byte;
+    $this->packetLengthBytes = [];
   }
 
   /**
    * @return int
    */
   public function getPacketType() : int {
-    return $this->byte->getSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS);
+    return $this->controlHeader->getSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS);
   }
 
   /**
@@ -39,7 +45,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setPacketType(int $type) : IFixedHeader {
-    $this->byte->setSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS, $type);
+    $this->controlHeader->setSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS, $type);
     return $this;
   }
 
@@ -48,7 +54,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setReserved(int $value) : IFixedHeader {
-    $this->byte->setSub(IFixedHeader::BIT_RESERVED_LS, IFixedHeader::BIT_RESERVED_MS, $value);
+    $this->controlHeader->setSub(IFixedHeader::BIT_RESERVED_LS, IFixedHeader::BIT_RESERVED_MS, $value);
     return $this;
   }
 
@@ -56,7 +62,7 @@ class FixedHeader implements IFixedHeader {
    * @return int
    */
   public function getQoS() : int {
-    return $this->byte->getSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS);
+    return $this->controlHeader->getSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS);
   }
 
   /**
@@ -64,7 +70,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setQoS(int $qos) : IFixedHeader {
-    $this->byte->setSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS, $qos);
+    $this->controlHeader->setSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS, $qos);
     return $this;
   }
 
@@ -72,7 +78,7 @@ class FixedHeader implements IFixedHeader {
    * @return bool
    */
   public function isDup() : bool {
-    return $this->byte->getBit(IFixedHeader::BIT_DUP);
+    return $this->controlHeader->getBit(IFixedHeader::BIT_DUP);
   }
 
   /**
@@ -80,7 +86,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setAsDup(bool $dup = true) : IFixedHeader {
-    $this->byte->setBit(IFixedHeader::BIT_DUP, $dup);
+    $this->controlHeader->setBit(IFixedHeader::BIT_DUP, $dup);
     return $this;
   }
 
@@ -88,7 +94,7 @@ class FixedHeader implements IFixedHeader {
    * @return type
    */
   public function isRetain() : bool {
-    return $this->byte->getBit(IFixedHeader::BIT_RETAIN);
+    return $this->controlHeader->getBit(IFixedHeader::BIT_RETAIN);
   }
 
   /**
@@ -96,7 +102,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setAsRetain(bool $retain = true) : IFixedHeader {
-    $this->byte->setBit(IFixedHeader::BIT_RETAIN, $retain);
+    $this->controlHeader->setBit(IFixedHeader::BIT_RETAIN, $retain);
     return $this;
   }
 
@@ -106,16 +112,16 @@ class FixedHeader implements IFixedHeader {
    */
   public function setRemainingLength(int $remainingLength) : IFixedHeader {
     $this->remainingLength = $remainingLength;
-    $this->bytes = [];
+    $this->packetLengthBytes = [];
 
     do {
       $lengthByte = (clone $this->byte)->set($remainingLength);
-      $byte = (clone $this->byte)->set($lengthByte->getSub(0, 6));
+      $packetLengthByte = (clone $this->byte)->set($lengthByte->getSub(0, 6));
       $remainingLength >>= 7;
       if ($remainingLength > 0) {
-        $byte->setBit(7, true);
+        $packetLengthByte->setBit(7, true);
       }
-      $this->bytes[] = $byte;
+      $this->packetLengthBytes[] = $packetLengthByte;
     } while ($remainingLength > 0);
 
     return $this;
@@ -126,18 +132,17 @@ class FixedHeader implements IFixedHeader {
    * @return \Mqtt\Protocol\Binary\IFixedHeader
    */
   public function decode(\Iterator $stream) : IFixedHeader {
-    $this->bytes = [ clone $this->byte ];
-    $this->byte->set($stream->current());
+    $this->controlHeader->set($stream->current());
 
     $multiplier = 1;
     $this->remainingLength = 0;
     do {
       $stream->next();
-      $byte = clone $this->byte;
-      $byte->set($stream->current());
-      $this->remainingLength += $byte->getSub(0, 6) * $multiplier;
+      $packetLengthByte = clone $this->byte;
+      $packetLengthByte->set($stream->current());
+      $this->remainingLength += $packetLengthByte->getSub(0, 6) * $multiplier;
       $multiplier *= 128;
-    } while ($byte->getBit(7));
+    } while ($packetLengthByte->getBit(7));
 
     return $this;
   }
@@ -157,8 +162,8 @@ class FixedHeader implements IFixedHeader {
   }
 
   public function __clone() {
-    $this->byte = clone $this->byte;
-    $this->bytes = [ clone clone $this->byte ];
+    $this->controlHeader = clone $this->controlHeader;
+    $this->packetLengthBytes = [ clone $this->byte ];
     $this->remainingLength = 0;
   }
 
@@ -166,7 +171,7 @@ class FixedHeader implements IFixedHeader {
    * @return \Mqtt\Protocol\Binary\Data\Byte[]
    */
   public function encode(): array {
-    return array_merge([], [$this->byte], $this->bytes);
+    return array_merge([], [$this->controlHeader], $this->packetLengthBytes);
   }
 
 }

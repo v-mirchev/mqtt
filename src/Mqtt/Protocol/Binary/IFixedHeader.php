@@ -16,7 +16,6 @@ interface IFixedHeader {
   const BIT_RESERVED_MS = 3;
 
   /**
-  /**
    * @return int
    */
   public function getPacketType() : int;
