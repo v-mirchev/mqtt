@@ -30,7 +30,7 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
       disableOriginalConstructor()->
       getMock();
 
-    $this->object = new Connection($this->socketMock, new \Mqtt\Protocol\Binary\Data\Byte());
+    $this->object = new Connection($this->socketMock, new \Mqtt\Protocol\Binary\Data\Uint8());
     $this->object->setProtocol($this->protocolMock);
   }
 

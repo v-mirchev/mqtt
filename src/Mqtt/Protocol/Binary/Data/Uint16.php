@@ -2,32 +2,32 @@
 
 namespace Mqtt\Protocol\Binary\Data;
 
-class Word {
+class Uint16 {
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Byte
+   * @var \Mqtt\Protocol\Binary\Data\Uint8
    */
   protected $lsb;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Byte
+   * @var \Mqtt\Protocol\Binary\Data\Uint8
    */
   protected $msb;
 
-  public function __construct(\Mqtt\Protocol\Binary\Data\Byte $byte) {
+  public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $byte) {
     $this->lsb = clone $byte;
     $this->msb = clone $byte;
   }
 
   /**
-   * @return Byte
+   * @return Uint8
    */
   public function getMsb() {
     return $this->msb;
   }
 
   /**
-   * @return Byte
+   * @return Uint8
    */
   public function getLsb() {
     return $this->lsb;
@@ -35,9 +35,9 @@ class Word {
 
   /**
    * @param int $value
-   * @return \Mqtt\Protocol\Binary\Data\Word
+   * @return \Mqtt\Protocol\Binary\Data\Uint16
    */
-  public function set(int $value) : Word {
+  public function set(int $value) : Uint16 {
     $this->msb->set($value >> 8);
     $this->lsb->set($value % 256);
     return $this;
@@ -46,9 +46,9 @@ class Word {
   /**
    * @param mixed $msb
    * @param mixed $lsb
-   * @return \Mqtt\Protocol\Binary\Data\Word
+   * @return \Mqtt\Protocol\Binary\Data\Uint16
    */
-  public function setBytes($msb, $lsb) : Word {
+  public function setBytes($msb, $lsb) : Uint16 {
     $this->msb->set($msb);
     $this->lsb->set($lsb);
     return $this;

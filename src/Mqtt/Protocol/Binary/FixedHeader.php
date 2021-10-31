@@ -5,17 +5,17 @@ namespace Mqtt\Protocol\Binary;
 class FixedHeader implements IFixedHeader {
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Byte
+   * @var \Mqtt\Protocol\Binary\Data\Uint8
    */
   protected $byte;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Byte
+   * @var \Mqtt\Protocol\Binary\Data\Uint8
    */
   protected $controlHeader;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Byte[]
+   * @var \Mqtt\Protocol\Binary\Data\Uint8[]
    */
   protected $packetLengthBytes;
 
@@ -25,9 +25,9 @@ class FixedHeader implements IFixedHeader {
   protected $remainingLength;
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\Byte $byte
+   * @param \Mqtt\Protocol\Binary\Data\Uint8 $byte
    */
-  public function __construct(\Mqtt\Protocol\Binary\Data\Byte $byte) {
+  public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $byte) {
     $this->byte = clone $byte;
     $this->controlHeader = clone $byte;
     $this->packetLengthBytes = [];
@@ -168,7 +168,7 @@ class FixedHeader implements IFixedHeader {
   }
 
   /**
-   * @return \Mqtt\Protocol\Binary\Data\Byte[]
+   * @return \Mqtt\Protocol\Binary\Data\Uint8[]
    */
   public function encode(): array {
     return array_merge([$this->controlHeader], $this->packetLengthBytes);

@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Binary\Data;
 
-class Byte {
+class Uint8 {
 
   /**
    * @var int
@@ -13,7 +13,7 @@ class Byte {
    * @param type $value
    * @return $this
    */
-  public function set($value) : \Mqtt\Protocol\Binary\Data\Byte {
+  public function set($value) : \Mqtt\Protocol\Binary\Data\Uint8 {
     $this->value = is_string($value) ? \ord($value[0]) : (0xFF & (int)$value);
     return $this;
   }
@@ -30,7 +30,7 @@ class Byte {
    * @param type $bitValue
    * @return void
    */
-  public function setBit(int $bit, $bitValue) : \Mqtt\Protocol\Binary\Data\Byte {
+  public function setBit(int $bit, $bitValue) : \Mqtt\Protocol\Binary\Data\Uint8 {
     $this->value = $bitValue ? $this->get() | (1 << $bit) : $this->get() & ~(1 << $bit);
     return $this;
   }
@@ -56,7 +56,7 @@ class Byte {
    * @param int $bit
    * @return int
    */
-  public function setSub(int $startBit, int $endBit, int $value) : \Mqtt\Protocol\Binary\Data\Byte {
+  public function setSub(int $startBit, int $endBit, int $value) : \Mqtt\Protocol\Binary\Data\Uint8 {
     $mask = (int)(((1 << ($endBit + 1)) - 1) >> $startBit) << $startBit;
     $shiftedValue = (($value << $startBit) & $mask);
     $this->value &= (~$mask);

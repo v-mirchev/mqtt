@@ -2,15 +2,15 @@
 
 namespace Mqtt\Protocol\Binary\Data;
 
-class WordTest extends \PHPUnit\Framework\TestCase {
+class Wint16Test extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var Word
+   * @var Uint16
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = new Word(new Byte());
+    $this->object = new Uint16(new Uint8());
   }
 
   public function testSetLimitsTo16bitSize() {

@@ -10,7 +10,7 @@ class VariableHeader {
   protected $buffer;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Word
+   * @var \Mqtt\Protocol\Binary\Data\Uint16
    */
   protected $word;
 
@@ -21,11 +21,11 @@ class VariableHeader {
 
   /**
    * @param \Mqtt\Protocol\Binary\Data\Buffer $buffer
-   * @param \Mqtt\Protocol\Binary\Data\Word $word
+   * @param \Mqtt\Protocol\Binary\Data\Uint16 $word
    */
   public function __construct(
     \Mqtt\Protocol\Binary\Data\Buffer $buffer,
-    \Mqtt\Protocol\Binary\Data\Word $word
+    \Mqtt\Protocol\Binary\Data\Uint16 $word
   ) {
     $this->buffer = clone $buffer;
     $this->word = clone $word;

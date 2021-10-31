@@ -2,15 +2,15 @@
 
 namespace Mqtt\Protocol\Binary\Data;
 
-class ByteTest extends \PHPUnit\Framework\TestCase {
+class Uint8Test extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var Byte
+   * @var Uint8
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = new Byte();
+    $this->object = new Uint8();
   }
 
   public function testSetLimitsTo8bitSize() {
