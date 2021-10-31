@@ -12,7 +12,7 @@ class VariableHeader {
   /**
    * @var \Mqtt\Protocol\Binary\Data\Uint16
    */
-  protected $word;
+  protected $uint16;
 
   /**
    * @var string
@@ -28,7 +28,7 @@ class VariableHeader {
     \Mqtt\Protocol\Binary\Data\Uint16 $word
   ) {
     $this->buffer = clone $buffer;
-    $this->word = clone $word;
+    $this->uint16 = clone $word;
 
     $this->content = '';
   }
@@ -38,7 +38,7 @@ class VariableHeader {
    */
   public function createString(string $content) : \Mqtt\Protocol\Binary\VariableHeader {
     $instance = clone $this;
-    $instance->word->set(strlen($content));
+    $instance->uint16->set(strlen($content));
     $instance->content = $content;
 
     return $instance;
@@ -49,7 +49,7 @@ class VariableHeader {
    */
   public function createWord(int $identifier) {
     $instance = clone $this;
-    $instance->word->set($identifier);
+    $instance->uint16->set($identifier);
     $instance->content = '';
 
     return $instance;
@@ -60,7 +60,7 @@ class VariableHeader {
    */
   public function createByte(int $byte) {
     $instance = clone $this;
-    $instance->word = null;
+    $instance->uint16 = null;
     $instance->content = chr($byte);
 
     return $instance;
@@ -85,8 +85,8 @@ class VariableHeader {
    * @return $this
    */
   public function getString() : string {
-    $this->word->decode($this->buffer);
-    $content = $this->buffer->getString($this->word->get());
+    $this->uint16->decode($this->buffer);
+    $content = $this->buffer->getString($this->uint16->get());
     return $content;
   }
 
@@ -94,16 +94,16 @@ class VariableHeader {
    * @return int
    */
   public function getWord() {
-    $this->word->decode($this->buffer);
-    return $this->word->get();
+    $this->uint16->decode($this->buffer);
+    return $this->uint16->get();
   }
 
   /**
    * @return string
    */
   public function getByte() : int {
-    $this->word->setBytes(0, $this->buffer->getByte());
-    return $this->word->getLsb()->get();
+    $this->uint16->set($this->buffer->getByte());
+    return $this->uint16->getLsb()->get();
   }
 
   /**
@@ -118,13 +118,13 @@ class VariableHeader {
    */
   public function __toString() : string {
     return
-      $this->word .
+      $this->uint16 .
       $this->content;
   }
 
   public function __clone() {
     $this->buffer = clone $this->buffer;
-    $this->word = clone $this->word;
+    $this->uint16 = clone $this->uint16;
     $this->content = '';
   }
 
