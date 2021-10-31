@@ -34,7 +34,7 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
       new \Mqtt\Entity\Configuration\Protocol()
     );
 
-    $this->flagsMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Flags\Connect::class)->
+    $this->flagsMock = $this->getMockBuilder(\Mqtt\Protocol\Packet\Type\Flags\Connect::class)->
       disableOriginalConstructor()->
       getMock();
 
@@ -42,7 +42,7 @@ class ConnectTest extends \PHPUnit\Framework\TestCase {
       disableOriginalConstructor()->
       getMock();
 
-    $this->object = new Connect($this->sessionParameters, $this->flagsMock);
+    $this->object = new \Mqtt\Protocol\Packet\Type\Connect($this->sessionParameters, $this->flagsMock);
   }
 
   public function testIsA() {

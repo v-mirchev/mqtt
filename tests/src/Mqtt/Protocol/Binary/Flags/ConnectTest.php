@@ -1,18 +1,18 @@
 <?php
 
-namespace Mqtt\Protocol\Binary\Flags;
+namespace Mqtt\Protocol\Packet\Type\Flags;
 
 class ConnectTest extends \PHPUnit\Framework\TestCase {
 
    use \Test\Helpers\Binary;
 
- /**
-   * @var Connect
+  /**
+   * @var \Mqtt\Protocol\Packet\Type\Connect
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = new Connect(new \Mqtt\Protocol\Binary\Data\Uint8);
+    $this->object = new \Mqtt\Protocol\Packet\Type\Flags\Connect(new \Mqtt\Protocol\Binary\Data\Uint8);
   }
 
   public function testCloneResetsInstance() {

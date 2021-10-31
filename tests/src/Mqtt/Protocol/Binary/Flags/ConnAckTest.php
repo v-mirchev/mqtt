@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Binary\Flags;
+namespace Mqtt\Protocol\Packet\Type\Flags;
 
 /**
  * @Inject $container
@@ -11,12 +11,12 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   use \Test\Helpers\Binary;
 
   /**
-   * @var ConnAck
+   * @var \Mqtt\Protocol\Packet\Type\Flags\ConnAck
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = clone $this->___container->get(ConnAck::class);
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Packet\Type\Flags\ConnAck::class);
   }
 
   public function testCloneResetsInstance() {

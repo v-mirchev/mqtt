@@ -17,7 +17,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->flagsMock = $this->getMockBuilder(\Mqtt\Protocol\Binary\Flags\ConnAck::class)->
+    $this->flagsMock = $this->getMockBuilder(\Mqtt\Protocol\Packet\Type\Flags\ConnAck::class)->
       disableOriginalConstructor()->
       getMock();
 
