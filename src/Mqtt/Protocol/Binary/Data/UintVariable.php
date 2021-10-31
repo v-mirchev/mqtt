@@ -4,6 +4,10 @@ namespace Mqtt\Protocol\Binary\Data;
 
 class UintVariable implements \Mqtt\Protocol\Binary\Data\ICodec {
 
+  const BIT_VALUE_START = 0;
+  const BIT_VALUE_END = 6;
+  const BIT_CONTINUOUS = 7;
+
   /**
    * @var string
    */
@@ -15,20 +19,30 @@ class UintVariable implements \Mqtt\Protocol\Binary\Data\ICodec {
   protected $lengthBytes;
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\Bit $length
+   * @var \Mqtt\Protocol\Binary\Data\Uint8
    */
-  public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $length) {
+  protected $uint8Prototype;
+
+  /**
+   * @var int
+   */
+  protected $length;
+
+  /**
+   * @param \Mqtt\Protocol\Binary\Data\Bit $uint8Prototype
+   */
+  public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $uint8Prototype) {
+    $this->uint8Prototype = clone $uint8Prototype;
+    $this->lengthBytes = [clone $this->uint8Prototype];
     $this->value = 0;
-    $this->length = clone $length;
   }
 
   /**
-   * @param string $content
+   * @param string $value
    * @return $this
    */
-  public function set(string $content) : \Mqtt\Protocol\Binary\Data\UintVariable {
-    $this->value = (string)$content;
-    $this->length->set(strlen($this->value));
+  public function set(int $value) : \Mqtt\Protocol\Binary\Data\UintVariable {
+    $this->value = $value;
     return $this;
   }
 
@@ -43,22 +57,45 @@ class UintVariable implements \Mqtt\Protocol\Binary\Data\ICodec {
    * @return string
    */
   public function __toString() : string {
-    return $this->length . $this->value;
+    $value = $this->value;
+    $this->packetLengthBytes = [];
+
+    do {
+      $lengthUint8 = (clone $this->byte)->set($value);
+      $packetLengthUint8 = (clone $this->byte)->
+        set($lengthUint8->bits()->getSub(static::BIT_VALUE_START, static::BIT_VALUE_END));
+
+      $value >>= static::BIT_CONTINUOUS;
+      if ($value > 0) {
+        $packetLengthUint8->bits()->setBit(static::BIT_CONTINUOUS, true);
+      }
+      $this->lengthBytes[] = $packetLengthUint8;
+    } while ($value > 0);
   }
 
   public function __clone() {
-    $this->value = '';
-    $this->length = clone $this->length;
+    $this->uint8Prototype = clone $this->uint8Prototype;
+    $this->lengthBytes = [clone $this->uint8Prototype];
+    $this->value = 0;
   }
-
 
   /**
    * @param \Mqtt\Protocol\Binary\Data\Buffer $buffer
    * @return void
    */
   public function decode(\Mqtt\Protocol\Binary\Data\Buffer $buffer): void {
-    $this->length->decode($buffer);
-    $this->set($buffer->getString($this->length->get()));
+    $multiplier = 1;
+    $this->value = 0;
+    do {
+      $packetLengthUint8 = clone $this->uint8Prototype;
+      $packetLengthUint8->set($buffer->getByte());
+      $this->value += $packetLengthUint8->bits()->
+        getSub(static::BIT_VALUE_START, static::BIT_VALUE_END)->get() * $multiplier;
+      if ($multiplier > 128 * 128 * 128) {
+        throw \Exception('Malformed Variable Byte Integer');
+      }
+      $multiplier *= 128;
+    } while ($packetLengthUint8->bits()->getBit(static::BIT_CONTINUOUS));
   }
 
   /**
