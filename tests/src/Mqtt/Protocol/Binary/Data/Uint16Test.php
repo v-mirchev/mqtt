@@ -24,11 +24,6 @@ class Uint16Test extends \PHPUnit\Framework\TestCase {
     $this->assertEquals(0x0000, $this->object->get());
   }
 
-  public function testSetFromChar() {
-    $this->object->setBytes('A', 'B');
-    $this->assertEquals(0x4142, $this->object->get());
-  }
-
   public function testStringable() {
     $this->object->set(0x4142);
     $this->assertEquals('AB', (string)$this->object);
