@@ -76,6 +76,14 @@ class Buffer {
   }
 
   /**
+   * @return $this
+   */
+  public function reset() {
+    $this->set('');
+    return $this;
+  }
+
+  /**
    * @param string $encodedData
    * @return $this
    */
