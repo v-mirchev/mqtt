@@ -16,15 +16,15 @@ class ConnAck implements \Mqtt\Protocol\Packet\IType {
   ];
 
   /**
-   * @var \Mqtt\Protocol\Packet\TypeFlags\ConnAck
+   * @var \Mqtt\Protocol\Packet\Type\Flags\ConnAck
    */
   protected $flags;
 
   /**
-   * @param \Mqtt\Protocol\Binary\Flags\ConnAck $flags
+   * @param \Mqtt\Protocol\Packet\Type\Flags\ConnAck $flags
    */
   public function __construct(
-    \Mqtt\Protocol\Binary\Flags\ConnAck $flags
+    \Mqtt\Protocol\Packet\Type\Flags\ConnAck $flags
   ) {
     $this->flags = $flags;
   }

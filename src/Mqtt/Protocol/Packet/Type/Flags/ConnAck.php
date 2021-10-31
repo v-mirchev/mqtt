@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Binary\Flags;
+namespace Mqtt\Protocol\Packet\Type\Flags;
 
 class ConnAck {
 

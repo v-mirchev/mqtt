@@ -12,17 +12,17 @@ class Connect implements \Mqtt\Protocol\Packet\IType {
   protected $sessionParameters;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Flags\Connect
+   * @var \Mqtt\Protocol\Packet\Type\Flags\Connect
    */
   protected $flags;
 
   /**
    * @param \Mqtt\Entity\Configuration\Session $sessionParameters
-   * @param \Mqtt\Protocol\Binary\Flags\Connect $flags
+   * @param \Mqtt\Protocol\Packet\Type\Flags\Connect $flags
    */
   public function __construct(
     \Mqtt\Entity\Configuration\Session $sessionParameters,
-    \Mqtt\Protocol\Binary\Flags\Connect $flags
+    \Mqtt\Protocol\Packet\Type\Flags\Connect $flags
   ) {
     $this->sessionParameters = $sessionParameters;
     $this->flags = $flags;
