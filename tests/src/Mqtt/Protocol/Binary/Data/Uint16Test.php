@@ -2,15 +2,19 @@
 
 namespace Mqtt\Protocol\Binary\Data;
 
-class Wint16Test extends \PHPUnit\Framework\TestCase {
+/**
+ * @Inject $container
+ * @property \Psr\Container\ContainerInterface $___container
+ */
+class Uint16Test extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var Uint16
+   * @var \Mqtt\Protocol\Binary\Data\Uint16
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = new Uint16(new Uint8());
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint16::class);
   }
 
   public function testSetLimitsTo16bitSize() {

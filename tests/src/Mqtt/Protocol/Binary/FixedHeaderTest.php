@@ -2,17 +2,21 @@
 
 namespace Mqtt\Protocol\Binary;
 
+/**
+ * @Inject $container
+ * @property \Psr\Container\ContainerInterface $___container
+ */
 class FixedHeaderTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\Binary;
 
   /**
-   * @var FixedHeader
+   * @var \Mqtt\Protocol\Binary\FixedHeader
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = new FixedHeader(new \Mqtt\Protocol\Binary\Data\Uint8());
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Binary\FixedHeader::class);
   }
 
   public function testClonedIsCleanObject() {
@@ -22,7 +26,7 @@ class FixedHeaderTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function firstByteDataProvider() {
-    $object = new FixedHeader(new \Mqtt\Protocol\Binary\Data\Uint8());
+    $object = new \Mqtt\Protocol\Binary\FixedHeader(new \Mqtt\Protocol\Binary\Data\Uint8(new \Mqtt\Protocol\Binary\Data\Bit()));
     $flagPermutations = [
       [
         (clone $object)->

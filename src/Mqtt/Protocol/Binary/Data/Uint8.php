@@ -2,7 +2,12 @@
 
 namespace Mqtt\Protocol\Binary\Data;
 
-class Uint8 {
+class Uint8 implements \Mqtt\Protocol\Binary\Data\ICodec, \Mqtt\Protocol\Binary\Data\IUint {
+
+  /**
+   * @var \Mqtt\Protocol\Binary\Data\Bit
+   */
+  protected $bit;
 
   /**
    * @var int
@@ -10,11 +15,20 @@ class Uint8 {
   protected $value;
 
   /**
+   * @param \Mqtt\Protocol\Binary\Data\Bit $bit
+   */
+  public function __construct(\Mqtt\Protocol\Binary\Data\Bit $bit) {
+    $this->bit = clone $bit;
+  }
+
+  /**
    * @param type $value
    * @return $this
    */
-  public function set($value) : \Mqtt\Protocol\Binary\Data\Uint8 {
-    $this->value = is_string($value) ? \ord($value[0]) : (0xFF & (int)$value);
+  public function set($value) : \Mqtt\Protocol\Binary\Data\IUint {
+    $this->value = $value instanceof \Mqtt\Protocol\Binary\Data\IUint ?
+      $value->get() :
+      (is_string($value) ? \ord($value[0]) : (0xFF & (int)$value));
     return $this;
   }
 
@@ -26,42 +40,10 @@ class Uint8 {
   }
 
   /**
-   * @param int $bit
-   * @param type $bitValue
-   * @return void
+   * @return \Mqtt\Protocol\Binary\Data\Bit
    */
-  public function setBit(int $bit, $bitValue) : \Mqtt\Protocol\Binary\Data\Uint8 {
-    $this->value = $bitValue ? $this->get() | (1 << $bit) : $this->get() & ~(1 << $bit);
-    return $this;
-  }
-
-  /**
-   * @param int $bit
-   * @return int
-   */
-  public function getBit(int $bit) : int {
-    return (bool)($this->get() & (1 << $bit));
-  }
-
-  /**
-   * @param int $startBit
-   * @param int $endBit
-   * @return int
-   */
-  public function getSub(int $startBit, int $endBit) : int {
-    return (int)(($this->get() & ((1 << ($endBit + 1)) - 1)) >> $startBit);
-  }
-
-  /**
-   * @param int $bit
-   * @return int
-   */
-  public function setSub(int $startBit, int $endBit, int $value) : \Mqtt\Protocol\Binary\Data\Uint8 {
-    $mask = (int)(((1 << ($endBit + 1)) - 1) >> $startBit) << $startBit;
-    $shiftedValue = (($value << $startBit) & $mask);
-    $this->value &= (~$mask);
-    $this->value |= $shiftedValue;
-    return $this;
+  public function bits(): \Mqtt\Protocol\Binary\Data\Bit {
+    return $this->bit->uint($this);
   }
 
   /**
@@ -73,6 +55,24 @@ class Uint8 {
 
   public function __clone() {
     $this->value = 0;
+    $this->bit = clone $this->bit;
+    $this->bit->uint($this);
+  }
+
+  /**
+   * @param \Mqtt\Protocol\Binary\Data\Buffer $buffer
+   * @return void
+   */
+  public function decode(\Mqtt\Protocol\Binary\Data\Buffer $buffer): void {
+    $this->set($buffer->buffer->getByte());
+  }
+
+  /**
+   * @param \Mqtt\Protocol\Binary\Data\Buffer $buffer
+   * @return void
+   */
+  public function encode(\Mqtt\Protocol\Binary\Data\Buffer $buffer): void {
+    $buffer->append((string) $this);
   }
 
 }

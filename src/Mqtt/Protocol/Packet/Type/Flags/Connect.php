@@ -30,56 +30,60 @@ class Connect {
    * @param bool $useUsername
    */
   public function useUsername(bool $useUsername = true) {
-    $this->byte->setBit(static::BIT_USERNAME, $useUsername);
+    $this->byte->bits()->setBit(static::BIT_USERNAME, $useUsername);
   }
 
   /**
    * @param bool $usePassword
    */
   public function usePassword(bool $usePassword = true) {
-    $this->byte->setBit(static::BIT_PASSWORD, $usePassword);
+    $this->byte->bits()->setBit(static::BIT_PASSWORD, $usePassword);
   }
 
   /**
    * @param bool $willRetain
    */
   public function setWillRetain(bool $willRetain = true) {
-    $this->byte->setBit(static::BIT_WILL_REATIN, $willRetain);
+    $this->byte->bits()->setBit(static::BIT_WILL_REATIN, $willRetain);
   }
 
   /**
    * @param int $willQoS
    */
   public function setWillQoS(int $willQoS = 0) {
-    $this->byte->setSub(static::BIT_WILL_QOS_LS, static::BIT_WILL_QOS_MS, $willQoS);
+    $this->byte->bits()->setSub(static::BIT_WILL_QOS_LS, static::BIT_WILL_QOS_MS, $willQoS);
   }
 
   /**
    * @param bool $will
    */
   public function useWill(bool $will = true) {
-    $this->byte->setBit(static::BIT_WILL, $will);
+    $this->byte->bits()->setBit(static::BIT_WILL, $will);
   }
 
   /**
    * @param bool $cleanSession
    */
   public function useCleanSession(bool $cleanSession = true) {
-    $this->byte->setBit(static::BIT_CLEAN_SESSION, $cleanSession);
+    $this->byte->bits()->setBit(static::BIT_CLEAN_SESSION, $cleanSession);
   }
 
   /**
    * @return int
    */
   public function get() : int {
-    if (!$this->byte->getBit(static::BIT_USERNAME)) {
-      $this->byte->setBit(static::BIT_PASSWORD, false);
+    if (!$this->byte->bits()->getBit(static::BIT_USERNAME)) {
+      $this->byte->bits()->setBit(static::BIT_PASSWORD, false);
     }
-    return $this->byte->get();
+    return $this->byte->bits()->get();
   }
 
   public function reset() {
-    $this->byte->set(0);
+    $this->byte->bits()->set(0);
+  }
+
+  public function __clone() {
+    $this->byte = clone $this->byte;
   }
 
 }

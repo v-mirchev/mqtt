@@ -23,7 +23,7 @@ class ConnAck {
    * @return bool
    */
   public function getSessionPresent(): bool {
-    return $this->word->getMsb()->getBit(static::BIT_SESSION_PRESENT);
+    return $this->word->getMsb()->bits()->getBit(static::BIT_SESSION_PRESENT);
   }
 
   /**

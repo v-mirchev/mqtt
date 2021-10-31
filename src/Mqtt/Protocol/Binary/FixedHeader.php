@@ -37,7 +37,7 @@ class FixedHeader implements IFixedHeader {
    * @return int
    */
   public function getPacketType() : int {
-    return $this->controlHeader->getSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS);
+    return $this->controlHeader->bits()->getSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS)->get();
   }
 
   /**
@@ -45,7 +45,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setPacketType(int $type) : IFixedHeader {
-    $this->controlHeader->setSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS, $type);
+    $this->controlHeader->bits()->setSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS, $type);
     return $this;
   }
 
@@ -54,7 +54,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setReserved(int $value) : IFixedHeader {
-    $this->controlHeader->setSub(IFixedHeader::BIT_RESERVED_LS, IFixedHeader::BIT_RESERVED_MS, $value);
+    $this->controlHeader->bits()->setSub(IFixedHeader::BIT_RESERVED_LS, IFixedHeader::BIT_RESERVED_MS, $value);
     return $this;
   }
 
@@ -62,7 +62,7 @@ class FixedHeader implements IFixedHeader {
    * @return int
    */
   public function getQoS() : int {
-    return $this->controlHeader->getSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS);
+    return $this->controlHeader->bits()->getSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS)->get();
   }
 
   /**
@@ -70,7 +70,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setQoS(int $qos) : IFixedHeader {
-    $this->controlHeader->setSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS, $qos);
+    $this->controlHeader->bits()->setSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS, $qos);
     return $this;
   }
 
@@ -78,7 +78,7 @@ class FixedHeader implements IFixedHeader {
    * @return bool
    */
   public function isDup() : bool {
-    return $this->controlHeader->getBit(IFixedHeader::BIT_DUP);
+    return $this->controlHeader->bits()->getBit(IFixedHeader::BIT_DUP);
   }
 
   /**
@@ -86,7 +86,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setAsDup(bool $dup = true) : IFixedHeader {
-    $this->controlHeader->setBit(IFixedHeader::BIT_DUP, $dup);
+    $this->controlHeader->bits()->setBit(IFixedHeader::BIT_DUP, $dup);
     return $this;
   }
 
@@ -94,7 +94,7 @@ class FixedHeader implements IFixedHeader {
    * @return type
    */
   public function isRetain() : bool {
-    return $this->controlHeader->getBit(IFixedHeader::BIT_RETAIN);
+    return $this->controlHeader->bits()->getBit(IFixedHeader::BIT_RETAIN);
   }
 
   /**
@@ -102,7 +102,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setAsRetain(bool $retain = true) : IFixedHeader {
-    $this->controlHeader->setBit(IFixedHeader::BIT_RETAIN, $retain);
+    $this->controlHeader->bits()->setBit(IFixedHeader::BIT_RETAIN, $retain);
     return $this;
   }
 
@@ -115,11 +115,11 @@ class FixedHeader implements IFixedHeader {
     $this->packetLengthBytes = [];
 
     do {
-      $lengthByte = (clone $this->byte)->set($remainingLength);
-      $packetLengthByte = (clone $this->byte)->set($lengthByte->getSub(0, 6));
+      $lengthUint8 = (clone $this->byte)->set($remainingLength);
+      $packetLengthByte = (clone $this->byte)->set($lengthUint8->bits()->getSub(0, 6));
       $remainingLength >>= 7;
       if ($remainingLength > 0) {
-        $packetLengthByte->setBit(7, true);
+        $packetLengthByte->bits()->setBit(7, true);
       }
       $this->packetLengthBytes[] = $packetLengthByte;
     } while ($remainingLength > 0);
@@ -140,9 +140,9 @@ class FixedHeader implements IFixedHeader {
       $stream->next();
       $packetLengthByte = clone $this->byte;
       $packetLengthByte->set($stream->current());
-      $this->remainingLength += $packetLengthByte->getSub(0, 6) * $multiplier;
+      $this->remainingLength += $packetLengthByte->bits()->getSub(0, 6)->get() * $multiplier;
       $multiplier *= 128;
-    } while ($packetLengthByte->getBit(7));
+    } while ($packetLengthByte->bits()->getBit(7));
 
     return $this;
   }

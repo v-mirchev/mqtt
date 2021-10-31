@@ -2,6 +2,10 @@
 
 namespace Mqtt\Connection;
 
+/**
+ * @Inject $container
+ * @property \Psr\Container\ContainerInterface $___container
+ */
 class ConnectionTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\TestPassedAssert;
@@ -30,7 +34,10 @@ class ConnectionTest extends \PHPUnit\Framework\TestCase {
       disableOriginalConstructor()->
       getMock();
 
-    $this->object = new Connection($this->socketMock, new \Mqtt\Protocol\Binary\Data\Uint8());
+    $this->object = new Connection(
+      $this->socketMock,
+      $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class)
+    );
     $this->object->setProtocol($this->protocolMock);
   }
 

@@ -2,17 +2,21 @@
 
 namespace Mqtt\Protocol\Packet\Type\Flags;
 
+/**
+ * @Inject $container
+ * @property \Psr\Container\ContainerInterface $___container
+ */
 class ConnectTest extends \PHPUnit\Framework\TestCase {
 
    use \Test\Helpers\Binary;
 
   /**
-   * @var \Mqtt\Protocol\Packet\Type\Connect
+   * @var \Mqtt\Protocol\Packet\Type\Flags\Connect
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = new \Mqtt\Protocol\Packet\Type\Flags\Connect(new \Mqtt\Protocol\Binary\Data\Uint8);
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Packet\Type\Flags\Connect::class);
   }
 
   public function testCloneResetsInstance() {

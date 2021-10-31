@@ -85,7 +85,7 @@ class VariableHeader {
    * @return $this
    */
   public function getString() : string {
-    $this->word->setBytes($this->buffer->getByte(), $this->buffer->getByte());
+    $this->word->decode($this->buffer);
     $content = $this->buffer->getString($this->word->get());
     return $content;
   }
@@ -94,7 +94,7 @@ class VariableHeader {
    * @return int
    */
   public function getWord() {
-    $this->word->setBytes($this->buffer->getByte(), $this->buffer->getByte());
+    $this->word->decode($this->buffer);
     return $this->word->get();
   }
 

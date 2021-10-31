@@ -76,6 +76,15 @@ class Buffer {
   }
 
   /**
+   * @param string $encodedData
+   * @return $this
+   */
+  public function append(string $encodedData) : \Mqtt\Protocol\Binary\Data\Buffer {
+    $this->buffer .= $encodedData;
+    return $this;
+  }
+
+  /**
    * @return string
    */
   public function __toString() {
