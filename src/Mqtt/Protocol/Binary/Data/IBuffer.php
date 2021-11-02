@@ -2,7 +2,13 @@
 
 namespace Mqtt\Protocol\Binary\Data;
 
-interface IBuffer {
+interface IBuffer extends \IteratorAggregate {
+
+  /**
+   * @param int $length
+   * @return \Mqtt\Protocol\Binary\Data\IBuffer
+   */
+  public function get(int $length = null) : \Mqtt\Protocol\Binary\Data\IBuffer;
 
   /**
    * @param int $length
@@ -25,6 +31,11 @@ interface IBuffer {
    * @return bool
    */
   public function eof(): bool;
+
+  /**
+   * @return int
+   */
+  public function length(): int;
 
   /**
    * @param string $buffer

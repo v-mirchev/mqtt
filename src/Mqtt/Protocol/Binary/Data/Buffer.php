@@ -26,6 +26,16 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
 
   /**
    * @param int $length
+   * @return \Mqtt\Protocol\Binary\Data\IBuffer
+   */
+  public function get(int $length = null) : \Mqtt\Protocol\Binary\Data\IBuffer {
+    $buffer = clone $this;
+    $buffer->append($this->getString($length));
+    return $buffer;
+  }
+
+  /**
+   * @param int $length
    * @return string
    */
   public function getString(int $length = null): string {
@@ -66,6 +76,13 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
   }
 
   /**
+   * @return int
+   */
+  public function length(): int {
+    return strlen($this->buffer);
+  }
+
+  /**
    * @param string $buffer
    * @return $this
    */
@@ -97,6 +114,14 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
    */
   public function __toString() : string {
     return $this->getString();
+  }
+
+  public function getIterator(): \Traversable {
+    return (function() {
+      while (!$this->eof()) {
+        yield $this->getString(1);
+      }
+    })();
   }
 
 }
