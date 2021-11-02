@@ -80,10 +80,10 @@ class UintVariable implements \Mqtt\Protocol\Binary\Data\ICodec {
   }
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\Buffer $buffer
+   * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
    * @return void
    */
-  public function decode(\Mqtt\Protocol\Binary\Data\Buffer $buffer): void {
+  public function decode(\Mqtt\Protocol\Binary\Data\IBuffer $buffer): void {
     $multiplier = 1;
     $this->value = 0;
     do {
@@ -99,10 +99,10 @@ class UintVariable implements \Mqtt\Protocol\Binary\Data\ICodec {
   }
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\Buffer $buffer
+   * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
    * @return void
    */
-  public function encode(\Mqtt\Protocol\Binary\Data\Buffer $buffer): void {
+  public function encode(\Mqtt\Protocol\Binary\Data\IBuffer $buffer): void {
     $buffer->append((string) $this);
   }
 }

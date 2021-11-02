@@ -62,10 +62,9 @@ class Bit {
   }
 
   /**
-   *
    * @param int $startBit
    * @param int $endBit
-   * @param int|\Mqtt\Protocol\Binary\Data\IUint $uintValue
+   * @param int|\Mqtt\Protocol\Binary\Data\IUint $uint
    * @return \Mqtt\Protocol\Binary\Data\Bit
    */
   public function setSub(int $startBit, int $endBit, $uint) : \Mqtt\Protocol\Binary\Data\Bit {

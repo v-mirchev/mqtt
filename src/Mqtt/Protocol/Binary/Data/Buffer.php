@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Binary\Data;
 
-class Buffer {
+class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
 
   /**
    * @var string
@@ -69,7 +69,7 @@ class Buffer {
    * @param string $buffer
    * @return $this
    */
-  public function set(string $buffer) {
+  public function set(string $buffer) : \Mqtt\Protocol\Binary\Data\IBuffer {
     $this->buffer = $buffer;
     $this->position = 0;
     return $this;
@@ -78,7 +78,7 @@ class Buffer {
   /**
    * @return $this
    */
-  public function reset() {
+  public function reset() : \Mqtt\Protocol\Binary\Data\IBuffer {
     $this->set('');
     return $this;
   }
@@ -87,7 +87,7 @@ class Buffer {
    * @param string $encodedData
    * @return $this
    */
-  public function append(string $encodedData) : \Mqtt\Protocol\Binary\Data\Buffer {
+  public function append(string $encodedData) : \Mqtt\Protocol\Binary\Data\IBuffer {
     $this->buffer .= $encodedData;
     return $this;
   }
@@ -95,7 +95,7 @@ class Buffer {
   /**
    * @return string
    */
-  public function __toString() {
+  public function __toString() : string {
     return $this->getString();
   }
 

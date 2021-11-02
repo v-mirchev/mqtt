@@ -53,19 +53,19 @@ class Utf8String implements \Mqtt\Protocol\Binary\Data\ICodec {
 
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\Buffer $buffer
+   * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
    * @return void
    */
-  public function decode(\Mqtt\Protocol\Binary\Data\Buffer $buffer): void {
+  public function decode(\Mqtt\Protocol\Binary\Data\IBuffer $buffer): void {
     $this->length->decode($buffer);
     $this->set($buffer->getString($this->length->get()));
   }
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\Buffer $buffer
+   * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
    * @return void
    */
-  public function encode(\Mqtt\Protocol\Binary\Data\Buffer $buffer): void {
+  public function encode(\Mqtt\Protocol\Binary\Data\IBuffer $buffer): void {
     $buffer->append((string) $this);
   }
 }
