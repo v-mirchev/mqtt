@@ -10,7 +10,7 @@ class FixedHeader implements IFixedHeader {
   protected $byte;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Uint8
+   * @var \Mqtt\Protocol\Binary\IControlHeader
    */
   protected $controlHeader;
 
@@ -25,11 +25,15 @@ class FixedHeader implements IFixedHeader {
   protected $remainingLength;
 
   /**
+   * @param \Mqtt\Protocol\Binary\ControlHeader $controlHeader
    * @param \Mqtt\Protocol\Binary\Data\Uint8 $byte
    */
-  public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $byte) {
+  public function __construct(
+    \Mqtt\Protocol\Binary\ControlHeader $controlHeader,
+    \Mqtt\Protocol\Binary\Data\Uint8 $byte
+  ) {
+    $this->controlHeader = clone $controlHeader;
     $this->byte = clone $byte;
-    $this->controlHeader = clone $byte;
     $this->packetLengthBytes = [];
   }
 
@@ -37,7 +41,7 @@ class FixedHeader implements IFixedHeader {
    * @return int
    */
   public function getPacketType() : int {
-    return $this->controlHeader->bits()->getSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS)->get();
+    return $this->controlHeader->getPacketType();
   }
 
   /**
@@ -45,7 +49,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setPacketType(int $type) : IFixedHeader {
-    $this->controlHeader->bits()->setSub(IFixedHeader::BIT_TYPE_LS, IFixedHeader::BIT_TYPE_MS, $type);
+    $this->controlHeader->setPacketType($type);
     return $this;
   }
 
@@ -54,7 +58,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setReserved(int $value) : IFixedHeader {
-    $this->controlHeader->bits()->setSub(IFixedHeader::BIT_RESERVED_LS, IFixedHeader::BIT_RESERVED_MS, $value);
+    $this->controlHeader->setReserved($value);
     return $this;
   }
 
@@ -62,7 +66,7 @@ class FixedHeader implements IFixedHeader {
    * @return int
    */
   public function getQoS() : int {
-    return $this->controlHeader->bits()->getSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS)->get();
+    return $this->controlHeader->getQoS();
   }
 
   /**
@@ -70,7 +74,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setQoS(int $qos) : IFixedHeader {
-    $this->controlHeader->bits()->setSub(IFixedHeader::BIT_QOS_LS, IFixedHeader::BIT_QOS_MS, $qos);
+    $this->controlHeader->setQoS($qos);
     return $this;
   }
 
@@ -78,7 +82,7 @@ class FixedHeader implements IFixedHeader {
    * @return bool
    */
   public function isDup() : bool {
-    return $this->controlHeader->bits()->getBit(IFixedHeader::BIT_DUP);
+    return $this->controlHeader->isDup();
   }
 
   /**
@@ -86,7 +90,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setAsDup(bool $dup = true) : IFixedHeader {
-    $this->controlHeader->bits()->setBit(IFixedHeader::BIT_DUP, $dup);
+    $this->controlHeader->setAsDup($dup);
     return $this;
   }
 
@@ -94,7 +98,7 @@ class FixedHeader implements IFixedHeader {
    * @return type
    */
   public function isRetain() : bool {
-    return $this->controlHeader->bits()->getBit(IFixedHeader::BIT_RETAIN);
+    return $this->controlHeader->isRetain();
   }
 
   /**
@@ -102,7 +106,7 @@ class FixedHeader implements IFixedHeader {
    * @return $this
    */
   public function setAsRetain(bool $retain = true) : IFixedHeader {
-    $this->controlHeader->bits()->setBit(IFixedHeader::BIT_RETAIN, $retain);
+    $this->controlHeader->setAsRetain($retain);
     return $this;
   }
 

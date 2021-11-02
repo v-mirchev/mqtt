@@ -26,7 +26,10 @@ class FixedHeaderTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function firstByteDataProvider() {
-    $object = new \Mqtt\Protocol\Binary\FixedHeader(new \Mqtt\Protocol\Binary\Data\Uint8(new \Mqtt\Protocol\Binary\Data\Bit()));
+    $object = new \Mqtt\Protocol\Binary\FixedHeader(
+      new \Mqtt\Protocol\Binary\ControlHeader(new \Mqtt\Protocol\Binary\Data\Uint8(new \Mqtt\Protocol\Binary\Data\Bit())),
+      new \Mqtt\Protocol\Binary\Data\Uint8(new \Mqtt\Protocol\Binary\Data\Bit())
+    );
     $flagPermutations = [
       [
         (clone $object)->
