@@ -57,6 +57,8 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
     $this->fixedHeader = clone $fixedHeader;
     $this->payload = clone $payload;
     $this->entityPrototype = clone $entityPrototype;
+
+    $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) {};
   }
 
   public function __clone() {
@@ -64,6 +66,7 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
     $this->fixedHeader = clone $this->fixedHeader;
     $this->payload = clone $this->payload;
     $this->entityPrototype = clone $this->entityPrototype;
+    $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) {};
   }
 
   /**

@@ -8,6 +8,8 @@ namespace Mqtt\Protocol\Decoder\Frame;
  */
 class FrameTest extends \PHPUnit\Framework\TestCase {
 
+  use \Test\Helpers\TestPassedAssert;
+
   /**
    * @var \Mqtt\Protocol\Decoder\Frame\Frame
    */
@@ -25,6 +27,17 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
     $this->object->onCompleted(function (\Mqtt\Protocol\Entity\Frame $frame) {
       $this->frameEntity = $frame;
     });
+  }
+
+  public function testNullObjectCallbackIsSetInitially() {
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Frame\Frame::class);
+
+    $receiver = $this->object->receiver();
+    $bytes = [0x02, 0x04, 0x41, 0x42, 0x43, 0x44, 0xA ];
+    foreach ($bytes as $byte) {
+      $receiver->input(chr($byte));
+    }
+    $this->pass();
   }
 
   public function testReceiverIsNotAffectedByNullValues() {
