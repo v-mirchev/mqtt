@@ -59,7 +59,7 @@ class UintVariable implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
         getSub(static::BIT_VALUE_START, static::BIT_VALUE_END)->get() * $multiplier;
 
       if ($multiplier > static::MAX_MULTIPLIER) {
-        throw \Exception('Malformed variable integer');
+        throw new \Exception('Malformed variable integer');
       }
 
       $multiplier *= 128;
