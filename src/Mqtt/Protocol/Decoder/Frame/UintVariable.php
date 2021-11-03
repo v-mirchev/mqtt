@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Frame;
 
 class UintVariable implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
 
+  use \Mqtt\Protocol\Decoder\Frame\TReceiver;
+
   const BIT_VALUE_START = 0;
   const BIT_VALUE_END = 6;
   const BIT_CONTINUOUS = 7;
@@ -43,7 +45,7 @@ class UintVariable implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   /**
    * @return \Generator
    */
-  public function receiver(): \Generator {
+  public function streamDecoder(): \Generator {
     $multiplier = 1;
     $this->value = 0;
 

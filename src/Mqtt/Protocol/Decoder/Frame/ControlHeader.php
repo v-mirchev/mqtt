@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Frame;
 
 class ControlHeader implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
 
+  use \Mqtt\Protocol\Decoder\Frame\TReceiver;
+
   const BIT_START_FLAGS = 0;
   const BIT_END_FLAGS = 3;
   const BIT_START_PACKET_TYPE = 4;
@@ -28,7 +30,7 @@ class ControlHeader implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   /**
    * @return \Generator
    */
-  public function receiver() : \Generator {
+  public function streamDecoder() : \Generator {
     $char = yield;
     $this->controlHeader->set($char);
   }

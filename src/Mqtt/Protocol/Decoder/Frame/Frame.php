@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Frame;
 
 class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
 
+  use \Mqtt\Protocol\Decoder\Frame\TReceiver;
+
   /**
    * @var \Mqtt\Protocol\Binary\Data\IBuffer
    */
@@ -25,12 +27,12 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   protected $entityPrototype;
 
   /**
-   * @var \Generator
+   * @var \Mqtt\Protocol\Decoder\Frame\Receiver
    */
   protected $fixedHeaderReceiver;
 
   /**
-   * @var \Generator
+   * @var \Mqtt\Protocol\Decoder\Frame\Receiver
    */
   protected $payloadReceiver;
 
@@ -67,7 +69,7 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   /**
    * @param string $chars
    */
-  public function receiver() : \Generator {
+  public function streamDecoder() : \Generator {
     $this->fixedHeaderReceiver = $this->fixedHeader->receiver();
     $this->payloadReceiver = $this->payload->receiver();
 
@@ -81,9 +83,9 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   protected function consumeBuffer() : void {
     foreach ($this->buffer as $char) {
 
-      if ($this->fixedHeaderReceiver->valid()) {
-        $this->fixedHeaderReceiver->send($char);
-        if (!$this->fixedHeaderReceiver->valid() && $this->fixedHeader->getRemainingLength() === 0) {
+      if (!$this->fixedHeaderReceiver->isCompleted()) {
+        $this->fixedHeaderReceiver->input($char);
+        if ($this->fixedHeaderReceiver->isCompleted() && $this->fixedHeader->getRemainingLength() === 0) {
           $this->complete();
           return;
         }
@@ -91,11 +93,11 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
       }
 
       $this->payload->setLength($this->fixedHeader->getRemainingLength());
-      if ($this->payloadReceiver->valid()) {
-        $this->payloadReceiver->send($char);
+      if (!$this->payloadReceiver->isCompleted()) {
+        $this->payloadReceiver->input($char);
       }
 
-      if (!$this->payloadReceiver->valid()) {
+      if ($this->payloadReceiver->isCompleted()) {
         $this->complete();
         return;
       }
@@ -104,8 +106,8 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   }
 
   protected function complete() : void {
-    $this->fixedHeaderReceiver = $this->fixedHeader->receiver();
-    $this->payloadReceiver = $this->payload->receiver();
+    $this->fixedHeaderReceiver->rewind();
+    $this->payloadReceiver->rewind();
 
     $entity = clone $this->entityPrototype;
     $entity->packetType = $this->fixedHeader->getPacketType();

@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Frame;
 
 class Payload implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
 
+  use \Mqtt\Protocol\Decoder\Frame\TReceiver;
+
   /**
    * @var \Mqtt\Protocol\Binary\Data\IBuffer
    */
@@ -44,7 +46,7 @@ class Payload implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   /**
    * @return void
    */
-  public function receiver(): \Generator {
+  public function streamDecoder(): \Generator {
     $this->buffer->reset();
     while ($this->buffer->length() < $this->length) {
       $char = yield;

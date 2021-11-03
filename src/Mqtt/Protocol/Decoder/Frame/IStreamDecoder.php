@@ -7,5 +7,11 @@ interface IStreamDecoder {
   /**
    * @return \Generator
    */
-  public function receiver() : \Generator;
+  public function streamDecoder() : \Generator;
+
+  /**
+   * @return \Mqtt\Protocol\Decoder\Frame\Receiver
+   */
+  public function receiver() : \Mqtt\Protocol\Decoder\Frame\Receiver;
+
 }

@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Frame;
 
 class FixedHeader implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
 
+  use \Mqtt\Protocol\Decoder\Frame\TReceiver;
+
   /**
    * @var \Mqtt\Protocol\Decoder\Frame\ControlHeader
    */
@@ -34,7 +36,7 @@ class FixedHeader implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   /**
    * @return void
    */
-  public function receiver(): \Generator {
+  public function streamDecoder(): \Generator {
 
     $controlHeaderReceiver = $this->controlHeader->receiver();
     $remainingLengthReceiver = $this->remainingLength->receiver();
@@ -42,16 +44,16 @@ class FixedHeader implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
     while (true) {
       $char = yield;
 
-      if ($controlHeaderReceiver->valid()) {
-        $controlHeaderReceiver->send($char);
+      if (!$controlHeaderReceiver->isCompleted()) {
+        $controlHeaderReceiver->input($char);
         continue;
       }
 
-      if ($remainingLengthReceiver->valid()) {
-        $remainingLengthReceiver->send($char);
+      if (!$remainingLengthReceiver->isCompleted()) {
+        $remainingLengthReceiver->input($char);
       }
 
-      if (!$remainingLengthReceiver->valid()) {
+      if ($remainingLengthReceiver->isCompleted()) {
         return;
       }
     }
