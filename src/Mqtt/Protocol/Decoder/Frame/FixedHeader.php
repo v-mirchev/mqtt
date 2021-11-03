@@ -54,7 +54,7 @@ class FixedHeader implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
       }
 
       if ($remainingLengthReceiver->isCompleted()) {
-        return;
+        break;
       }
     }
   }
