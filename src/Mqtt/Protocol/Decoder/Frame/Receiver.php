@@ -27,6 +27,10 @@ class Receiver {
     }
   }
 
+  public function stop() : void {
+    $this->getReceiver()->throw(new \Exception());
+  }
+
   /**
    * @return bool
    */

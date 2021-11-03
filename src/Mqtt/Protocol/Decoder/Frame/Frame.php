@@ -74,7 +74,11 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
     $this->payloadReceiver = $this->payload->receiver();
 
     while (true) {
-      $chars = yield;
+      try {
+        $chars = yield;
+      } catch (\Exception $stop) {
+        break;
+      }
       $this->buffer->append((string)$chars);
       $this->consumeBuffer();
     }
