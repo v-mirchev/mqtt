@@ -55,6 +55,19 @@ class Bootstrap  {
         );
       },
 
+      __NAMESPACE__ . '.mqtt.protocol.packet.decoder.classmap' => [
+        \Mqtt\Protocol\Packet\IType::CONNACK => \Mqtt\Protocol\Decoder\Packet\ConnAck::class,
+        \Mqtt\Protocol\Packet\IType::PINGRESP => \Mqtt\Protocol\Decoder\Packet\PingResp::class,
+        \Mqtt\Protocol\Packet\IType::PUBACK => \Mqtt\Protocol\Decoder\Packet\PubAck::class,
+      ],
+
+      \Mqtt\Protocol\Decoder\DecoderFactory::class => function (\Psr\Container\ContainerInterface $container) {
+        return new \Mqtt\Protocol\Decoder\DecoderFactory(
+          $container,
+          $container->get(__NAMESPACE__ . '.mqtt.protocol.packet.decoder.classmap')
+        );
+      },
+
       __NAMESPACE__ . '.mqtt.session.state.classmap' => [
         \Mqtt\Session\State\IState::NOT_CONNECTED => \Mqtt\Session\State\NotConnected::class,
         \Mqtt\Session\State\IState::CONNECTED => \Mqtt\Session\State\Connected::class,
