@@ -64,7 +64,7 @@ class Uint8 implements \Mqtt\Protocol\Binary\Data\ICodec, \Mqtt\Protocol\Binary\
    * @return void
    */
   public function decode(\Mqtt\Protocol\Binary\Data\IBuffer $buffer): void {
-    $this->set($buffer->buffer->getByte());
+    $this->set($buffer->getByte());
   }
 
   /**

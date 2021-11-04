@@ -40,7 +40,7 @@ class Payload implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
    * @return \Mqtt\Protocol\Binary\Data\IBuffer
    */
   public function get(): \Mqtt\Protocol\Binary\Data\IBuffer {
-    return $this->buffer;
+    return $this->buffer->get();
   }
 
   /**

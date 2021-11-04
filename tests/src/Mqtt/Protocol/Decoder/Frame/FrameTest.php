@@ -9,6 +9,7 @@ namespace Mqtt\Protocol\Decoder\Frame;
 class FrameTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\TestPassedAssert;
+  use \Test\Helpers\Binary;
 
   /**
    * @var \Mqtt\Protocol\Decoder\Frame\Frame
@@ -19,6 +20,11 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
    * @var \Mqtt\Protocol\Entity\Frame
    */
   protected $frameEntity;
+
+  /**
+   * @var \Mqtt\Protocol\Entity\Frame[]
+   */
+  protected $frames;
 
   protected function setUp() {
     $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Frame\Frame::class);
@@ -169,6 +175,38 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
 
     $this->assertNotNull($this->frameEntity);
     $this->assertEquals($payload, $this->frameEntity->payload->getString());
+  }
+
+  public function testStreamedSequenceIsProperlyDecoded() {
+    $receiver = $this->object->receiver();
+
+    $streams = [
+      [0x3, '',       [0x0031, 0x00, 0x0051, ]],
+      [0x5, 'A',      [0x01, 0x41, 0x0022, 0x01, ]],
+      [0x2, 'A',      [0x41, 0x0042, 0x02, ]],
+      [0x4, 'AB',     [0x41, 0x42, 0x0011, ]],
+      [0x1, '',       [0x00, 0x0072, 0x03, 0x41, ]],
+      [0x7, 'ABC',    [0x42, 0x43, ]],
+      [0x9, 'BACD',   [0x0092, 0x04, 0x42, 0x41, 0x43, 0x44, 0x00A2, 0x02, ]],
+      [0xA, 'AB',     [0x41, 0x42, 0x00D1, ]],
+      [0xD, '',       [0x00, 0x00C2, 0x03, ]],
+      [0xC, 'ABC',    [0x41, 0x42, 0x43, ]],
+      [0xE, 'ABDC',   [0x00E0, 0x04, 0x41, 0x42, 0x44, 0x43,]],
+    ];
+
+    $this->frames = [];
+    $this->object->onCompleted(function (\Mqtt\Protocol\Entity\Frame $frame) {
+      $this->frames[] = $frame;
+    });
+
+    foreach ($streams as $stream) {
+      $receiver->input($this->toStringStream($stream[2]));
+    }
+
+    foreach ($streams as $ix => $stream) {
+      $this->assertEquals($stream[0], $this->frames[$ix]->packetType);
+      $this->assertEquals($stream[1], $this->frames[$ix]->payload->getString());
+    }
   }
 
 }
