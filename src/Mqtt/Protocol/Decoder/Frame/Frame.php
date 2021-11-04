@@ -12,60 +12,27 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   protected $buffer;
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Frame\FixedHeader
+   * @var \Mqtt\Protocol\Decoder\Frame\FrameFsm
    */
-  protected $fixedHeader;
-
-  /**
-   * @var \Mqtt\Protocol\Decoder\Frame\Payload
-   */
-  protected $payload;
-
-  /**
-   * @var \Mqtt\Protocol\Entity\Frame
-   */
-  protected $entityPrototype;
-
-  /**
-   * @var \Mqtt\Protocol\Decoder\Frame\Receiver
-   */
-  protected $fixedHeaderReceiver;
-
-  /**
-   * @var \Mqtt\Protocol\Decoder\Frame\Receiver
-   */
-  protected $payloadReceiver;
-
-  /**
-   * @var callable
-   */
-  protected $onFrameCompleted;
+  protected $fsm;
 
   /**
    * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
-   * @param \Mqtt\Protocol\Decoder\Frame\FixedHeader $fixedHeader
-   * @param \Mqtt\Protocol\Decoder\Frame\Payload $payload
-   * @param \Mqtt\Protocol\Entity\Frame $entityPrototype
+   * @param \Mqtt\Protocol\Decoder\Frame\FrameFsm $fsm
    */
   public function __construct(
     \Mqtt\Protocol\Binary\Data\IBuffer $buffer,
-    \Mqtt\Protocol\Decoder\Frame\FixedHeader $fixedHeader,
-    \Mqtt\Protocol\Decoder\Frame\Payload $payload,
-    \Mqtt\Protocol\Entity\Frame $entityPrototype
+    \Mqtt\Protocol\Decoder\Frame\FrameFsm $fsm
   ) {
     $this->buffer = clone $buffer;
-    $this->fixedHeader = clone $fixedHeader;
-    $this->payload = clone $payload;
-    $this->entityPrototype = clone $entityPrototype;
+    $this->fsm = clone $fsm;
 
     $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) {};
   }
 
   public function __clone() {
     $this->buffer = clone $this->buffer;
-    $this->fixedHeader = clone $this->fixedHeader;
-    $this->payload = clone $this->payload;
-    $this->entityPrototype = clone $this->entityPrototype;
+    $this->fsm = clone $this->fsm;
     $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) {};
   }
 
@@ -73,8 +40,7 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
    * @param string $chars
    */
   public function streamDecoder() : \Generator {
-    $this->fixedHeaderReceiver = $this->fixedHeader->receiver();
-    $this->payloadReceiver = $this->payload->receiver();
+    $this->fsm->start();
 
     while (true) {
       try {
@@ -83,54 +49,17 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
         break;
       }
       $this->buffer->append((string)$chars);
-      $this->consumeBuffer();
+      foreach ($this->buffer as $char) {
+        $this->fsm->input($char);
+      }
     }
   }
-
-  protected function consumeBuffer() : void {
-    foreach ($this->buffer as $char) {
-
-      if (!$this->fixedHeaderReceiver->isCompleted()) {
-        $this->fixedHeaderReceiver->input($char);
-        if ($this->fixedHeaderReceiver->isCompleted() && $this->fixedHeader->getRemainingLength() === 0) {
-          $this->complete();
-          return;
-        }
-        continue;
-      }
-
-      $this->payload->setLength($this->fixedHeader->getRemainingLength());
-      if (!$this->payloadReceiver->isCompleted()) {
-        $this->payloadReceiver->input($char);
-      }
-
-      if ($this->payloadReceiver->isCompleted()) {
-        $this->complete();
-        return;
-      }
-
-    }
-  }
-
-  protected function complete() : void {
-    $this->fixedHeaderReceiver->rewind();
-    $this->payloadReceiver->rewind();
-
-    $entity = clone $this->entityPrototype;
-    $entity->packetType = $this->fixedHeader->getPacketType();
-    $entity->flags = $this->fixedHeader->getFlags();
-    $entity->payload = $this->payload->get();
-
-    $onFrameCompleted = $this->onFrameCompleted;
-    $onFrameCompleted($entity);
-  }
-
 
   /**
    * @param callable $onFrameCompleted
    */
   public function onCompleted(callable $onFrameCompleted) : void {
-    $this->onFrameCompleted = $onFrameCompleted;
+    $this->fsm->onCompleted($onFrameCompleted);
   }
 
 }

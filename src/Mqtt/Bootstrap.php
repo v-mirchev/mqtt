@@ -40,6 +40,21 @@ class Bootstrap  {
         return new \Mqtt\Protocol\Packet\Factory($container, $container->get(__NAMESPACE__ . '.mqtt.protocol.packet.classmap'));
       },
 
+      __NAMESPACE__ . '.mqtt.protocol.frame.decoder.classmap' => [
+        \Mqtt\Protocol\Decoder\Frame\State\IState::CONTROL_HEADER_PROCESSING => \Mqtt\Protocol\Decoder\Frame\State\ControlHeaderProcessing::class,
+        \Mqtt\Protocol\Decoder\Frame\State\IState::REMAINING_LENGTH_PROCESSING => \Mqtt\Protocol\Decoder\Frame\State\RemainingLengthProcessing::class,
+        \Mqtt\Protocol\Decoder\Frame\State\IState::REMAINING_LENGTH_COMPLETED => \Mqtt\Protocol\Decoder\Frame\State\RemainingLengthCompleted::class,
+        \Mqtt\Protocol\Decoder\Frame\State\IState::PAYLOAD_PROCESSING => \Mqtt\Protocol\Decoder\Frame\State\PayloadProcessing::class,
+        \Mqtt\Protocol\Decoder\Frame\State\IState::FRAME_COMPLETED => \Mqtt\Protocol\Decoder\Frame\State\FrameCompleted::class,
+      ],
+
+      \Mqtt\Protocol\Decoder\Frame\FrameStateFactory::class => function (\Psr\Container\ContainerInterface $container) {
+        return new \Mqtt\Protocol\Decoder\Frame\FrameStateFactory(
+          $container,
+          $container->get(__NAMESPACE__ . '.mqtt.protocol.frame.decoder.classmap')
+        );
+      },
+
       __NAMESPACE__ . '.mqtt.session.state.classmap' => [
         \Mqtt\Session\State\IState::NOT_CONNECTED => \Mqtt\Session\State\NotConnected::class,
         \Mqtt\Session\State\IState::CONNECTED => \Mqtt\Session\State\Connected::class,

@@ -65,7 +65,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
 
   public function testOnCompleteIsNotCalledForIncompleteByteSequence() {
     $receiver = $this->object->receiver();
-    $bytes = [0x02, 0x04, 0x41, 0x42, 0x43 ];
+    $bytes = [0x02, 0x04, 0x41, 0x42, 0x43, /* @missing 0x44 */ ];
     foreach ($bytes as $byte) {
       $receiver->input(chr($byte));
     }
