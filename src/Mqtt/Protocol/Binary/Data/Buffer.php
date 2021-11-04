@@ -9,19 +9,12 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
    */
   protected $buffer;
 
-  /**
-   * @var int
-   */
-  protected $position;
-
   public function __construct() {
     $this->buffer = '';
-    $this->position = 0;
   }
 
   public function __clone() {
     $this->buffer = '';
-    $this->position = 0;
   }
 
   /**
@@ -30,7 +23,7 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
    */
   public function get(int $length = null) : \Mqtt\Protocol\Binary\Data\IBuffer {
     $buffer = clone $this;
-    $buffer->append($this->getString($length));
+    $buffer->buffer = $this->getString($length);
     return $buffer;
   }
 
@@ -39,13 +32,11 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
    * @return string
    */
   public function getString(int $length = null): string {
-    if ($this->position + $length > strlen($this->buffer)) {
+    if ($length > strlen($this->buffer)) {
       throw new \Exception('Trying to read outside buffer');
     }
-    $value = is_null($length) ?
-       substr($this->buffer, $this->position) :
-       substr($this->buffer, $this->position, $length);
-    $this->position = $length ? $this->position + $length : strlen($this->buffer);
+    $value = is_null($length) ? $this->buffer : substr($this->buffer, 0, $length );
+    $this->buffer = is_null($length) ?  '' : substr($this->buffer, $length);
     return $value;
   }
 
@@ -69,10 +60,10 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
   }
 
   /**
-   * @return bool
+   * @return string
    */
-  public function eof(): bool {
-    return $this->position === strlen($this->buffer);
+  public function getChar(): string {
+    return $this->getString(1);
   }
 
   /**
@@ -83,12 +74,18 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
   }
 
   /**
+   * @return bool
+   */
+  public function isEmpty(): bool {
+    return strlen($this->buffer) === 0;
+  }
+
+  /**
    * @param string $buffer
    * @return $this
    */
   public function set(string $buffer) : \Mqtt\Protocol\Binary\Data\IBuffer {
     $this->buffer = $buffer;
-    $this->position = 0;
     return $this;
   }
 
@@ -118,7 +115,7 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
 
   public function getIterator(): \Traversable {
     return (function() {
-      while (!$this->eof()) {
+      while (!$this->isEmpty()) {
         yield $this->getString(1);
       }
     })();

@@ -28,14 +28,19 @@ interface IBuffer extends \IteratorAggregate {
   public function getByte(): int;
 
   /**
-   * @return bool
+   * @return string
    */
-  public function eof(): bool;
+  public function getChar(): string;
 
   /**
    * @return int
    */
   public function length(): int;
+
+  /**
+   * @return bool
+   */
+  public function isEmpty(): bool;
 
   /**
    * @param string $buffer

@@ -15,6 +15,7 @@ class BufferTest extends \PHPUnit\Framework\TestCase {
 
   public function testInitiallyEmpty() {
     $this->assertEmpty($this->object->getString());
+    $this->assertTrue($this->object->isEmpty());
   }
 
   public function testCloneResets() {
@@ -23,19 +24,15 @@ class BufferTest extends \PHPUnit\Framework\TestCase {
     $this->assertEmpty($object->getString());
   }
 
-  public function testInitiallyEoF() {
-    $this->assertTrue($this->object->eof());
-  }
-
   public function testEoFAtfterBufferSetNotTrue() {
     $this->object->set('ABC');
-    $this->assertFalse($this->object->eof());
+    $this->assertFalse($this->object->isEmpty());
   }
 
   public function testEoFAtfterBufferConsumedIsTrue() {
     $this->object->set('ABC');
     $this->object->getString();
-    $this->assertTrue($this->object->eof());
+    $this->assertTrue($this->object->isEmpty());
   }
 
   public function testThrowsExceptionWhenReadingStringOutsideBuffer() {
