@@ -31,6 +31,13 @@ class Publish {
     $this->dup = (bool)$frameFlags->bits()->getBit(static::BIT_DUP);
     $this->retain = (bool)$frameFlags->bits()->getBit(static::BIT_RETAIN);
     $this->qos = (int)$frameFlags->bits()->getSub(static::BIT_QOS_START, static::BIT_QOS_END)->get();
+
+    if ($this->qos > 2) {
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Incorrect packet QoS received in PUBLISH',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_QOS
+      );
+    }
   }
 
 }

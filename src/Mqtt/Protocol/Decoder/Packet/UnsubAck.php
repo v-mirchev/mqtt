@@ -32,14 +32,27 @@ class UnsubAck implements \Mqtt\Protocol\Decoder\IPacketDecoder {
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
     if ($frame->packetType !== \Mqtt\Protocol\IPacketType::UNSUBACK) {
-      throw new \Exception('Packet type received <' . $frame->packetType . '> is not UNSUBACK');
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Packet type received <' . $frame->packetType . '> is not UNSUBACK',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
+      );
     }
 
     if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_UNSUBACK) {
-      throw new \Mqtt\Exception\ProtocolViolation('Packet flags received do not match UNSUBACK reserved ones');
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Packet flags received do not match UNSUBACK reserved ones',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
+      );
     }
 
     $this->identificator->decode($frame->payload);
+
+    if (!$frame->payload->isEmpty()) {
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Unknown payload data in UNSUBACK',
+        \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
+      );
+    }
 
     $this->unsubAck = clone $this->unsubAck;
     $this->unsubAck->setId($this->identificator->get());

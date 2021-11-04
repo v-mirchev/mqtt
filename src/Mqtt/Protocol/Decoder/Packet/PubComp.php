@@ -32,14 +32,28 @@ class PubComp implements \Mqtt\Protocol\Decoder\IPacketDecoder {
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
     if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBCOMP) {
-      throw new \Exception('Packet type received <' . $frame->packetType . '> is not PUBCOMP');
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Packet type received <' . $frame->packetType . '> is not PUBCOMP',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
+      );
     }
 
     if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBCOMP) {
-      throw new \Mqtt\Exception\ProtocolViolation('Packet flags received do not match PUBCOMP reserved ones');
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Packet flags received do not match PUBCOMP reserved ones',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
+      );
     }
 
+
     $this->identificator->decode($frame->payload);
+
+    if (!$frame->payload->isEmpty()) {
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Unknown payload data in PUBCOMP',
+        \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
+      );
+    }
 
     $this->pubComp = clone $this->pubComp;
     $this->pubComp->setId($this->identificator->get());

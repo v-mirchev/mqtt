@@ -10,7 +10,7 @@ class Publish implements \Mqtt\Protocol\Decoder\IPacketDecoder {
   protected $flags;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Uint8
+   * @var \Mqtt\Protocol\Binary\Data\Uint16
    */
   protected $id;
 
@@ -26,7 +26,7 @@ class Publish implements \Mqtt\Protocol\Decoder\IPacketDecoder {
 
   public function __construct(
     \Mqtt\Protocol\Decoder\Packet\Flags\Publish $flags,
-    \Mqtt\Protocol\Binary\Data\Uint8 $id,
+    \Mqtt\Protocol\Binary\Data\Uint16 $id,
     \Mqtt\Protocol\Binary\Data\Utf8String $topic,
     \Mqtt\Protocol\Entity\Packet\Publish $publish
   ) {
@@ -42,7 +42,10 @@ class Publish implements \Mqtt\Protocol\Decoder\IPacketDecoder {
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
     if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBLISH) {
-      throw new \Exception('Packet type received <' . $frame->packetType . '> is not PUBLISH');
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Packet type received <' . $frame->packetType . '> is not PUBLISH',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
+      );
     }
 
     $this->flags->decode($frame->flags);
@@ -59,6 +62,7 @@ class Publish implements \Mqtt\Protocol\Decoder\IPacketDecoder {
     if ($this->publish->qosLevel > 0) {
       $this->publish->setId($this->id->get());
     }
+    $this->publish->topic = $this->topic->get();
     $this->publish->message = $message;
   }
 

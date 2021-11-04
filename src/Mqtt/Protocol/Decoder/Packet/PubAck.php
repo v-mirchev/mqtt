@@ -32,14 +32,27 @@ class PubAck implements \Mqtt\Protocol\Decoder\IPacketDecoder {
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
     if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBACK) {
-      throw new \Exception('Packet type received <' . $frame->packetType . '> is not PUBACK');
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Packet type received <' . $frame->packetType . '> is not PUBACK',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
+      );
     }
 
     if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBACK) {
-      throw new \Mqtt\Exception\ProtocolViolation('Packet flags received do not match PUBACK reserved ones');
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Packet flags received do not match PUBACK reserved ones',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
+      );
     }
 
     $this->identificator->decode($frame->payload);
+
+    if (!$frame->payload->isEmpty()) {
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Unknown payload data in PUBACK',
+        \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
+      );
+    }
 
     $this->pubAck = clone $this->pubAck;
     $this->pubAck->setId($this->identificator->get());

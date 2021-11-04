@@ -23,7 +23,10 @@ class ConnAck {
       $this->flags->bits()->getSub(static::BIT_RESERVED_START, static::BIT_RESERVED_END)->get() !==
       \Mqtt\Protocol\IPacketReservedBits::PAYLOAD_CONNACK_FLAGS_BIT_1_TO_7
     ) {
-      throw new \Mqtt\Exception\ProtocolViolation('Wrong CONNACK reserved bits');
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Wrong CONNACK reserved bits',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_PAYLOAD_RESERVED_BITS
+      );
     }
   }
 

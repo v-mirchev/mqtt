@@ -16,6 +16,8 @@ class ConnAck implements \Mqtt\Protocol\Entity\Packet\IPacket {
   const CODE_CONNECTION__REFUSED_NOT_AUTHENTICATED = 4;
   const CODE_CONNECTION__REFUSED_NOT_AUTHORIZED = 5;
 
+  const CODE_MAX_VALUE = 5;
+
   /**
    * @var int
    */
