@@ -50,15 +50,15 @@ class Publish implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
     $this->flags->decode($frame->flags);
     $this->topic->decode($frame->payload);
-    if ($this->flags->qos > 0) {
+    if ($this->flags->getQos() > 0) {
       $this->id->decode($frame->payload);
     }
     $message = $frame->payload->getString();
 
     $this->publish = clone $this->publish;
-    $this->publish->isDuplicate = $this->flags->dup;
-    $this->publish->isRetain = $this->flags->retain;
-    $this->publish->qosLevel = $this->flags->qos;
+    $this->publish->isDuplicate = $this->flags->isDuplicate();
+    $this->publish->isRetain = $this->flags->isRetain();
+    $this->publish->qosLevel = $this->flags->getQos();
     if ($this->publish->qosLevel > 0) {
       $this->publish->setId($this->id->get());
     }

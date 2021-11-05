@@ -12,23 +12,35 @@ class Publish {
   /**
    * @var bool
    */
-  public $dup;
+  protected $duplicate;
 
   /**
    * @var bool
    */
-  public $retain;
+  protected $retain;
 
   /**
    * @var int
    */
-  public $qos;
+  protected $qos;
+
+  public function __construct() {
+    $this->duplicate = false;
+    $this->retain = false;
+    $this->qos = 0;
+  }
+
+  public function __clone() {
+    $this->duplicate = false;
+    $this->retain = false;
+    $this->qos = 0;
+  }
 
   /**
    * @param \Mqtt\Protocol\Binary\Data\Uint8 $frameFlags
    */
   public function decode(\Mqtt\Protocol\Binary\Data\Uint8 $frameFlags) : void {
-    $this->dup = (bool)$frameFlags->bits()->getBit(static::BIT_DUP);
+    $this->duplicate = (bool)$frameFlags->bits()->getBit(static::BIT_DUP);
     $this->retain = (bool)$frameFlags->bits()->getBit(static::BIT_RETAIN);
     $this->qos = (int)$frameFlags->bits()->getSub(static::BIT_QOS_START, static::BIT_QOS_END)->get();
 
@@ -38,6 +50,27 @@ class Publish {
         \Mqtt\Exception\ProtocolViolation::INCORRECT_QOS
       );
     }
+  }
+
+  /**
+   * @return bool
+   */
+  public function isDuplicate(): bool {
+    return $this->duplicate;
+  }
+
+  /**
+   * @return bool
+   */
+  public function isRetain(): bool {
+    return $this->retain;
+  }
+
+  /**
+   * @return int
+   */
+  public function getQos(): int {
+    return $this->qos;
   }
 
 }
