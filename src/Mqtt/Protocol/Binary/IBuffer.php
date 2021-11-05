@@ -1,14 +1,14 @@
 <?php
 
-namespace Mqtt\Protocol\Binary\Data;
+namespace Mqtt\Protocol\Binary;
 
 interface IBuffer extends \IteratorAggregate {
 
   /**
    * @param int $length
-   * @return \Mqtt\Protocol\Binary\Data\IBuffer
+   * @return \Mqtt\Protocol\Binary\IBuffer
    */
-  public function get(int $length = null) : \Mqtt\Protocol\Binary\Data\IBuffer;
+  public function get(int $length = null) : \Mqtt\Protocol\Binary\IBuffer;
 
   /**
    * @param int $length
@@ -46,7 +46,7 @@ interface IBuffer extends \IteratorAggregate {
    * @param string $buffer
    * @return $this
    */
-  public function set(string $buffer) : \Mqtt\Protocol\Binary\Data\IBuffer;
+  public function set(string $buffer) : \Mqtt\Protocol\Binary\IBuffer;
 
   /**
    * @return $this
@@ -57,7 +57,7 @@ interface IBuffer extends \IteratorAggregate {
    * @param string $encodedData
    * @return $this
    */
-  public function append(string $encodedData) : \Mqtt\Protocol\Binary\Data\IBuffer;
+  public function append(string $encodedData) : \Mqtt\Protocol\Binary\IBuffer;
 
   /**
    * @return string

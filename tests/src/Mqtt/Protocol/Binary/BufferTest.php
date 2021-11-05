@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Binary\Data;
+namespace Mqtt\Protocol\Binary;
 
 class BufferTest extends \PHPUnit\Framework\TestCase {
 
@@ -10,7 +10,7 @@ class BufferTest extends \PHPUnit\Framework\TestCase {
   protected $object;
 
   protected function setUp() {
-    $this->object = new Buffer();
+    $this->object = new \Mqtt\Protocol\Binary\Buffer();
   }
 
   public function testInitiallyEmpty() {

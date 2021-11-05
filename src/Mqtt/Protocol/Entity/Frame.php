@@ -15,7 +15,7 @@ class Frame {
   public $flags;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\IBuffer
+   * @var \Mqtt\Protocol\Binary\IBuffer
    */
   public $payload;
 

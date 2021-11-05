@@ -83,19 +83,19 @@ class Uint16 implements \Mqtt\Protocol\Binary\Data\ICodec, \Mqtt\Protocol\Binary
   }
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
+   * @param \Mqtt\Protocol\Binary\IBuffer $buffer
    * @return void
    */
-  public function decode(\Mqtt\Protocol\Binary\Data\IBuffer $buffer): void {
+  public function decode(\Mqtt\Protocol\Binary\IBuffer $buffer): void {
     $this->msb->set($buffer->getByte());
     $this->lsb->set($buffer->getByte());
   }
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
+   * @param \Mqtt\Protocol\Binary\IBuffer $buffer
    * @return void
    */
-  public function encode(\Mqtt\Protocol\Binary\Data\IBuffer $buffer): void {
+  public function encode(\Mqtt\Protocol\Binary\IBuffer $buffer): void {
     $buffer->append((string) $this);
   }
 }

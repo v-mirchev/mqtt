@@ -17,7 +17,7 @@ class ConnAck {
     $this->flags = clone $flags;
   }
 
-  public function decode(\Mqtt\Protocol\Binary\Data\IBuffer $buffer) {
+  public function decode(\Mqtt\Protocol\Binary\IBuffer $buffer) {
     $this->flags->decode($buffer);
     if (
       $this->flags->bits()->getSub(static::BIT_RESERVED_START, static::BIT_RESERVED_END)->get() !==

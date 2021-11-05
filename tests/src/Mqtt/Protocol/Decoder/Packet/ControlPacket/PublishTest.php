@@ -24,7 +24,7 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
     $this->frame = clone $this->___container->get(\Mqtt\Protocol\Entity\Frame::class);
     $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PUBLISH;
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x0) . chr(0x5) . 'TOPIC');
     $this->frame->payload->append('MESSAGE');
   }
@@ -79,7 +79,7 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testProperlyDecodingIdentificatorForQos1() {
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->flags->bits()->set(0b00000010);
     $this->frame->payload->append(chr(0x00) . chr(0x05) . 'TOPIC');
     $this->frame->payload->append(chr(0x01) . chr(0x02));

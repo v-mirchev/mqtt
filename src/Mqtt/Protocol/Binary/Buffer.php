@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Binary\Data;
+namespace Mqtt\Protocol\Binary;
 
-class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
+class Buffer implements \Mqtt\Protocol\Binary\IBuffer {
 
   /**
    * @var string
@@ -19,9 +19,9 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
 
   /**
    * @param int $length
-   * @return \Mqtt\Protocol\Binary\Data\IBuffer
+   * @return \Mqtt\Protocol\Binary\IBuffer
    */
-  public function get(int $length = null) : \Mqtt\Protocol\Binary\Data\IBuffer {
+  public function get(int $length = null) : \Mqtt\Protocol\Binary\IBuffer {
     $buffer = clone $this;
     $buffer->buffer = $this->getString($length);
     return $buffer;
@@ -84,7 +84,7 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
    * @param string $buffer
    * @return $this
    */
-  public function set(string $buffer) : \Mqtt\Protocol\Binary\Data\IBuffer {
+  public function set(string $buffer) : \Mqtt\Protocol\Binary\IBuffer {
     $this->buffer = $buffer;
     return $this;
   }
@@ -92,7 +92,7 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
   /**
    * @return $this
    */
-  public function reset() : \Mqtt\Protocol\Binary\Data\IBuffer {
+  public function reset() : \Mqtt\Protocol\Binary\IBuffer {
     $this->set('');
     return $this;
   }
@@ -101,7 +101,7 @@ class Buffer implements \Mqtt\Protocol\Binary\Data\IBuffer {
    * @param string $encodedData
    * @return $this
    */
-  public function append(string $encodedData) : \Mqtt\Protocol\Binary\Data\IBuffer {
+  public function append(string $encodedData) : \Mqtt\Protocol\Binary\IBuffer {
     $this->buffer .= $encodedData;
     return $this;
   }

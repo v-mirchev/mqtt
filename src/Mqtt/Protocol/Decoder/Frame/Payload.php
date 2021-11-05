@@ -7,7 +7,7 @@ class Payload implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   use \Mqtt\Protocol\Decoder\Frame\TReceiver;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\IBuffer
+   * @var \Mqtt\Protocol\Binary\IBuffer
    */
   protected $buffer;
 
@@ -17,9 +17,9 @@ class Payload implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   protected $length;
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
+   * @param \Mqtt\Protocol\Binary\IBuffer $buffer
    */
-  public function __construct(\Mqtt\Protocol\Binary\Data\IBuffer $buffer) {
+  public function __construct(\Mqtt\Protocol\Binary\IBuffer $buffer) {
     $this->buffer = clone $buffer;
     $this->length = 0;
   }
@@ -37,9 +37,9 @@ class Payload implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   }
 
   /**
-   * @return \Mqtt\Protocol\Binary\Data\IBuffer
+   * @return \Mqtt\Protocol\Binary\IBuffer
    */
-  public function get(): \Mqtt\Protocol\Binary\Data\IBuffer {
+  public function get(): \Mqtt\Protocol\Binary\IBuffer {
     return $this->buffer->get();
   }
 

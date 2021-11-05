@@ -25,7 +25,7 @@ class PingRespTest extends \PHPUnit\Framework\TestCase {
     $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PINGRESP;
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
     $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PINGRESP);
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
   }
 
   public function testInitialCleanState() {

@@ -25,7 +25,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
     $this->frame->packetType = \Mqtt\Protocol\Packet\IType::CONNACK;
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
     $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_CONNACK);
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x0) . chr(0x0));
   }
 
@@ -56,7 +56,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testDecodeFailsWhenIncorrectReturnCodeValue() {
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x0) . chr(0xF));
     $this->expectException(\Exception::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_CONNACK_RETURN_CODE);
@@ -64,7 +64,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testDecodeFailsWhenIncorrectPayloadReservedBits() {
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0xF) . chr(0x1));
     $this->expectException(\Exception::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_PAYLOAD_RESERVED_BITS);
@@ -72,12 +72,12 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testProperlyDecodingSessionPresentFlag() {
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x0) . chr(0x0));
     $this->object->decode($this->frame);
     $this->assertFalse($this->object->get()->isSessionPresent);
 
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x1) . chr(0x0));
     $this->object->decode($this->frame);
     $this->assertTrue($this->object->get()->isSessionPresent);
@@ -98,7 +98,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
    * @dataProvider returnCodeDataProvider
    */
   public function testProperlyDecodingConnectReturnCode(int $returnCode, int $encodedByte) {
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x0) . chr($encodedByte));
     $this->object->decode($this->frame);
     $this->assertEquals($returnCode, $this->object->get()->code);

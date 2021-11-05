@@ -25,7 +25,7 @@ class PubRelTest extends \PHPUnit\Framework\TestCase {
     $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PUBREL;
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
     $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL);
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x0) . chr(0x0));
   }
 
@@ -56,7 +56,7 @@ class PubRelTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testProperlyDecodingIdentificator() {
-    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x01) . chr(0x02));
     $this->object->decode($this->frame);
     $this->assertEquals(0x0102, $this->object->get()->getId());

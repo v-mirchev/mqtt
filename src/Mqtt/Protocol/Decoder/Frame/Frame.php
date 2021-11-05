@@ -7,7 +7,7 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   use \Mqtt\Protocol\Decoder\Frame\TReceiver;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\IBuffer
+   * @var \Mqtt\Protocol\Binary\IBuffer
    */
   protected $buffer;
 
@@ -17,11 +17,11 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   protected $fsm;
 
   /**
-   * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
+   * @param \Mqtt\Protocol\Binary\IBuffer $buffer
    * @param \Mqtt\Protocol\Decoder\Frame\Fsm $fsm
    */
   public function __construct(
-    \Mqtt\Protocol\Binary\Data\IBuffer $buffer,
+    \Mqtt\Protocol\Binary\IBuffer $buffer,
     \Mqtt\Protocol\Decoder\Frame\Fsm\Fsm $fsm
   ) {
     $this->buffer = clone $buffer;
