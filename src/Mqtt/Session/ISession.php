@@ -2,7 +2,7 @@
 
 namespace Mqtt\Session;
 
-interface ISession extends \Mqtt\Protocol\IHandler  {
+interface ISession  {
 
   /**
    * @param \Mqtt\Client\IClient $client

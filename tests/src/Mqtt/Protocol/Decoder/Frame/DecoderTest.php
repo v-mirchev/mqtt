@@ -6,13 +6,13 @@ namespace Mqtt\Protocol\Decoder\Frame;
  * @Inject $container
  * @property \Psr\Container\ContainerInterface $___container
  */
-class FrameTest extends \PHPUnit\Framework\TestCase {
+class DecoderTest extends \PHPUnit\Framework\TestCase {
 
   use \Test\Helpers\TestPassedAssert;
   use \Test\Helpers\Binary;
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Frame\Frame
+   * @var \Mqtt\Protocol\Decoder\Frame\Decoder
    */
   protected $object;
 
@@ -27,7 +27,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   protected $frames;
 
   protected function setUp() {
-    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Frame\Frame::class);
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Frame\Decoder::class);
 
     $this->frameEntity = null;
     $this->object->onCompleted(function (\Mqtt\Protocol\Entity\Frame $frame) {
@@ -36,7 +36,7 @@ class FrameTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testNullObjectCallbackIsSetInitially() {
-    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Frame\Frame::class);
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Frame\Decoder::class);
 
     $receiver = $this->object->receiver();
     $bytes = [0x02, 0x04, 0x41, 0x42, 0x43, 0x44, 0xA ];
