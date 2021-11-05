@@ -2,7 +2,18 @@
 
 namespace Mqtt\Protocol\Decoder;
 
-interface IDecoder extends \Mqtt\Protocol\Decoder\IPacketDecoder {
+interface IDecoder  {
+
+  /**
+   * @return void
+   */
+  public function init() : void;
+
+  /**
+   * @param string|null $chars
+   * @return void
+   */
+  public function input(string $chars = null) : void;
 
   /**
    * @param callable $onPacketComplete

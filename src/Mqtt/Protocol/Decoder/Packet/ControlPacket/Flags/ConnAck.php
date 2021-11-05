@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet\Flags;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket\Flags;
 
 class ConnAck {
 

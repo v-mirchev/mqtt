@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
-class PubAck implements \Mqtt\Protocol\Decoder\IPacketDecoder {
+class PubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
   /**
    * @var \Mqtt\Protocol\Binary\Data\Uint16

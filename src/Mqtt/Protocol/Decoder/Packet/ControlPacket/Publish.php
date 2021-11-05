@@ -1,11 +1,11 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
-class Publish implements \Mqtt\Protocol\Decoder\IPacketDecoder {
+class Publish implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Packet\Flags\Publish
+   * @var \Mqtt\Protocol\Decoder\Packet\ControlPacket\Flags\Publish
    */
   protected $flags;
 
@@ -25,7 +25,7 @@ class Publish implements \Mqtt\Protocol\Decoder\IPacketDecoder {
   protected $publish;
 
   public function __construct(
-    \Mqtt\Protocol\Decoder\Packet\Flags\Publish $flags,
+    \Mqtt\Protocol\Decoder\Packet\ControlPacket\Flags\Publish $flags,
     \Mqtt\Protocol\Binary\Data\Uint16 $id,
     \Mqtt\Protocol\Binary\Data\Utf8String $topic,
     \Mqtt\Protocol\Entity\Packet\Publish $publish

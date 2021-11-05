@@ -5,9 +5,19 @@ namespace Mqtt\Protocol\Decoder;
 class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
 
   /**
-   * @var \Mqtt\Protocol\Decoder\DecoderFactory
+   * @var \Mqtt\Protocol\Decoder\Frame\Frame
    */
-  protected $decoderFactory;
+  protected $frameDecoder;
+
+  /**
+   * @var \Mqtt\Protocol\Decoder\Packet\Decoder
+   */
+  protected $packetDecoder;
+
+  /**
+   * @var \Mqtt\Protocol\Decoder\Frame\Receiver
+   */
+  protected $inputReceiver;
 
   /**
    * @var callable
@@ -15,52 +25,30 @@ class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
   protected $onPacketCompleted;
 
   /**
-   * @var \Mqtt\Protocol\Entity\Packet\IPacket
+   * @param \Mqtt\Protocol\Decoder\Frame\Frame $frameDecoder
+   * @param \Mqtt\Protocol\Decoder\Packet\Decoder $packetDecoder
    */
-  protected $packet;
-
-  /**
-   * @param \Mqtt\Protocol\Decoder\DecoderFactory $decoderFactory
-   */
-  public function __construct(\Mqtt\Protocol\Decoder\DecoderFactory $decoderFactory) {
-    $this->decoderFactory = $decoderFactory;
+  public function __construct(
+    \Mqtt\Protocol\Decoder\Frame\Frame $frameDecoder,
+    \Mqtt\Protocol\Decoder\Packet\Decoder $packetDecoder
+  ) {
+    $this->frameDecoder = $frameDecoder;
+    $this->packetDecoder = $packetDecoder;
 
     $this->onPacketCompleted = function (\Mqtt\Protocol\Entity\Packet\IPacket $packet) : void {};
   }
 
-  /**
-   * @param \Mqtt\Protocol\Entity\Frame $frame
-   */
-  public function decode(\Mqtt\Protocol\Entity\Frame $frame) : void {
-    $decoder = $this->decoderFactory->create($frame->packetType);
-
-    $decoder->decode($frame);
-    if (!$frame->payload->isEmpty()) {
-      throw new \Mqtt\Exception\ProtocolViolation('Unprocessed data found in frame payload');
-    }
-
-    $this->packet = $decoder->get();
-    if (!$this->packet->isA($frame->packetType)) {
-      throw new \Mqtt\Exception\ProtocolViolation('Unexpected packet decoded');
-    }
-
-    $onCompletedCallback = $this->onPacketCompleted;
-    $onCompletedCallback($this->packet);
+  public function init(): void {
+    $this->inputReceiver = $this->frameDecoder->receiver();
+    $this->frameDecoder->onCompleted(\Closure::fromCallable([$this->packetDecoder, 'decode']));
   }
 
-  /**
-   * @param callable $onPacketCompleted
-   * @return void
-   */
-  public function onCompleted(callable $onPacketCompleted) : void {
-    $this->onPacketCompleted = $onPacketCompleted;
+  public function input(string $chars = null): void {
+    $this->inputReceiver->input($chars);
   }
 
-  /**
-   * @return \Mqtt\Protocol\Entity\Packet\IPacket
-   */
-  public function get() : \Mqtt\Protocol\Entity\Packet\IPacket {
-    return $this->packet;
+  public function onCompleted(callable $onPacketComplete): void {
+    $this->packetDecoder->onCompleted($onPacketComplete);
   }
 
 }

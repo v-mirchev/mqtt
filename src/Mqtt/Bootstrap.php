@@ -19,6 +19,7 @@ class Bootstrap  {
       \Mqtt\Protocol\Packet\Flow\IQueue::class => \Di\get(\Mqtt\Protocol\Packet\Flow\Queue::class),
       \Mqtt\Protocol\Binary\Data\IBuffer::class => \Di\get(\Mqtt\Protocol\Binary\Data\Buffer::class),
       \Mqtt\Protocol\Decoder\IDecoder::class => \Di\get(\Mqtt\Protocol\Decoder\Decoder::class),
+      \Mqtt\Protocol\Decoder\Packet\IDecoder::class => \Di\get(\Mqtt\Protocol\Decoder\Packet\Decoder::class),
 
       __NAMESPACE__ . '.mqtt.protocol.packet.classmap' => [
         \Mqtt\Protocol\Packet\IType::CONNECT => \Mqtt\Protocol\Packet\Type\Connect::class,
@@ -57,13 +58,13 @@ class Bootstrap  {
       },
 
       __NAMESPACE__ . '.mqtt.protocol.packet.decoder.classmap' => [
-        \Mqtt\Protocol\Packet\IType::CONNACK => \Mqtt\Protocol\Decoder\Packet\ConnAck::class,
-        \Mqtt\Protocol\Packet\IType::PINGRESP => \Mqtt\Protocol\Decoder\Packet\PingResp::class,
-        \Mqtt\Protocol\Packet\IType::PUBACK => \Mqtt\Protocol\Decoder\Packet\PubAck::class,
+        \Mqtt\Protocol\Packet\IType::CONNACK => \Mqtt\Protocol\Decoder\Packet\ControlPacket\ConnAck::class,
+        \Mqtt\Protocol\Packet\IType::PINGRESP => \Mqtt\Protocol\Decoder\Packet\ControlPacket\PingResp::class,
+        \Mqtt\Protocol\Packet\IType::PUBACK => \Mqtt\Protocol\Decoder\Packet\ControlPacket\PubAck::class,
       ],
 
-      \Mqtt\Protocol\Decoder\DecoderFactory::class => function (\Psr\Container\ContainerInterface $container) {
-        return new \Mqtt\Protocol\Decoder\DecoderFactory(
+      \Mqtt\Protocol\Decoder\Packet\Factory::class => function (\Psr\Container\ContainerInterface $container) {
+        return new \Mqtt\Protocol\Decoder\Packet\Factory(
           $container,
           $container->get(__NAMESPACE__ . '.mqtt.protocol.packet.decoder.classmap')
         );

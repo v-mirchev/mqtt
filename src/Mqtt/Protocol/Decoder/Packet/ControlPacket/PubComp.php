@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
-class UnsubAck implements \Mqtt\Protocol\Decoder\IPacketDecoder {
+class PubComp implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
   /**
    * @var \Mqtt\Protocol\Binary\Data\Uint16
@@ -10,20 +10,20 @@ class UnsubAck implements \Mqtt\Protocol\Decoder\IPacketDecoder {
   protected $identificator;
 
   /**
-   * @var \Mqtt\Protocol\Entity\Packet\UnsubAck
+   * @var \Mqtt\Protocol\Entity\Packet\PubComp
    */
-  protected $unsubAck;
+  protected $pubComp;
 
   /**
    * @param \Mqtt\Protocol\Binary\Data\Uint16 $uint16
-   * @param \Mqtt\Protocol\Entity\Packet\UnsubAck $unsubAck
+   * @param \Mqtt\Protocol\Entity\Packet\PubComp $pubComp
    */
   public function __construct(
     \Mqtt\Protocol\Binary\Data\Uint16 $uint16,
-    \Mqtt\Protocol\Entity\Packet\UnsubAck $unsubAck
+    \Mqtt\Protocol\Entity\Packet\PubComp $pubComp
   ) {
     $this->identificator = clone $uint16;
-    $this->unsubAck = clone $unsubAck;
+    $this->pubComp = clone $pubComp;
   }
 
   /**
@@ -31,35 +31,36 @@ class UnsubAck implements \Mqtt\Protocol\Decoder\IPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
-    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::UNSUBACK) {
+    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBCOMP) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $frame->packetType . '> is not UNSUBACK',
+        'Packet type received <' . $frame->packetType . '> is not PUBCOMP',
         \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
       );
     }
 
-    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_UNSUBACK) {
+    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBCOMP) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet flags received do not match UNSUBACK reserved ones',
+        'Packet flags received do not match PUBCOMP reserved ones',
         \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
       );
     }
+
 
     $this->identificator->decode($frame->payload);
 
     if (!$frame->payload->isEmpty()) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Unknown payload data in UNSUBACK',
+        'Unknown payload data in PUBCOMP',
         \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
       );
     }
 
-    $this->unsubAck = clone $this->unsubAck;
-    $this->unsubAck->setId($this->identificator->get());
+    $this->pubComp = clone $this->pubComp;
+    $this->pubComp->setId($this->identificator->get());
   }
 
   public function get(): \Mqtt\Protocol\Entity\Packet\IPacket {
-    return $this->unsubAck;
+    return $this->pubComp;
   }
 
 }

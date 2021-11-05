@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
 /**
  * @Inject $container
@@ -9,7 +9,7 @@ namespace Mqtt\Protocol\Decoder\Packet;
 class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Packet\ConnAck
+   * @var \Mqtt\Protocol\Decoder\Packet\ControlPacket\ConnAck
    */
   protected $object;
 
@@ -19,7 +19,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   protected $frame;
 
   protected function setUp() {
-    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\ConnAck::class);
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\ControlPacket\ConnAck::class);
 
     $this->frame = clone $this->___container->get(\Mqtt\Protocol\Entity\Frame::class);
     $this->frame->packetType = \Mqtt\Protocol\Packet\IType::CONNACK;

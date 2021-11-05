@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder;
+namespace Mqtt\Protocol\Decoder\Packet;
 
-class DecoderFactory {
+class Factory {
 
   /**
    * @var \Psr\Container\ContainerInterface
@@ -25,9 +25,9 @@ class DecoderFactory {
 
   /**
    * @param int $packetType
-   * @return \Mqtt\Protocol\Decoder\IPacketDecoder
+   * @return \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder
    */
-  public function create(int $packetType) : \Mqtt\Protocol\Decoder\IPacketDecoder {
+  public function create(int $packetType) : \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     if (!isset($this->classMap[$packetType])) {
       throw new \Exception('Packet type <' . $packetType . '> not registered');
     }

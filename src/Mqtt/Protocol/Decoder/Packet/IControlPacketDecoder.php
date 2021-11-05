@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder;
+namespace Mqtt\Protocol\Decoder\Packet;
 
-interface IPacketDecoder {
+interface IControlPacketDecoder {
 
   /**
    * @param \Mqtt\Protocol\Entity\Frame $frame

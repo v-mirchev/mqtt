@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
-class PubComp implements \Mqtt\Protocol\Decoder\IPacketDecoder {
+class PubRel implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
   /**
    * @var \Mqtt\Protocol\Binary\Data\Uint16
@@ -10,20 +10,20 @@ class PubComp implements \Mqtt\Protocol\Decoder\IPacketDecoder {
   protected $identificator;
 
   /**
-   * @var \Mqtt\Protocol\Entity\Packet\PubComp
+   * @var \Mqtt\Protocol\Entity\Packet\PubRel
    */
-  protected $pubComp;
+  protected $pubRel;
 
   /**
    * @param \Mqtt\Protocol\Binary\Data\Uint16 $uint16
-   * @param \Mqtt\Protocol\Entity\Packet\PubComp $pubComp
+   * @param \Mqtt\Protocol\Entity\Packet\PubRel $pubRel
    */
   public function __construct(
     \Mqtt\Protocol\Binary\Data\Uint16 $uint16,
-    \Mqtt\Protocol\Entity\Packet\PubComp $pubComp
+    \Mqtt\Protocol\Entity\Packet\PubRel $pubRel
   ) {
     $this->identificator = clone $uint16;
-    $this->pubComp = clone $pubComp;
+    $this->pubRel = clone $pubRel;
   }
 
   /**
@@ -31,36 +31,35 @@ class PubComp implements \Mqtt\Protocol\Decoder\IPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
-    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBCOMP) {
+    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBREL) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $frame->packetType . '> is not PUBCOMP',
+        'Packet type received <' . $frame->packetType . '> is not PUBREL',
         \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
       );
     }
 
-    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBCOMP) {
+    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet flags received do not match PUBCOMP reserved ones',
+        'Packet flags received do not match PUBREL reserved ones',
         \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
       );
     }
-
 
     $this->identificator->decode($frame->payload);
 
     if (!$frame->payload->isEmpty()) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Unknown payload data in PUBCOMP',
+        'Unknown payload data in PUBREL',
         \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
       );
     }
 
-    $this->pubComp = clone $this->pubComp;
-    $this->pubComp->setId($this->identificator->get());
+    $this->pubRel = clone $this->pubRel;
+    $this->pubRel->setId($this->identificator->get());
   }
 
   public function get(): \Mqtt\Protocol\Entity\Packet\IPacket {
-    return $this->pubComp;
+    return $this->pubRel;
   }
 
 }

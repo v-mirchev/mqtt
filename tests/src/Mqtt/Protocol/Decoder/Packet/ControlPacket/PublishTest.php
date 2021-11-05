@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
 /**
  * @Inject $container
@@ -9,7 +9,7 @@ namespace Mqtt\Protocol\Decoder\Packet;
 class PublishTest extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Packet\Publish
+   * @var \Mqtt\Protocol\Decoder\Packet\ControlPacket\Publish
    */
   protected $object;
 
@@ -19,7 +19,7 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
   protected $frame;
 
   protected function setUp() {
-    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\Publish::class);
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\ControlPacket\Publish::class);
 
     $this->frame = clone $this->___container->get(\Mqtt\Protocol\Entity\Frame::class);
     $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PUBLISH;

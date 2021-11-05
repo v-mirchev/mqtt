@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
-class PubRec implements \Mqtt\Protocol\Decoder\IPacketDecoder {
+class UnsubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
   /**
    * @var \Mqtt\Protocol\Binary\Data\Uint16
@@ -10,20 +10,20 @@ class PubRec implements \Mqtt\Protocol\Decoder\IPacketDecoder {
   protected $identificator;
 
   /**
-   * @var \Mqtt\Protocol\Entity\Packet\PubRec
+   * @var \Mqtt\Protocol\Entity\Packet\UnsubAck
    */
-  protected $pubRec;
+  protected $unsubAck;
 
   /**
    * @param \Mqtt\Protocol\Binary\Data\Uint16 $uint16
-   * @param \Mqtt\Protocol\Entity\Packet\PubRec $pubRec
+   * @param \Mqtt\Protocol\Entity\Packet\UnsubAck $unsubAck
    */
   public function __construct(
     \Mqtt\Protocol\Binary\Data\Uint16 $uint16,
-    \Mqtt\Protocol\Entity\Packet\PubRec $pubRec
+    \Mqtt\Protocol\Entity\Packet\UnsubAck $unsubAck
   ) {
     $this->identificator = clone $uint16;
-    $this->pubRec = clone $pubRec;
+    $this->unsubAck = clone $unsubAck;
   }
 
   /**
@@ -31,16 +31,16 @@ class PubRec implements \Mqtt\Protocol\Decoder\IPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
-    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBREC) {
+    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::UNSUBACK) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $frame->packetType . '> is not PUBREC',
+        'Packet type received <' . $frame->packetType . '> is not UNSUBACK',
         \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
       );
     }
 
-    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREC) {
+    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_UNSUBACK) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet flags received do not match PUBREC reserved ones',
+        'Packet flags received do not match UNSUBACK reserved ones',
         \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
       );
     }
@@ -49,17 +49,17 @@ class PubRec implements \Mqtt\Protocol\Decoder\IPacketDecoder {
 
     if (!$frame->payload->isEmpty()) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Unknown payload data in PUBREC',
+        'Unknown payload data in UNSUBACK',
         \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
       );
     }
 
-    $this->pubRec = clone $this->pubRec;
-    $this->pubRec->setId($this->identificator->get());
+    $this->unsubAck = clone $this->unsubAck;
+    $this->unsubAck->setId($this->identificator->get());
   }
 
   public function get(): \Mqtt\Protocol\Entity\Packet\IPacket {
-    return $this->pubRec;
+    return $this->unsubAck;
   }
 
 }

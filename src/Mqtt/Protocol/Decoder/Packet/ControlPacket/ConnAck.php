@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
-class ConnAck implements \Mqtt\Protocol\Decoder\IPacketDecoder {
+class ConnAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
   const CODES = [
     0 => 'Connection Accepted',
@@ -29,12 +29,12 @@ class ConnAck implements \Mqtt\Protocol\Decoder\IPacketDecoder {
   protected $connAck;
 
   /**
-   * @param \Mqtt\Protocol\Decoder\Packet\Flags\ConnAck $flags
+   * @param \Mqtt\Protocol\Decoder\Packet\ControlPacket\Flags\ConnAck $flags
    * @param \Mqtt\Protocol\Binary\Data\Uint8 $code
    * @param \Mqtt\Protocol\Entity\Packet\ConnAck $connAck
    */
   public function __construct(
-    \Mqtt\Protocol\Decoder\Packet\Flags\ConnAck $flags,
+    \Mqtt\Protocol\Decoder\Packet\ControlPacket\Flags\ConnAck $flags,
     \Mqtt\Protocol\Binary\Data\Uint8 $code,
     \Mqtt\Protocol\Entity\Packet\ConnAck $connAck
   ) {

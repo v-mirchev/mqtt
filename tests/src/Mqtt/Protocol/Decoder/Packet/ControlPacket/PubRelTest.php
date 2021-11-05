@@ -1,15 +1,15 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Packet;
+namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
 /**
  * @Inject $container
  * @property \Psr\Container\ContainerInterface $___container
  */
-class PubRecTest extends \PHPUnit\Framework\TestCase {
+class PubRelTest extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Packet\PubRec
+   * @var \Mqtt\Protocol\Decoder\Packet\ControlPacket\PubRel
    */
   protected $object;
 
@@ -19,19 +19,19 @@ class PubRecTest extends \PHPUnit\Framework\TestCase {
   protected $frame;
 
   protected function setUp() {
-    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\PubRec::class);
+    $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\ControlPacket\PubRel::class);
 
     $this->frame = clone $this->___container->get(\Mqtt\Protocol\Entity\Frame::class);
-    $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PUBREC;
+    $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PUBREL;
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
-    $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREC);
+    $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL);
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\IBuffer::class);
     $this->frame->payload->append(chr(0x0) . chr(0x0));
   }
 
   public function testInitialCleanState() {
     $object = clone $this->object;
-    $this->assertEquals(\Mqtt\Protocol\Packet\IType::PUBREC, $object->get()->getType());
+    $this->assertEquals(\Mqtt\Protocol\Packet\IType::PUBREL, $object->get()->getType());
   }
 
   public function testDecodeFailsWhenIncorrectPacketTypeSetInFrame() {
@@ -62,9 +62,9 @@ class PubRecTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals(0x0102, $this->object->get()->getId());
   }
 
-  public function testProperlyDecodingReturnsPubRecPacketEntity() {
+  public function testProperlyDecodingReturnsPubRelPacketEntity() {
     $this->object->decode($this->frame);
-    $this->assertInstanceOf(\Mqtt\Protocol\Entity\Packet\PubRec::class, $this->object->get());
+    $this->assertInstanceOf(\Mqtt\Protocol\Entity\Packet\PubRel::class, $this->object->get());
   }
 
 }
