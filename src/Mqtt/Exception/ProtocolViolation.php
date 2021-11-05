@@ -10,4 +10,6 @@ class ProtocolViolation extends \Exception {
   const INCORRECT_QOS = 5;
 
   const INCORRECT_CONNACK_RETURN_CODE = 101;
+  const INCORRECT_CONNECT_WILL_SETUP = 102;
+  const INCORRECT_CONNECT_AUTHENTICATION_SETUP = 103;
 }
