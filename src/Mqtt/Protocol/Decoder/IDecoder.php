@@ -5,11 +5,6 @@ namespace Mqtt\Protocol\Decoder;
 interface IDecoder  {
 
   /**
-   * @return void
-   */
-  public function init() : void;
-
-  /**
    * @param string|null $chars
    * @return void
    */

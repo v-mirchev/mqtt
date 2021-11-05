@@ -20,11 +20,6 @@ class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
   protected $inputReceiver;
 
   /**
-   * @var callable
-   */
-  protected $onPacketCompleted;
-
-  /**
    * @param \Mqtt\Protocol\Decoder\Frame\Frame $frameDecoder
    * @param \Mqtt\Protocol\Decoder\Packet\Decoder $packetDecoder
    */
@@ -35,12 +30,9 @@ class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
     $this->frameDecoder = $frameDecoder;
     $this->packetDecoder = $packetDecoder;
 
-    $this->onPacketCompleted = function (\Mqtt\Protocol\Entity\Packet\IPacket $packet) : void {};
-  }
-
-  public function init(): void {
-    $this->inputReceiver = $this->frameDecoder->receiver();
     $this->frameDecoder->onCompleted(\Closure::fromCallable([$this->packetDecoder, 'decode']));
+    $this->onPacketCompleted = function (\Mqtt\Protocol\Entity\Packet\IPacket $packet) : void {};
+    $this->inputReceiver = $this->frameDecoder->receiver();
   }
 
   public function input(string $chars = null): void {
