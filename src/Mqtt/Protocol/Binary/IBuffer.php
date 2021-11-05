@@ -17,17 +17,6 @@ interface IBuffer extends \IteratorAggregate {
   public function getString(int $length = null): string;
 
   /**
-   * @param int $count
-   * @return int[]
-   */
-  public function getBytes(int $count = null): array;
-
-  /**
-   * @return int
-   */
-  public function getByte(): int;
-
-  /**
    * @return string
    */
   public function getChar(): string;

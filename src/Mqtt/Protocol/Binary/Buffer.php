@@ -41,25 +41,6 @@ class Buffer implements \Mqtt\Protocol\Binary\IBuffer {
   }
 
   /**
-   * @param int $count
-   * @return int[]
-   */
-  public function getBytes(int $count = null): array {
-    $value = $this->getString($count);
-    if ($value === '') {
-      return [];
-    }
-    return array_map('ord', str_split($value));
-  }
-
-  /**
-   * @return int
-   */
-  public function getByte(): int {
-    return ord($this->getString(1));
-  }
-
-  /**
    * @return string
    */
   public function getChar(): string {

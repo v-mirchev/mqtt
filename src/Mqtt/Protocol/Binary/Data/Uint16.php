@@ -33,26 +33,16 @@ class Uint16 implements \Mqtt\Protocol\Binary\Data\ICodec, \Mqtt\Protocol\Binary
   }
 
   /**
-   * @return Uint8
-   */
-  public function getMsb() {
-    return $this->msb;
-  }
-
-  /**
-   * @return Uint8
-   */
-  public function getLsb() {
-    return $this->lsb;
-  }
-
-  /**
    * @param int $value
    * @return $this
    */
   public function set($value) : \Mqtt\Protocol\Binary\Data\IUint {
-    $this->msb->set($value >> 8);
-    $this->lsb->set($value % 256);
+    if ($value instanceof \Mqtt\Protocol\Binary\Data\IUint) {
+      $this->set($value->get());
+    } else {
+      $this->msb->set($value >> 8);
+      $this->lsb->set($value % 256);
+    }
     return $this;
   }
 
@@ -87,8 +77,8 @@ class Uint16 implements \Mqtt\Protocol\Binary\Data\ICodec, \Mqtt\Protocol\Binary
    * @return void
    */
   public function decode(\Mqtt\Protocol\Binary\IBuffer $buffer): void {
-    $this->msb->set($buffer->getByte());
-    $this->lsb->set($buffer->getByte());
+    $this->msb->set($buffer->getChar());
+    $this->lsb->set($buffer->getChar());
   }
 
   /**

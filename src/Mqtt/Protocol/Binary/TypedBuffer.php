@@ -39,7 +39,6 @@ class TypedBuffer implements \Mqtt\Protocol\Binary\ITypedBuffer {
     $this->utf8string = $utf8string;
   }
 
-
   /**
    * @param \Mqtt\Protocol\Binary\IBuffer $buffer
    * @return void
