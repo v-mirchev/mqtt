@@ -12,17 +12,17 @@ class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
   protected $buffer;
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Frame\FrameFsm
+   * @var \Mqtt\Protocol\Decoder\Frame\Fsm\Fsm
    */
   protected $fsm;
 
   /**
    * @param \Mqtt\Protocol\Binary\Data\IBuffer $buffer
-   * @param \Mqtt\Protocol\Decoder\Frame\FrameFsm $fsm
+   * @param \Mqtt\Protocol\Decoder\Frame\Fsm $fsm
    */
   public function __construct(
     \Mqtt\Protocol\Binary\Data\IBuffer $buffer,
-    \Mqtt\Protocol\Decoder\Frame\FrameFsm $fsm
+    \Mqtt\Protocol\Decoder\Frame\Fsm\Fsm $fsm
   ) {
     $this->buffer = clone $buffer;
     $this->fsm = clone $fsm;

@@ -1,10 +1,10 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Frame\State;
+namespace Mqtt\Protocol\Decoder\Frame\Fsm\State;
 
-class RemainingLengthProcessing  implements \Mqtt\Protocol\Decoder\Frame\State\IState {
+class RemainingLengthProcessing  implements \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState {
 
-  use \Mqtt\Protocol\Decoder\Frame\State\TState;
+  use \Mqtt\Protocol\Decoder\Frame\Fsm\State\TState;
 
   public function onEnter() {
     $this->context->remainingLengthReceiver->rewind();
@@ -16,7 +16,7 @@ class RemainingLengthProcessing  implements \Mqtt\Protocol\Decoder\Frame\State\I
     }
 
     if ($this->context->remainingLengthReceiver->isCompleted()) {
-      $this->action->setState(\Mqtt\Protocol\Decoder\Frame\State\IState::REMAINING_LENGTH_COMPLETED);
+      $this->action->setState(\Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::REMAINING_LENGTH_COMPLETED);
     }
   }
 

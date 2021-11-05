@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Frame;
+namespace Mqtt\Protocol\Decoder\Frame\Fsm;
 
-class FrameStateFactory {
+class Factory {
 
   /**
    * @var \Psr\Container\ContainerInterface
@@ -28,10 +28,10 @@ class FrameStateFactory {
 
   /**
    * @param string $stateName
-   * @return \Mqtt\Protocol\Decoder\Frame\State\IState
+   * @return \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState
    * @throws \Exception
    */
-  public function create(string $stateName) : \Mqtt\Protocol\Decoder\Frame\State\IState {
+  public function create(string $stateName) : \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState {
     if (!isset($this->classMap[$stateName])) {
       throw new \Exception('Frame state type <' . $stateName . '> not registered');
     }

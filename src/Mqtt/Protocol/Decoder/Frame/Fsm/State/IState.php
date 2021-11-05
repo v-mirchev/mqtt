@@ -1,6 +1,6 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Frame\State;
+namespace Mqtt\Protocol\Decoder\Frame\Fsm\State;
 
 interface IState {
 
@@ -11,14 +11,14 @@ interface IState {
   const FRAME_COMPLETED = 'frame.fsm.frame.completed';
 
   /**
-   * @param \Mqtt\Protocol\Decoder\Frame\FrameStateContext $context
+   * @param \Mqtt\Protocol\Decoder\Frame\Fsm\Context $context
    */
-  public function setContext(\Mqtt\Protocol\Decoder\Frame\FrameStateContext $context);
+  public function setContext(\Mqtt\Protocol\Decoder\Frame\Fsm\Context $context);
 
   /**
-   * @param \Mqtt\Protocol\Decoder\Frame\IFrameStateAction $action
+   * @param \Mqtt\Protocol\Decoder\Frame\Fsm\IActions $action
    */
-  public function setAction(\Mqtt\Protocol\Decoder\Frame\IFrameStateAction $action);
+  public function setAction(\Mqtt\Protocol\Decoder\Frame\Fsm\IActions $action);
 
   public function onEnter();
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Frame;
+namespace Mqtt\Protocol\Decoder\Frame\Fsm;
 
-interface IFrameStateAction {
+interface IActions {
 
 
   /**

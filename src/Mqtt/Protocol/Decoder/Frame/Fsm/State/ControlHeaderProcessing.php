@@ -1,10 +1,10 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Frame\State;
+namespace Mqtt\Protocol\Decoder\Frame\Fsm\State;
 
-class ControlHeaderProcessing implements \Mqtt\Protocol\Decoder\Frame\State\IState {
+class ControlHeaderProcessing implements \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState {
 
-  use \Mqtt\Protocol\Decoder\Frame\State\TState;
+  use \Mqtt\Protocol\Decoder\Frame\Fsm\State\TState;
 
   public function onEnter() {
     $this->nextState = $this;
@@ -17,7 +17,7 @@ class ControlHeaderProcessing implements \Mqtt\Protocol\Decoder\Frame\State\ISta
     }
 
     if ($this->context->controlHeaderReceiver->isCompleted()) {
-      $this->action->setState(\Mqtt\Protocol\Decoder\Frame\State\IState::REMAINING_LENGTH_PROCESSING);
+      $this->action->setState(\Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::REMAINING_LENGTH_PROCESSING);
     }
   }
 

@@ -1,16 +1,16 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Frame;
+namespace Mqtt\Protocol\Decoder\Frame\Fsm;
 
-class FrameFsm implements \Mqtt\Protocol\Decoder\Frame\IFrameStateAction {
+class Fsm implements \Mqtt\Protocol\Decoder\Frame\Fsm\IActions {
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Frame\FrameStateContext
+   * @var \Mqtt\Protocol\Decoder\Frame\Fsm\Context
    */
   protected $context;
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Frame\FrameStateFactory
+   * @var \Mqtt\Protocol\Decoder\Frame\Fsm\Factory
    */
   protected $stateFactory;
 
@@ -30,8 +30,8 @@ class FrameFsm implements \Mqtt\Protocol\Decoder\Frame\IFrameStateAction {
   public $state;
 
   public function __construct(
-    \Mqtt\Protocol\Decoder\Frame\FrameStateContext $context,
-    \Mqtt\Protocol\Decoder\Frame\FrameStateFactory $stateFactory,
+    \Mqtt\Protocol\Decoder\Frame\Fsm\Context $context,
+    \Mqtt\Protocol\Decoder\Frame\Fsm\Factory $stateFactory,
     \Mqtt\Protocol\Entity\Frame $entityPrototype
   ) {
     $this->context = $context;
@@ -49,7 +49,7 @@ class FrameFsm implements \Mqtt\Protocol\Decoder\Frame\IFrameStateAction {
     $this->remainingLengthReceiver = $this->context->remainingLengthHeader->receiver();
     $this->payloadReceiver = $this->context->payload->receiver();
 
-    $this->setState(\Mqtt\Protocol\Decoder\Frame\State\IState::CONTROL_HEADER_PROCESSING);
+    $this->setState(\Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::CONTROL_HEADER_PROCESSING);
   }
 
   /**

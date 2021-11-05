@@ -1,10 +1,10 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Frame\State;
+namespace Mqtt\Protocol\Decoder\Frame\Fsm\State;
 
-class PayloadProcessing implements \Mqtt\Protocol\Decoder\Frame\State\IState {
+class PayloadProcessing implements \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState {
 
-  use \Mqtt\Protocol\Decoder\Frame\State\TState;
+  use \Mqtt\Protocol\Decoder\Frame\Fsm\State\TState;
 
   public function onEnter() {
     $this->context->payloadReceiver->rewind();
@@ -17,7 +17,7 @@ class PayloadProcessing implements \Mqtt\Protocol\Decoder\Frame\State\IState {
     }
 
     if ($this->context->payloadReceiver->isCompleted()) {
-      $this->action->setState(\Mqtt\Protocol\Decoder\Frame\State\IState::FRAME_COMPLETED);
+      $this->action->setState(\Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::FRAME_COMPLETED);
     }
   }
 

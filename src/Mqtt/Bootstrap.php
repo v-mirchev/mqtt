@@ -42,15 +42,15 @@ class Bootstrap  {
       },
 
       __NAMESPACE__ . '.mqtt.protocol.frame.decoder.classmap' => [
-        \Mqtt\Protocol\Decoder\Frame\State\IState::CONTROL_HEADER_PROCESSING => \Mqtt\Protocol\Decoder\Frame\State\ControlHeaderProcessing::class,
-        \Mqtt\Protocol\Decoder\Frame\State\IState::REMAINING_LENGTH_PROCESSING => \Mqtt\Protocol\Decoder\Frame\State\RemainingLengthProcessing::class,
-        \Mqtt\Protocol\Decoder\Frame\State\IState::REMAINING_LENGTH_COMPLETED => \Mqtt\Protocol\Decoder\Frame\State\RemainingLengthCompleted::class,
-        \Mqtt\Protocol\Decoder\Frame\State\IState::PAYLOAD_PROCESSING => \Mqtt\Protocol\Decoder\Frame\State\PayloadProcessing::class,
-        \Mqtt\Protocol\Decoder\Frame\State\IState::FRAME_COMPLETED => \Mqtt\Protocol\Decoder\Frame\State\FrameCompleted::class,
+        \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::CONTROL_HEADER_PROCESSING => \Mqtt\Protocol\Decoder\Frame\Fsm\State\ControlHeaderProcessing::class,
+        \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::REMAINING_LENGTH_PROCESSING => \Mqtt\Protocol\Decoder\Frame\Fsm\State\RemainingLengthProcessing::class,
+        \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::REMAINING_LENGTH_COMPLETED => \Mqtt\Protocol\Decoder\Frame\Fsm\State\RemainingLengthCompleted::class,
+        \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::PAYLOAD_PROCESSING => \Mqtt\Protocol\Decoder\Frame\Fsm\State\PayloadProcessing::class,
+        \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState::FRAME_COMPLETED => \Mqtt\Protocol\Decoder\Frame\Fsm\State\FrameCompleted::class,
       ],
 
-      \Mqtt\Protocol\Decoder\Frame\FrameStateFactory::class => function (\Psr\Container\ContainerInterface $container) {
-        return new \Mqtt\Protocol\Decoder\Frame\FrameStateFactory(
+      \Mqtt\Protocol\Decoder\Frame\Fsm\Factory::class => function (\Psr\Container\ContainerInterface $container) {
+        return new \Mqtt\Protocol\Decoder\Frame\Fsm\Factory(
           $container,
           $container->get(__NAMESPACE__ . '.mqtt.protocol.frame.decoder.classmap')
         );

@@ -1,8 +1,8 @@
 <?php
 
-namespace Mqtt\Protocol\Decoder\Frame;
+namespace Mqtt\Protocol\Decoder\Frame\Fsm;
 
-class FrameStateContext {
+class Context {
 
   /**
    * @var \Mqtt\Protocol\Decoder\Frame\ControlHeader
