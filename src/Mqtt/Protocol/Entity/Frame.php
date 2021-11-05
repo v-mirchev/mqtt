@@ -19,4 +19,22 @@ class Frame {
    */
   public $payload;
 
+  /**
+   * @param \Mqtt\Protocol\Binary\Data\Uint8 $flags
+   * @param \Mqtt\Protocol\Binary\IBuffer $payload
+   */
+  public function __construct(
+    \Mqtt\Protocol\Binary\Data\Uint8 $flags,
+    \Mqtt\Protocol\Binary\IBuffer $payload
+  ) {
+    $this->packetType = 0;
+    $this->flags = $flags;
+    $this->payload = $payload;
+  }
+
+  public function __clone() {
+    $this->packetType = 0;
+    $this->flags = clone $this->flags;
+    $this->payload = clone $this->payload;
+  }
 }
