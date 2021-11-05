@@ -18,6 +18,7 @@ class Bootstrap  {
       \Mqtt\Protocol\Packet\Flow\ISessionContext::class => \Di\get(\Mqtt\Protocol\Packet\Flow\Context::class),
       \Mqtt\Protocol\Packet\Flow\IQueue::class => \Di\get(\Mqtt\Protocol\Packet\Flow\Queue::class),
       \Mqtt\Protocol\Binary\Data\IBuffer::class => \Di\get(\Mqtt\Protocol\Binary\Data\Buffer::class),
+      \Mqtt\Protocol\Decoder\IDecoder::class => \Di\get(\Mqtt\Protocol\Decoder\Decoder::class),
 
       __NAMESPACE__ . '.mqtt.protocol.packet.classmap' => [
         \Mqtt\Protocol\Packet\IType::CONNECT => \Mqtt\Protocol\Packet\Type\Connect::class,

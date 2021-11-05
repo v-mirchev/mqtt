@@ -2,12 +2,17 @@
 
 namespace Mqtt\Protocol\Decoder;
 
-class Decoder implements \Mqtt\Protocol\Decoder\IPacketDecoder {
+class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
 
   /**
    * @var \Mqtt\Protocol\Decoder\DecoderFactory
    */
   protected $decoderFactory;
+
+  /**
+   * @var callable
+   */
+  protected $onPacketCompleted;
 
   /**
    * @var \Mqtt\Protocol\Entity\Packet\IPacket
@@ -19,6 +24,8 @@ class Decoder implements \Mqtt\Protocol\Decoder\IPacketDecoder {
    */
   public function __construct(\Mqtt\Protocol\Decoder\DecoderFactory $decoderFactory) {
     $this->decoderFactory = $decoderFactory;
+
+    $this->onPacketCompleted = function (\Mqtt\Protocol\Entity\Packet\IPacket $packet) : void {};
   }
 
   /**
@@ -37,6 +44,16 @@ class Decoder implements \Mqtt\Protocol\Decoder\IPacketDecoder {
       throw new \Mqtt\Exception\ProtocolViolation('Unexpected packet decoded');
     }
 
+    $onCompletedCallback = $this->onPacketCompleted;
+    $onCompletedCallback($this->packet);
+  }
+
+  /**
+   * @param callable $onPacketCompleted
+   * @return void
+   */
+  public function onCompleted(callable $onPacketCompleted) : void {
+    $this->onPacketCompleted = $onPacketCompleted;
   }
 
   /**
