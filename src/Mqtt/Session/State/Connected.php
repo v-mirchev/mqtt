@@ -53,7 +53,7 @@ class Connected implements \Mqtt\Session\State\IState {
     $this->stateChanger->setState(\Mqtt\Session\State\IState::DISCONNECTED);
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     $this->connectionFlow->onPacketReceived($packet);
   }
 
@@ -65,7 +65,7 @@ class Connected implements \Mqtt\Session\State\IState {
     $this->connectionFlow->onTick();
   }
 
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
 
   }
 

@@ -28,8 +28,8 @@ class Connecting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHan
     $this->timeout->start();
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if (!$packet->is(\Mqtt\Protocol\Packet\IType::CONNACK)) {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if (!$packet->is(\Mqtt\Protocol\IPacketType::CONNACK)) {
       throw new \Exception('CONNACK packet expected');
     }
 

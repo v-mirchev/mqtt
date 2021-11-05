@@ -80,18 +80,18 @@ class Session implements \Mqtt\Session\ISession, \Mqtt\Session\IStateChanger {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     $this->sessionState->onPacketReceived($packet);
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
     $this->sessionState->onPacketSent($packet);
   }
 

@@ -27,11 +27,11 @@ class CompletedWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITime
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBCOMP) && $packet->id === $this->flowContext->getOutgoingPacket()->id) {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::PUBCOMP) && $packet->id === $this->flowContext->getOutgoingPacket()->id) {
       $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::PUBLISH_OUTGOING_COMPLETED);
     }
   }

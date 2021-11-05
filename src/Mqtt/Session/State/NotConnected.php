@@ -39,11 +39,11 @@ class NotConnected implements \Mqtt\Session\State\IState {
     throw new \Exception('Not allowed in this state');
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     throw new \Exception('Not allowed in this state');
   }
 
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
     throw new \Exception('Not allowed in this state');
   }
 

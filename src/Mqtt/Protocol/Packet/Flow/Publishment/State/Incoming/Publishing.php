@@ -8,10 +8,10 @@ class Publishing implements \Mqtt\Protocol\Packet\Flow\IState {
   use \Mqtt\Protocol\Packet\Flow\TState;
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     /* @var $packet \Mqtt\Protocol\Packet\Type\Publish */
     $this->flowContext->setIncomingPacket($packet);
 

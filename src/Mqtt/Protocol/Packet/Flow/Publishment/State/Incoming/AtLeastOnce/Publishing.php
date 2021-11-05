@@ -15,7 +15,7 @@ class Publishing implements \Mqtt\Protocol\Packet\Flow\IState {
     $packet = $this->flowContext->getIncomingPacket();
 
     /* @var $pubAckPacket \Mqtt\Protocol\Packet\Type\PubAck */
-    $pubAckPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::PUBACK);
+    $pubAckPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacketType::PUBACK);
     $pubAckPacket->id = $packet->id;
 
     $this->context->getProtocol()->writePacket($pubAckPacket);

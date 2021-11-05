@@ -71,7 +71,7 @@ class Started implements \Mqtt\Session\State\IState {
    */
   public function publish(\Mqtt\Entity\Message $message) : void {
     /* @var $publishPacket \Mqtt\Protocol\Packet\Type\Publish */
-    $publishPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::PUBLISH);
+    $publishPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacketType::PUBLISH);
     $publishPacket->topic = $message->topic;
     $publishPacket->content = $message->content;
     $publishPacket->dup = false;
@@ -83,14 +83,14 @@ class Started implements \Mqtt\Session\State\IState {
 
   public function subscribe(array $subscriptions) : void {
     /* @var $subscribePacket \Mqtt\Protocol\Packet\Type\Subscribe */
-    $subscribePacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::SUBSCRIBE);
+    $subscribePacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacketType::SUBSCRIBE);
     $subscribePacket->subscriptions = $subscriptions;
     $this->context->getProtocol()->writePacket($subscribePacket);
   }
 
   public function unsubscribe(array $subscriptions) : void {
     /* @var $unsubscribePacket \Mqtt\Protocol\Packet\Type\Unsubscribe */
-    $unsubscribePacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::UNSUBSCRIBE);
+    $unsubscribePacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacketType::UNSUBSCRIBE);
     $unsubscribePacket->subscriptions = $subscriptions;
     $this->context->getProtocol()->writePacket($unsubscribePacket);
   }
@@ -105,7 +105,7 @@ class Started implements \Mqtt\Session\State\IState {
     $this->stateChanger->setState(\Mqtt\Session\State\IState::DISCONNECTED);
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     $this->connectionFlow->onPacketReceived($packet);
     $this->keepAliveFlow->onPacketReceived($packet);
     $this->subscriptionFlows->onPacketReceived($packet);
@@ -113,7 +113,7 @@ class Started implements \Mqtt\Session\State\IState {
     $this->publishmentFlows->onPacketReceived($packet);
   }
 
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
     $this->connectionFlow->onPacketSent($packet);
     $this->keepAliveFlow->onPacketSent($packet);
     $this->subscriptionFlows->onPacketSent($packet);

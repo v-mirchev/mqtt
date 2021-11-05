@@ -22,7 +22,7 @@ class PingRespTest extends \PHPUnit\Framework\TestCase {
     $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\ControlPacket\PingResp::class);
 
     $this->frame = clone $this->___container->get(\Mqtt\Protocol\Entity\Frame::class);
-    $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PINGRESP;
+    $this->frame->packetType = \Mqtt\Protocol\IPacketType::PINGRESP;
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
     $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PINGRESP);
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
@@ -30,11 +30,11 @@ class PingRespTest extends \PHPUnit\Framework\TestCase {
 
   public function testInitialCleanState() {
     $object = clone $this->object;
-    $this->assertEquals(\Mqtt\Protocol\Packet\IType::PINGRESP, $object->get()->getType());
+    $this->assertEquals(\Mqtt\Protocol\IPacketType::PINGRESP, $object->get()->getType());
   }
 
   public function testDecodeFailsWhenWrongPacketTypeSetInFrame() {
-    $this->frame->packetType = \Mqtt\Protocol\Packet\IType::CONNECT;
+    $this->frame->packetType = \Mqtt\Protocol\IPacketType::CONNECT;
     $this->expectException(\Exception::class);
     $this->object->decode($this->frame);
   }

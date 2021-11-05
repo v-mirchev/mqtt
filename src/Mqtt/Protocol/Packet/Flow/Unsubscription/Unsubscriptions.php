@@ -29,21 +29,21 @@ class Unsubscriptions implements \Mqtt\Session\ISession {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::UNSUBACK)) {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::UNSUBACK)) {
       $this->context->getUnsubscriptionsFlowQueue()->get($packet->id)->onPacketReceived($packet);
     }
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::UNSUBSCRIBE)) {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::UNSUBSCRIBE)) {
       $unsubscriptionFlow = clone $this->unsubscriptionFlow;
       $unsubscriptionFlow->start();
       $unsubscriptionFlow->onPacketSent($packet);

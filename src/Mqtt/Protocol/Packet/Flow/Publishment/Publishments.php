@@ -29,19 +29,19 @@ class Publishments implements \Mqtt\Session\ISession {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     $this->incomingPublishments->onPacketReceived($packet);
     $this->outgoingPublishments->onPacketReceived($packet);
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
     $this->incomingPublishments->onPacketSent($packet);
     $this->outgoingPublishments->onPacketSent($packet);
   }

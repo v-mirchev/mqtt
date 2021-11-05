@@ -9,7 +9,7 @@ class NotConnected implements \Mqtt\Protocol\Packet\Flow\IState {
 
   public function onStateEnter(): void {
     $sessionConfiguration = $this->context->getSessionConfiguration();
-    $connectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::CONNECT);
+    $connectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacketType::CONNECT);
     $connectPacket->cleanSession = !$sessionConfiguration->isPersistent;
     $connectPacket->keepAliveInterval = $sessionConfiguration->keepAliveInterval;
     $connectPacket->will = $sessionConfiguration->will;

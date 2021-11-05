@@ -13,13 +13,13 @@ class Connected implements \Mqtt\Protocol\Packet\Flow\IState {
 
   public function stop() : void {
     $this->context->getSessionStateChanger()->setState(\Mqtt\Session\State\IState::DISCONNECTING);
-    $disconnectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::DISCONNECT);
+    $disconnectPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacketType::DISCONNECT);
     $this->context->getProtocol()->writePacket($disconnectPacket);
     $this->context->getProtocol()->disconnect();
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::CONNACK)) {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::CONNACK)) {
       throw new \Exception('CONNACK packet not expected');
     }
   }

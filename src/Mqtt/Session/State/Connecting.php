@@ -73,11 +73,11 @@ class Connecting implements \Mqtt\Session\State\IState, \Mqtt\ITimeoutHandler {
     throw new \Exception('Could not connect');
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     throw new \Exception('Not allowed in this state');
   }
 
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
     throw new \Exception('Not allowed in this state');
   }
 

@@ -7,8 +7,8 @@ class Disabled implements \Mqtt\Protocol\Packet\Flow\IState {
   use \Mqtt\Protocol\Packet\Flow\TState;
 
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PINGRESP)) {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::PINGRESP)) {
       throw new \Exception('PONG packet not expected');
     }
   }

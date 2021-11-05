@@ -29,20 +29,20 @@ class IncomingPublishments implements \Mqtt\Session\ISession {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     $this->onPublishPacketReceived($packet);
     $this->onPublishReleasePacketReceived($packet);
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPublishPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBLISH)) {
+  public function onPublishPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::PUBLISH)) {
       $publishmentFlow = clone $this->publishmentIncomingFlow;
       if (isset($packet->id)) {
         $this->context->getPublishmentIncomingFlowQueue()->add($packet->id, $publishmentFlow);
@@ -53,11 +53,11 @@ class IncomingPublishments implements \Mqtt\Session\ISession {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPublishReleasePacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBREL)) {
+  public function onPublishReleasePacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::PUBREL)) {
       $publishmentFlow = $this->context->getPublishmentIncomingFlowQueue()->get($packet->id);
       $publishmentFlow->onPacketReceived($packet);
     }

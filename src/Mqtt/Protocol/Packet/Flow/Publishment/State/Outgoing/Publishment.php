@@ -21,12 +21,12 @@ class Publishment implements
   protected $stateFactory;
 
   /**
-   * @var \Mqtt\Protocol\Packet\IType
+   * @var \Mqtt\Protocol\IPacketType
    */
   protected $outgoingPacket;
 
   /**
-   * @var \Mqtt\Protocol\Packet\IType
+   * @var \Mqtt\Protocol\IPacketType
    */
   protected $incomingPacket;
 
@@ -44,14 +44,14 @@ class Publishment implements
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     $this->flowState->onPacketReceived($packet);
   }
 
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
     $this->flowState->onPacketSent($packet);
   }
 
@@ -74,32 +74,32 @@ class Publishment implements
   }
 
   /**
-   * @return \Mqtt\Protocol\Packet\IType
+   * @return \Mqtt\Protocol\IPacketType
    */
-  public function getOutgoingPacket() : \Mqtt\Protocol\Packet\IType {
+  public function getOutgoingPacket() : \Mqtt\Protocol\IPacketType {
     return $this->outgoingPacket;
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function setOutgoingPacket(\Mqtt\Protocol\Packet\IType $packet) : void {
+  public function setOutgoingPacket(\Mqtt\Protocol\IPacketType $packet) : void {
     $this->outgoingPacket = $packet;
   }
 
   /**
-   * @return \Mqtt\Protocol\Packet\IType
+   * @return \Mqtt\Protocol\IPacketType
    */
-  public function getIncomingPacket() : \Mqtt\Protocol\Packet\IType {
+  public function getIncomingPacket() : \Mqtt\Protocol\IPacketType {
     return $this->incomingPacket;
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function setIncomingPacket(\Mqtt\Protocol\Packet\IType $packet) : void {
+  public function setIncomingPacket(\Mqtt\Protocol\IPacketType $packet) : void {
     $this->incomingPacket = $packet;
   }
 

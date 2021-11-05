@@ -22,7 +22,7 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
     $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\ControlPacket\Publish::class);
 
     $this->frame = clone $this->___container->get(\Mqtt\Protocol\Entity\Frame::class);
-    $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PUBLISH;
+    $this->frame->packetType = \Mqtt\Protocol\IPacketType::PUBLISH;
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
     $this->frame->payload->append(chr(0x0) . chr(0x5) . 'TOPIC');
@@ -31,11 +31,11 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
 
   public function testInitialCleanState() {
     $object = clone $this->object;
-    $this->assertEquals(\Mqtt\Protocol\Packet\IType::PUBLISH, $object->get()->getType());
+    $this->assertEquals(\Mqtt\Protocol\IPacketType::PUBLISH, $object->get()->getType());
   }
 
   public function testDecodeFailsWhenIncorrectPacketTypeSetInFrame() {
-    $this->frame->packetType = \Mqtt\Protocol\Packet\IType::CONNECT;
+    $this->frame->packetType = \Mqtt\Protocol\IPacketType::CONNECT;
     $this->expectException(\Mqtt\Exception\ProtocolViolation::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE);
     $this->object->decode($this->frame);

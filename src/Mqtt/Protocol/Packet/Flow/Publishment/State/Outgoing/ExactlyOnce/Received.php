@@ -12,7 +12,7 @@ class Received implements \Mqtt\Protocol\Packet\Flow\IState {
     $packet = $this->flowContext->getOutgoingPacket();
 
     /* @var $pubRelPacket \Mqtt\Protocol\Packet\Type\PubRel */
-    $pubRelPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::PUBREL);
+    $pubRelPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacketType::PUBREL);
     $pubRelPacket->id = $packet->id;
 
     $this->context->getProtocol()->writePacket($pubRelPacket);

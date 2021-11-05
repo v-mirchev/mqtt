@@ -19,8 +19,8 @@ class PongWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHa
     $this->timeout = clone $timeout;
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PINGRESP)) {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::PINGRESP)) {
       $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::KEEP_ALIVE_PING_WAIT);
     }
   }

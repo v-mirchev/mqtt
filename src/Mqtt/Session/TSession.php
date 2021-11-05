@@ -40,16 +40,16 @@ trait TSession  {
   public function onProtocolDisconnect(): void {}
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {}
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {}
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {}
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {}
 
   public function onTick(): void {}
 

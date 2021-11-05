@@ -22,7 +22,7 @@ class PubRelTest extends \PHPUnit\Framework\TestCase {
     $this->object = clone $this->___container->get(\Mqtt\Protocol\Decoder\Packet\ControlPacket\PubRel::class);
 
     $this->frame = clone $this->___container->get(\Mqtt\Protocol\Entity\Frame::class);
-    $this->frame->packetType = \Mqtt\Protocol\Packet\IType::PUBREL;
+    $this->frame->packetType = \Mqtt\Protocol\IPacketType::PUBREL;
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
     $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL);
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
@@ -31,11 +31,11 @@ class PubRelTest extends \PHPUnit\Framework\TestCase {
 
   public function testInitialCleanState() {
     $object = clone $this->object;
-    $this->assertEquals(\Mqtt\Protocol\Packet\IType::PUBREL, $object->get()->getType());
+    $this->assertEquals(\Mqtt\Protocol\IPacketType::PUBREL, $object->get()->getType());
   }
 
   public function testDecodeFailsWhenIncorrectPacketTypeSetInFrame() {
-    $this->frame->packetType = \Mqtt\Protocol\Packet\IType::CONNECT;
+    $this->frame->packetType = \Mqtt\Protocol\IPacketType::CONNECT;
     $this->expectException(\Mqtt\Exception\ProtocolViolation::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE);
     $this->object->decode($this->frame);

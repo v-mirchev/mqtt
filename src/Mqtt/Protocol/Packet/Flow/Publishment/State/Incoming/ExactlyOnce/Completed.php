@@ -12,7 +12,7 @@ class Completed implements \Mqtt\Protocol\Packet\Flow\IState {
     $packet = $this->flowContext->getIncomingPacket();
 
     /* @var $pubCompPacket \Mqtt\Protocol\Packet\Type\PubComp */
-    $pubCompPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\Packet\IType::PUBCOMP);
+    $pubCompPacket = $this->context->getProtocol()->createPacket(\Mqtt\Protocol\IPacketType::PUBCOMP);
     $pubCompPacket->id = $packet->id;
 
     $this->context->getProtocol()->writePacket($pubCompPacket);

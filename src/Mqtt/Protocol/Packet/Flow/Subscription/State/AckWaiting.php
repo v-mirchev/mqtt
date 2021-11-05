@@ -19,8 +19,8 @@ class AckWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHan
     $this->timeout = clone $timeout;
   }
 
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::SUBACK) && $packet->id === $this->flowContext->getOutgoingPacket()->id) {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::SUBACK) && $packet->id === $this->flowContext->getOutgoingPacket()->id) {
       $this->flowContext->setIncomingPacket($packet);
       $this->stateChanger->setState(\Mqtt\Protocol\Packet\Flow\IState::SUBSCRIBE_ACKNOWLEDGED);
     }

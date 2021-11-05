@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Packet\Flow;
 
-interface IState extends \Mqtt\Protocol\IHandler {
+interface IState {
 
   const NOT_CONNECTED = 'session.not.connected';
   const CONNECTED = 'session.connected';

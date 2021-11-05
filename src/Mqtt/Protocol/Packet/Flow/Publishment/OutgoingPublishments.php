@@ -29,14 +29,14 @@ class OutgoingPublishments implements \Mqtt\Session\ISession {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketReceived(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketReceived(\Mqtt\Protocol\IPacketType $packet): void {
     if (
-      $packet->is(\Mqtt\Protocol\Packet\IType::PUBACK) ||
-      $packet->is(\Mqtt\Protocol\Packet\IType::PUBREC) ||
-      $packet->is(\Mqtt\Protocol\Packet\IType::PUBCOMP)
+      $packet->is(\Mqtt\Protocol\IPacketType::PUBACK) ||
+      $packet->is(\Mqtt\Protocol\IPacketType::PUBREC) ||
+      $packet->is(\Mqtt\Protocol\IPacketType::PUBCOMP)
     ) {
       $publishmentFlow = $this->context->getPublishmentOutgoingFlowQueue()->get($packet->id);
       $publishmentFlow->onPacketReceived($packet);
@@ -44,20 +44,20 @@ class OutgoingPublishments implements \Mqtt\Session\ISession {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
+  public function onPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
     $this->onNewPublishPacketSent($packet);
     $this->onDupPublishPacketSent($packet);
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onNewPublishPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBLISH) && !$packet->dup) {
+  public function onNewPublishPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::PUBLISH) && !$packet->dup) {
       $publishmentFlow = clone $this->publishmentOutgoingFlow;
       $publishmentFlow->start();
       $publishmentFlow->onPacketSent($packet);
@@ -68,11 +68,11 @@ class OutgoingPublishments implements \Mqtt\Session\ISession {
   }
 
   /**
-   * @param \Mqtt\Protocol\Packet\IType $packet
+   * @param \Mqtt\Protocol\IPacketType $packet
    * @return void
    */
-  public function onDupPublishPacketSent(\Mqtt\Protocol\Packet\IType $packet): void {
-    if ($packet->is(\Mqtt\Protocol\Packet\IType::PUBLISH) && $packet->dup) {
+  public function onDupPublishPacketSent(\Mqtt\Protocol\IPacketType $packet): void {
+    if ($packet->is(\Mqtt\Protocol\IPacketType::PUBLISH) && $packet->dup) {
       $publishmentFlow = $this->context->getPublishmentOutgoingFlowQueue()->get($packet->id);
       $publishmentFlow->onPacketReceived($packet);
     }
