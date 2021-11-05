@@ -31,7 +31,7 @@ class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
     $this->packetDecoder = $packetDecoder;
 
     $this->frameDecoder->onCompleted(\Closure::fromCallable([$this->packetDecoder, 'decode']));
-    $this->onPacketCompleted = function (\Mqtt\Protocol\Entity\Packet\IPacket $packet) : void {};
+    $this->packetDecoder->onCompleted(function (\Mqtt\Protocol\Entity\Packet\IPacket $packet) : void {});
     $this->inputReceiver = $this->frameDecoder->receiver();
   }
 
