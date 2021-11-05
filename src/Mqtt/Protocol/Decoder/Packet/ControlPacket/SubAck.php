@@ -49,15 +49,15 @@ class SubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     $typedBuffer->decorate($frame->payload);
 
     $this->subAck = clone $this->subAck;
-    $this->subAck->setId($typedBuffer->getUint16());
+    $this->subAck->setId($typedBuffer->getUint16()->get());
 
     $this->subAck->returnCodes = [];
     while (!$frame->payload->isEmpty()) {
-      $returnCode = $typedBuffer->getUint8();
+      $returnCode = $typedBuffer->getUint8()->get();
       if (!in_array($returnCode, [ 0x00, 0x01, 0x02, 0x80] )) {
         throw new \Mqtt\Exception\ProtocolViolation(
           'Return codes received do not match SUBACK allowed ones',
-          \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
+          \Mqtt\Exception\ProtocolViolation::INCORRECT_SUBACK_RETURN_CODE
         );
       }
       $this->subAck->returnCodes[] = $returnCode;
