@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Decoder\Frame;
 
-interface IFrameDecoder extends \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
+interface IDecoder extends \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
 
   /**
    * @param callable $onFrameCompleted

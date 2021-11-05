@@ -2,7 +2,7 @@
 
 namespace Mqtt\Protocol\Decoder\Frame;
 
-class Frame implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
+class Decoder implements \Mqtt\Protocol\Decoder\Frame\IDecoder {
 
   use \Mqtt\Protocol\Decoder\Frame\TReceiver;
 

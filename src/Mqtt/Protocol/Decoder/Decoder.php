@@ -5,7 +5,7 @@ namespace Mqtt\Protocol\Decoder;
 class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Frame\Frame
+   * @var \Mqtt\Protocol\Decoder\Frame\Decoder
    */
   protected $frameDecoder;
 
@@ -20,11 +20,11 @@ class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
   protected $inputReceiver;
 
   /**
-   * @param \Mqtt\Protocol\Decoder\Frame\Frame $frameDecoder
+   * @param \Mqtt\Protocol\Decoder\Frame\Decoder $frameDecoder
    * @param \Mqtt\Protocol\Decoder\Packet\Decoder $packetDecoder
    */
   public function __construct(
-    \Mqtt\Protocol\Decoder\Frame\Frame $frameDecoder,
+    \Mqtt\Protocol\Decoder\Frame\Decoder $frameDecoder,
     \Mqtt\Protocol\Decoder\Packet\Decoder $packetDecoder
   ) {
     $this->frameDecoder = $frameDecoder;
@@ -35,11 +35,11 @@ class Decoder implements \Mqtt\Protocol\Decoder\IDecoder {
     $this->inputReceiver = $this->frameDecoder->receiver();
   }
 
-  public function input(string $chars = null): void {
+  public function decode(string $chars = null): void {
     $this->inputReceiver->input($chars);
   }
 
-  public function onCompleted(callable $onPacketComplete): void {
+  public function onDecodingCompleted(callable $onPacketComplete): void {
     $this->packetDecoder->onCompleted($onPacketComplete);
   }
 
