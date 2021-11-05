@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Mqtt\Entity\Configuration;
 
@@ -95,7 +95,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testSetPersistentFluentlySetsIsPersistent() {
-    $this->assertSame($this->object, $this->object->usePersistent(''));
+    $this->assertSame($this->object, $this->object->usePersistent());
   }
 
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Mqtt\Protocol\Binary\Data;
 
@@ -53,7 +53,7 @@ class BitTest extends \PHPUnit\Framework\TestCase {
     for ($value = 0; $value < 256; $value ++) {
       $this->object->set($value);
       for ($bit = 0; $bit < 8; $bit ++) {
-        $binary = str_pad(decbin($this->object->get()), 8, 0, STR_PAD_LEFT);
+        $binary = str_pad(decbin($this->object->get()), 8, '0', STR_PAD_LEFT);
         $this->assertEquals(
           intval(substr($binary, - $bit - 1, 1)),
           $this->object->getBit($bit)

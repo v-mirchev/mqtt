@@ -1,4 +1,4 @@
-<?php declare(ticks = 1);
+<?php declare(ticks = 1); declare(strict_types = 1);
 
 set_time_limit(0);
 

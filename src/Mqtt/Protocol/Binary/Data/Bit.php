@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types = 1);
 
 namespace Mqtt\Protocol\Binary\Data;
 
@@ -48,7 +48,7 @@ class Bit {
    * @param int $bit
    * @return int
    */
-  public function getBit(int $bit) : int {
+  public function getBit(int $bit) : bool {
     return (bool)($this->get() & (1 << $bit));
   }
 
