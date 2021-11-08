@@ -44,9 +44,19 @@ class Context {
     \Mqtt\Protocol\Decoder\Frame\UintVariable $remainingLengthHeader,
     \Mqtt\Protocol\Decoder\Frame\Payload $payload
   ) {
-    $this->controlHeader = $controlHeader;
-    $this->remainingLengthHeader = $remainingLengthHeader;
-    $this->payload = $payload;
+    $this->controlHeader = clone  $controlHeader;
+    $this->remainingLengthHeader = clone $remainingLengthHeader;
+    $this->payload = clone $payload;
+
+    $this->controlHeaderReceiver = $this->controlHeader->receiver();
+    $this->remainingLengthReceiver = $this->remainingLengthHeader->receiver();
+    $this->payloadReceiver = $this->payload->receiver();
+  }
+
+  public function __clone() {
+    $this->controlHeader = clone $this->controlHeader;
+    $this->remainingLengthHeader = clone $this->remainingLengthHeader;
+    $this->payload = clone $this->payload;
 
     $this->controlHeaderReceiver = $this->controlHeader->receiver();
     $this->remainingLengthReceiver = $this->remainingLengthHeader->receiver();

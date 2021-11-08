@@ -29,7 +29,7 @@ class Factory {
    */
   public function create(int $packetType) : \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     if (!isset($this->classMap[$packetType])) {
-      throw new \Exception('Packet type <' . $packetType . '> not registered');
+      throw new \Mqtt\Exception\ProtocolViolation('Packet type <' . $packetType . '> not registered');
     }
 
     return clone $this->dic->get($this->classMap[$packetType]);

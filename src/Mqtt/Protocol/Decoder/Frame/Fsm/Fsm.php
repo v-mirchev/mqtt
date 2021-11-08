@@ -29,14 +29,27 @@ class Fsm implements \Mqtt\Protocol\Decoder\Frame\Fsm\IActions {
    */
   public $state;
 
+  /**
+   * @param \Mqtt\Protocol\Decoder\Frame\Fsm\Context $context
+   * @param \Mqtt\Protocol\Decoder\Frame\Fsm\Factory $stateFactory
+   * @param \Mqtt\Protocol\Entity\Frame $entityPrototype
+   */
   public function __construct(
     \Mqtt\Protocol\Decoder\Frame\Fsm\Context $context,
     \Mqtt\Protocol\Decoder\Frame\Fsm\Factory $stateFactory,
     \Mqtt\Protocol\Entity\Frame $entityPrototype
   ) {
-    $this->context = $context;
+    $this->context = clone $context;
     $this->stateFactory = $stateFactory;
-    $this->entityPrototype = $entityPrototype;
+    $this->entityPrototype = clone $entityPrototype;
+
+    $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) {};
+  }
+
+  public function __clone() {
+    $this->context = clone $this->context;
+    $this->stateFactory = $this->stateFactory;
+    $this->entityPrototype = clone $this->entityPrototype;
 
     $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) {};
   }
