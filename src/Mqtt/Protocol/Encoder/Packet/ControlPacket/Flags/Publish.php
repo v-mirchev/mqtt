@@ -24,6 +24,18 @@ class Publish {
    */
   public $qos;
 
+  public function __construct() {
+    $this->qos = 0;
+    $this->retain = false;
+    $this->dup = false;
+  }
+
+  public function __clone() {
+    $this->qos = 0;
+    $this->retain = false;
+    $this->dup = false;
+  }
+
   /**
    * @param \Mqtt\Protocol\Binary\Data\Uint8 $frameFlags
    */

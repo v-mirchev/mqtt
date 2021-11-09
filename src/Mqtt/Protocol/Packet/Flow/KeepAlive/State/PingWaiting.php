@@ -27,7 +27,7 @@ class PingWaiting implements \Mqtt\Protocol\Packet\Flow\IState, \Mqtt\ITimeoutHa
   }
 
   public function onStateEnter(): void {
-    $this->timeout->setInterval(ceil($this->context->getSessionConfiguration()->keepAliveInterval / 2));
+    $this->timeout->setInterval(ceil($this->context->getSessionConfiguration()->keepAliveInterval));
     $this->timeout->subscribe($this);
     $this->timeout->start();
   }

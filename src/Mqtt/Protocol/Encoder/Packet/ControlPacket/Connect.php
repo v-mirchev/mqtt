@@ -64,7 +64,7 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
 
     $this->flags = clone $this->flags;
     $this->buildConnectFlags($packet);
-    $payload->appendUint8($this->flags->get());
+    $this->flags->encode($payload);
 
     $payload->appendUint16($packet->keepAlive);
     $payload->appendUtf8String($packet->clientId);
@@ -83,15 +83,16 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
 
   }
 
+  /**
+   * @param \Mqtt\Protocol\Entity\Packet\Connect $packet
+   */
   public function buildConnectFlags(\Mqtt\Protocol\Entity\Packet\Connect $packet) {
-    $this->flags->useCleanSession($packet->cleanSession);
-    $this->flags->useUsername($packet->useUsername);
-    $this->flags->usePassword($packet->usePassword);
-    if ($packet->useWill) {
-      $this->flags->useWill();
-      $this->flags->setWillQoS($packet->willQos);
-      $this->flags->setWillRetain($packet->willRetain);
-    }
+    $this->flags->useCleanSession = $packet->cleanSession;
+    $this->flags->useUsername = $packet->useUsername;
+    $this->flags->usePassword = $packet->usePassword;
+    $this->flags->useWill = $packet->useWill;
+    $this->flags->willQoS = $packet->willQos;
+    $this->flags->willRetain = $packet->willRetain;
   }
 
   public function validateWill(\Mqtt\Protocol\Entity\Packet\Connect $packet) {

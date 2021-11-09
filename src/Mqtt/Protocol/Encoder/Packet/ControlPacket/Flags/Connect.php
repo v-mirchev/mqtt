@@ -4,11 +4,6 @@ namespace Mqtt\Protocol\Encoder\Packet\ControlPacket\Flags;
 
 class Connect {
 
-  /**
-   * @var \Mqtt\Protocol\Binary\Data\Uint8
-   */
-  protected $flags;
-
   const BIT_CLEAN_SESSION = 1;
   const BIT_WILL = 2;
   const BIT_WILL_QOS_LS = 3;
@@ -20,67 +15,58 @@ class Connect {
   /**
    * @var bool
    */
-  protected $useCleanSession;
-
-  public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $byte) {
-    $this->flags = clone $byte;
-  }
+  public $useCleanSession;
 
   /**
-   * @param bool $useUsername
+   * @var bool
    */
-  public function useUsername(bool $useUsername = true) {
-    $this->flags->bits()->setBit(static::BIT_USERNAME, $useUsername);
-  }
+  public $usePassword;
 
   /**
-   * @param bool $usePassword
+   * @var bool
    */
-  public function usePassword(bool $usePassword = true) {
-    $this->flags->bits()->setBit(static::BIT_PASSWORD, $usePassword);
-  }
+  public $useUsername;
 
   /**
-   * @param bool $willRetain
+   * @var bool
    */
-  public function setWillRetain(bool $willRetain = true) {
-    $this->flags->bits()->setBit(static::BIT_WILL_REATIN, $willRetain);
-  }
+  public $useWill;
 
   /**
-   * @param int $willQoS
+   * @var bool
    */
-  public function setWillQoS(int $willQoS = 0) {
-    $this->flags->bits()->setSub(static::BIT_WILL_QOS_LS, static::BIT_WILL_QOS_MS, $willQoS);
-  }
+  public $willQoS;
 
   /**
-   * @param bool $will
+   * @var bool
    */
-  public function useWill(bool $will = true) {
-    $this->flags->bits()->setBit(static::BIT_WILL, $will);
-  }
+  public $willRetain;
 
-  /**
-   * @param bool $cleanSession
-   */
-  public function useCleanSession(bool $cleanSession = true) {
-    $this->flags->bits()->setBit(static::BIT_CLEAN_SESSION, $cleanSession);
-  }
-
-  /**
-   * @return int
-   */
-  public function get() : int {
-    return $this->flags->bits()->get();
-  }
-
-  public function reset() {
-    $this->flags->bits()->set(0);
+  public function __construct() {
+    $this->useCleanSession = false;
+    $this->usePassword = false;
+    $this->useUsername = false;
+    $this->useWill = false;
+    $this->willQos = 0;
+    $this->willRetain = false;
   }
 
   public function __clone() {
-    $this->flags = clone $this->flags;
+    $this->useCleanSession = false;
+    $this->usePassword = false;
+    $this->useUsername = false;
+    $this->useWill = false;
+    $this->willQos = 0;
+    $this->willRetain = false;
+  }
+
+  public function encode(\Mqtt\Protocol\Binary\Data\Uint8 $flags) {
+    $flags->bits()->setBit(static::BIT_USERNAME, $this->useUsername);
+    $flags->bits()->setBit(static::BIT_PASSWORD, $this->usePassword);
+    $flags->bits()->setBit(static::BIT_WILL_REATIN, $this->willRetain);
+    $flags->bits()->setSub(static::BIT_WILL_QOS_LS, static::BIT_WILL_QOS_MS, $this->willQoS);
+    $flags->bits()->setBit(static::BIT_WILL, $this->useWill);
+    $flags->bits()->setBit(static::BIT_CLEAN_SESSION, $this->useCleanSession);
   }
 
 }
