@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Encoder\Frame;
 
 class UintVariable implements \Mqtt\Protocol\Encoder\Frame\IStreamEncoder {
 
+  const MAX_VALUE = 268435455;
+
   /**
    * @var int
    */
@@ -23,6 +25,10 @@ class UintVariable implements \Mqtt\Protocol\Encoder\Frame\IStreamEncoder {
   }
 
   public function encode(\Mqtt\Protocol\Binary\IBuffer $buffer): void {
+    if ($this->value > static::MAX_VALUE) {
+      throw new \Exception('Remaining length exceeds maximum value');
+    }
+
     $remainingValue = $this->value;
 
     do {

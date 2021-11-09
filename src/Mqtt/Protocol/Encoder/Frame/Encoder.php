@@ -12,9 +12,9 @@ class Encoder implements \Mqtt\Protocol\Encoder\Frame\IEncoder {
   protected $buffer;
 
   /**
-   * @var \Mqtt\Protocol\Binary\Data\Uint8
+   * @var \Mqtt\Protocol\Encoder\Frame\ControlHeader
    */
-  protected $packetType;
+  protected $controlHeader;
 
   /**
    * @var \Mqtt\Protocol\Encoder\Frame\UintVariable
@@ -28,16 +28,16 @@ class Encoder implements \Mqtt\Protocol\Encoder\Frame\IEncoder {
 
   /**
    * @param \Mqtt\Protocol\Binary\IBuffer $buffer
-   * @param \Mqtt\Protocol\Binary\Data\Uint8 $packetType
+   * @param \Mqtt\Protocol\Encoder\Frame\ControlHeader $controlHeader
    * @param \Mqtt\Protocol\Encoder\Frame\UintVariable $remainingLength
    */
   public function __construct(
     \Mqtt\Protocol\Binary\IBuffer $buffer,
-    \Mqtt\Protocol\Binary\Data\Uint8 $packetType,
+    \Mqtt\Protocol\Encoder\Frame\ControlHeader $controlHeader,
     \Mqtt\Protocol\Encoder\Frame\UintVariable $remainingLength
   ) {
     $this->buffer = $buffer;
-    $this->packetType = $packetType;
+    $this->controlHeader = $controlHeader;
     $this->remainingLength = $remainingLength;
 
     $this->onFrameCompleted = function (string $data) {};
@@ -45,21 +45,28 @@ class Encoder implements \Mqtt\Protocol\Encoder\Frame\IEncoder {
 
   public function __clone() {
     $this->buffer = clone $this->buffer;
+    $this->controlHeader = clone $this->controlHeader;
     $this->remainingLength = clone $this->remainingLength;
     $this->onFrameCompleted = function (string $data) {};
   }
 
+  /**
+   * @param \Mqtt\Protocol\Entity\Frame $frame
+   * @return void
+   */
   public function encode(\Mqtt\Protocol\Entity\Frame $frame): void {
     $this->buffer->reset();
 
-    $this->packetType->set($frame->packetType);
-    $this->packetType->encode($this->buffer);
-
-    $frame->flags->encode($this->buffer);
+    $this->controlHeader->setPacketType($frame->packetType);
+    $this->controlHeader->setFlags($frame->flags->get());
+    $this->controlHeader->encode($this->buffer);
 
     $payload = (string) $frame->payload;
-    $this->remainingLength->set(strlen($payload));
+    $remainingLengtht  = strlen($payload);
+
+    $this->remainingLength->set($remainingLengtht);
     $this->remainingLength->encode($this->buffer);
+
     $this->buffer->append($payload);
 
     $onCompletedCallback = $this->onCompleted;
