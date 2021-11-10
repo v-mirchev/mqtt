@@ -30,10 +30,10 @@ class EncoderTest extends \PHPUnit\Framework\TestCase {
     $frame->packetType = \Mqtt\Protocol\IPacketType::PINGREQ;
     $frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PINGREQ);
 
-    $expectedOutput = [0xC0, 0x00];
+    $expectedOutput = 'C0 00';
 
     $this->object->onCompleted(function (string $output) use ($expectedOutput) {
-      $this->assertEquals($this->toStringStream($expectedOutput), $output);
+      $this->assertEquals($this->hex2string($expectedOutput), $output);
     });
     $this->object->encode($frame);
   }
@@ -42,12 +42,12 @@ class EncoderTest extends \PHPUnit\Framework\TestCase {
     $frame = clone $this->frame;
     $frame->packetType = \Mqtt\Protocol\IPacketType::PUBACK;
     $frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBACK);
-    $frame->payload->append(chr(0x03) . chr(0x02));
+    $frame->payload->append(chr(03) . chr(02));
 
-    $expectedOutput = [0x40, 0x02, 0x03, 0x02];
+    $expectedOutput = '40 02 03 02';
 
     $this->object->onCompleted(function (string $output) use ($expectedOutput) {
-      $this->assertEquals($this->toStringStream($expectedOutput), $output);
+      $this->assertEquals($this->hex2string($expectedOutput), $output);
     });
     $this->object->encode($frame);
   }
@@ -56,12 +56,12 @@ class EncoderTest extends \PHPUnit\Framework\TestCase {
     $frame = clone $this->frame;
     $frame->packetType = \Mqtt\Protocol\IPacketType::PUBREL;
     $frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL);
-    $frame->payload->append(chr(0x03) . chr(0x02));
+    $frame->payload->append(chr(03) . chr(02));
 
-    $expectedOutput = [0x62, 0x02, 0x03, 0x02];
+    $expectedOutput = '62 02 03 02';
 
     $this->object->onCompleted(function (string $output) use ($expectedOutput) {
-      $this->assertEquals($this->toStringStream($expectedOutput), $output);
+      $this->assertEquals($this->hex2string($expectedOutput), $output);
     });
     $this->object->encode($frame);
   }

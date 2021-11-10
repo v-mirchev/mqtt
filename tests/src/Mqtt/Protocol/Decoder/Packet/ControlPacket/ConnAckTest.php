@@ -8,6 +8,8 @@ namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
  */
 class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
+  use \Test\Helpers\Binary;
+
   /**
    * @var \Mqtt\Protocol\Decoder\Packet\ControlPacket\ConnAck
    */
@@ -26,7 +28,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
     $this->frame->flags = clone $this->___container->get(\Mqtt\Protocol\Binary\Data\Uint8::class);
     $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_CONNACK);
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
-    $this->frame->payload->append(chr(0x0) . chr(0x0));
+    $this->frame->payload->append($this->hex2string('00 00'));
   }
 
   public function testInitialCleanState() {
@@ -49,7 +51,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testDecodeFailsWhenPaylodNotFullyDecoded() {
-    $this->frame->payload->append(chr(0x0) . chr(0x0) . chr(0x5));
+    $this->frame->payload->append($this->hex2string('00 00 05'));
     $this->expectException(\Mqtt\Exception\ProtocolViolation::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA);
     $this->object->decode($this->frame);
@@ -57,7 +59,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
   public function testDecodeFailsWhenIncorrectReturnCodeValue() {
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
-    $this->frame->payload->append(chr(0x0) . chr(0xF));
+    $this->frame->payload->append($this->hex2string('00 0F'));
     $this->expectException(\Exception::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_CONNACK_RETURN_CODE);
     $this->object->decode($this->frame);
@@ -65,7 +67,7 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
   public function testDecodeFailsWhenIncorrectPayloadReservedBits() {
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
-    $this->frame->payload->append(chr(0xF) . chr(0x1));
+    $this->frame->payload->append($this->hex2string('0F 01'));
     $this->expectException(\Exception::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_PAYLOAD_RESERVED_BITS);
     $this->object->decode($this->frame);
@@ -73,12 +75,12 @@ class ConnAckTest extends \PHPUnit\Framework\TestCase {
 
   public function testProperlyDecodingSessionPresentFlag() {
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
-    $this->frame->payload->append(chr(0x0) . chr(0x0));
+    $this->frame->payload->append($this->hex2string('00 00'));
     $this->object->decode($this->frame);
     $this->assertFalse($this->object->get()->isSessionPresent);
 
     $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
-    $this->frame->payload->append(chr(0x1) . chr(0x0));
+    $this->frame->payload->append($this->hex2string('01 00'));
     $this->object->decode($this->frame);
     $this->assertTrue($this->object->get()->isSessionPresent);
   }

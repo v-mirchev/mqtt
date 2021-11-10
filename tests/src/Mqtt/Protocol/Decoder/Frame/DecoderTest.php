@@ -181,17 +181,17 @@ class DecoderTest extends \PHPUnit\Framework\TestCase {
     $receiver = $this->object->receiver();
 
     $streams = [
-      [0x3, '',       [0x0031, 0x00, 0x0051, ]],
-      [0x5, 'A',      [0x01, 0x41, 0x0022, 0x01, ]],
-      [0x2, 'A',      [0x41, 0x0042, 0x02, ]],
-      [0x4, 'AB',     [0x41, 0x42, 0x0011, ]],
-      [0x1, '',       [0x00, 0x0072, 0x03, 0x41, ]],
-      [0x7, 'ABC',    [0x42, 0x43, ]],
-      [0x9, 'BACD',   [0x0092, 0x04, 0x42, 0x41, 0x43, 0x44, 0x00A2, 0x02, ]],
-      [0xA, 'AB',     [0x41, 0x42, 0x00D1, ]],
-      [0xD, '',       [0x00, 0x00C2, 0x03, ]],
-      [0xC, 'ABC',    [0x41, 0x42, 0x43, ]],
-      [0xE, 'ABDC',   [0x00E0, 0x04, 0x41, 0x42, 0x44, 0x43,]],
+      [0x3, '',      '31 00  51'],
+      [0x5, 'A',     '0141  22 01'],
+      [0x2, 'A',     '41  42 02'],
+      [0x4, 'AB',    '4142  11'],
+      [0x1, '',      '00  72 03 41'],
+      [0x7, 'ABC',   '4243  '],
+      [0x9, 'BACD',  '92 04 42 41 43 44  A202'],
+      [0xA, 'AB',    '4142  D1'],
+      [0xD, '',      '00  C2 03'],
+      [0xC, 'ABC',   '414243'],
+      [0xE, 'ABDC',  'E0 04 41424443'],
     ];
 
     $this->frames = [];
@@ -200,12 +200,12 @@ class DecoderTest extends \PHPUnit\Framework\TestCase {
     });
 
     foreach ($streams as $stream) {
-      $receiver->input($this->toStringStream($stream[2]));
+      $receiver->input($this->hex2string($stream[2]));
     }
 
     foreach ($streams as $ix => $stream) {
-      $this->assertEquals($stream[0], $this->frames[$ix]->packetType);
-      $this->assertEquals($stream[1], $this->frames[$ix]->payload->getString());
+      $this->assertEquals($stream[0], $this->frames[$ix]->packetType, 'Wrong packet type decoded');
+      $this->assertEquals($stream[1], $this->frames[$ix]->payload->getString(), 'Wrong payload decoded');
     }
   }
 

@@ -90,6 +90,30 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals(0x0102, $this->object->get()->getId());
   }
 
+  public function testProperlyDecodingTopic() {
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
+    $this->frame->flags->bits()->set(0b00000010);
+    $this->frame->payload->append(chr(0x00) . chr(0x05) . 'TOPIC');
+    $this->frame->payload->append(chr(0x01) . chr(0x02));
+    $this->frame->payload->append('MESSAGE');
+
+    $this->object->decode($this->frame);
+
+    $this->assertEquals('TOPIC', $this->object->get()->topic);
+  }
+
+  public function testProperlyDecodingContent() {
+    $this->frame->payload = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
+    $this->frame->flags->bits()->set(0b00000010);
+    $this->frame->payload->append(chr(0x00) . chr(0x05) . 'TOPIC');
+    $this->frame->payload->append(chr(0x01) . chr(0x02));
+    $this->frame->payload->append('MESSAGE');
+
+    $this->object->decode($this->frame);
+
+    $this->assertEquals('MESSAGE', $this->object->get()->message);
+  }
+
   public function testProperlyDecodingReturnsPublishPacketEntity() {
     $this->object->decode($this->frame);
     $this->assertInstanceOf(\Mqtt\Protocol\Entity\Packet\Publish::class, $this->object->get());

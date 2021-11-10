@@ -8,6 +8,8 @@ namespace Mqtt\Protocol\Binary\Data;
  */
 class Utf8StringTest extends \PHPUnit\Framework\TestCase {
 
+  use \Test\Helpers\Binary;
+
   /**
    * @var Utf8String
    */
@@ -19,13 +21,13 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase {
 
   public function testStringable() {
     $this->object->set('ABC');
-    $this->assertEquals(chr(0x00) . chr(0x03) . 'ABC', (string)$this->object);
+    $this->assertEquals($this->hex2string('00 03') . 'ABC', (string)$this->object);
   }
 
   public function testDecodesBufferProperly() {
     /* @var $buffer \Mqtt\Protocol\Binary\IBuffer */
     $buffer = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
-    $buffer->set(chr(0x00) . chr(0x03) . 'ABC');
+    $buffer->set($this->hex2string('00 03') . 'ABC');
 
     $this->object->set('');
     $this->object->decode($buffer);
@@ -38,7 +40,7 @@ class Utf8StringTest extends \PHPUnit\Framework\TestCase {
 
     $this->object->set('ABC');
     $this->object->encode($buffer);
-    $this->assertEquals(chr(0x00) . chr(0x03) . 'ABC', $buffer->getString());
+    $this->assertEquals($this->hex2string('00 03') . 'ABC', $buffer->getString());
   }
 
 }

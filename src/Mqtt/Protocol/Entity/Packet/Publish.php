@@ -29,4 +29,9 @@ class Publish implements \Mqtt\Protocol\Entity\Packet\IPacket {
    */
   public $topic;
 
+  /**
+   * @var string
+   */
+  public $message;
+
 }

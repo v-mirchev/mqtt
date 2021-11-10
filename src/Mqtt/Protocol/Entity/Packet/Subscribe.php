@@ -12,5 +12,5 @@ class Subscribe implements \Mqtt\Protocol\Entity\Packet\IPacket {
   /**
    * @var int[string]
    */
-  public $topics;
+  public $topics = [];
 }

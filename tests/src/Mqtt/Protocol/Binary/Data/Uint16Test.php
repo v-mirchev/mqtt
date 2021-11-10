@@ -8,6 +8,8 @@ namespace Mqtt\Protocol\Binary\Data;
  */
 class Uint16Test extends \PHPUnit\Framework\TestCase {
 
+  use \Test\Helpers\Binary;
+
   /**
    * @var \Mqtt\Protocol\Binary\Data\Uint16
    */
@@ -50,7 +52,7 @@ class Uint16Test extends \PHPUnit\Framework\TestCase {
   public function testDecodesBufferProperly() {
     /* @var $buffer \Mqtt\Protocol\Binary\IBuffer */
     $buffer = clone $this->___container->get(\Mqtt\Protocol\Binary\IBuffer::class);
-    $buffer->set(chr(0xA3) . chr(0x1F));
+    $buffer->set($this->hex2string('A3 1F'));
 
     $this->object->set(0x0000);
     $this->object->decode($buffer);
@@ -63,7 +65,7 @@ class Uint16Test extends \PHPUnit\Framework\TestCase {
 
     $this->object->set(0xA31F);
     $this->object->encode($buffer);
-    $this->assertEquals(chr(0xA3) . chr(0x1F), $buffer->getString());
+    $this->assertEquals($this->hex2string('A3 1F'), $buffer->getString());
   }
 
 }

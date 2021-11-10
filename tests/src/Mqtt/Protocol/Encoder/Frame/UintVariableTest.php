@@ -33,17 +33,17 @@ class UintVariableTest extends \PHPUnit\Framework\TestCase {
 
   public function remainingLengthTestDataProvider() {
     return [
-      [0,          [ 0x00 ] ],
-      [53,         [ 0x35 ] ],
-      [127,        [ 0x7F ] ],
-      [128,        [ 0x80, 0x01 ] ],
-      [4295,       [ 0xC7, 0x21 ] ],
-      [16383,      [ 0xFF, 0x7F ] ],
-      [16384,      [ 0x80, 0x80, 0x01 ] ],
-      [2097151,    [ 0xFF, 0xFF, 0x7F ] ],
-      [2097152,    [ 0x80, 0x80, 0x80, 0x01 ] ],
-      [20971520,   [ 0x80, 0x80, 0x80, 0x0a ] ],
-      [268435455,  [ 0xFF, 0xFF, 0xFF, 0x7F ] ],
+      [0,         '00'],
+      [53,        '35'],
+      [127,       '7F'],
+      [128,       '80 01'],
+      [4295,      'C7 21'],
+      [16383,     'FF 7F'],
+      [16384,     '80 80 01'],
+      [2097151,   'FF FF 7F'],
+      [2097152,   '80 80 80 01'],
+      [20971520,  '80 80 80 0a'],
+      [268435455, 'FF FF FF 7F'],
     ];
   }
 
@@ -55,13 +55,13 @@ class UintVariableTest extends \PHPUnit\Framework\TestCase {
    */
   public function testDecodesProperlyIntegerLength(
     int $inputValue,
-    array $expectedBytes
+    string $expectedBytes
   ) {
     $this->buffer->reset();
 
     $this->object->set($inputValue);
     $this->object->encode($this->buffer);
-    $this->assertEquals($this->toStringStream($expectedBytes), $this->buffer->getString());
+    $this->assertEquals($this->hex2string($expectedBytes), $this->buffer->getString());
   }
 
 }

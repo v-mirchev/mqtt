@@ -28,19 +28,19 @@ class ControlHeaderTest extends \PHPUnit\Framework\TestCase {
   public function testEncodesProperlyPacketType() {
     $this->object->setPacketType(\Mqtt\Protocol\IPacketType::PUBACK);
 
-    $expectedOutput = [0x40];
+    $expectedOutput = '40';
 
     $this->object->encode($this->buffer);
-    $this->assertEquals($this->toStringStream($expectedOutput), (string) $this->buffer);
+    $this->assertEquals($this->hex2string($expectedOutput), (string) $this->buffer);
   }
 
   public function testEncodesProperlyFlags() {
     $this->object->setFlags(0x02);
 
-    $expectedOutput = [0x02];
+    $expectedOutput = '02';
 
     $this->object->encode($this->buffer);
-    $this->assertEquals($this->toStringStream($expectedOutput), (string) $this->buffer);
+    $this->assertEquals($this->hex2string($expectedOutput), (string) $this->buffer);
   }
 
 }
