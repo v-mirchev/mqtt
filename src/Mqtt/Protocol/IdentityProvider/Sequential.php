@@ -21,10 +21,31 @@ class Sequential implements \Mqtt\Protocol\IdentityProvider\IProvider {
     $this->freeIdentificators = [];
   }
 
-  public function free(int $id) {
-    $this->freeIdentificators[] = $id;
+  public function __clone() {
+    $this->id = 0;
+    $this->freeIdentificators = [];
   }
 
+  /**
+   * @param int $id
+   * @throws \Exception
+   */
+  public function free(int $id) {
+    if (isset($this->freeIdentificators[$id])) {
+      throw new \Exception('Packet ID <' . $id . '> is already as free');
+    }
+
+    if ($id > $this->id) {
+      throw new \Exception('Packet ID <' . $id . '> could not be freed');
+    }
+
+    $this->freeIdentificators[$id] = $id;
+  }
+
+  /**
+   * @return int
+   * @throws \Exception
+   */
   public function get(): int {
     $freeId = array_shift($this->freeIdentificators);
     if ($freeId) {
