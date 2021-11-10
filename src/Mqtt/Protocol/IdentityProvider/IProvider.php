@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Mqtt\Protocol\Packet\Id;
+namespace Mqtt\Protocol\IdentityProvider;
 
 interface IProvider {
 

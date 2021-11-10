@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
-namespace Mqtt\Protocol\Packet\Id;
+namespace Mqtt\Protocol\IdentityProvider;
 
 class SequentialTest extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var Sequential
+   * @var \Mqtt\Protocol\IdentityProvider\Sequential
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = new Sequential();
+    $this->object = new \Mqtt\Protocol\IdentityProvider\Sequential();
   }
 
   public function testGetReturnsSequentialNumbers() {

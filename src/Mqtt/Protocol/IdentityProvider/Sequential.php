@@ -1,8 +1,8 @@
 <?php declare(strict_types = 1);
 
-namespace Mqtt\Protocol\Packet\Id;
+namespace Mqtt\Protocol\IdentityProvider;
 
-class Sequential implements \Mqtt\Protocol\Packet\Id\IProvider {
+class Sequential implements \Mqtt\Protocol\IdentityProvider\IProvider {
 
   const MAX_VALUE_16BIT = 65535;
 

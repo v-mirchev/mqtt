@@ -32,7 +32,7 @@ class EncoderTest extends \PHPUnit\Framework\TestCase {
 
   public function testCallBackCalledProperly() {
     $this->object->onEncodingCompleted(function (string $data) {
-      $this->assertEquals($this->hex2string('E000'), $data);
+      $this->assertEquals($this->hex2string('E0 00'), $data);
     });
 
     $this->object->encode(new \Mqtt\Protocol\Entity\Packet\Disconnect());
