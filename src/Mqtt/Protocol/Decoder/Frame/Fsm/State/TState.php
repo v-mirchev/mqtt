@@ -24,7 +24,7 @@ trait TState {
   /**
    * @param \Mqtt\Protocol\Decoder\Frame\Fsm\IActions $action
    */
-  public function setAction(\Mqtt\Protocol\Decoder\Frame\Fsm\IActions $action) {
+  public function setActions(\Mqtt\Protocol\Decoder\Frame\Fsm\IActions $action) {
     $this->action = $action;
   }
 

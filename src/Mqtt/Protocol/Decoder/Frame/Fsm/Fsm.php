@@ -25,7 +25,7 @@ class Fsm implements \Mqtt\Protocol\Decoder\Frame\Fsm\IActions {
   protected $onFrameCompleted;
 
   /**
-   * @var \Mqtt\Protocol\Decoder\Frame\State\IState
+   * @var \Mqtt\Protocol\Decoder\Frame\Fsm\State\IState
    */
   public $state;
 
@@ -80,7 +80,7 @@ class Fsm implements \Mqtt\Protocol\Decoder\Frame\Fsm\IActions {
   public function setState(string $state) : void {
     $this->state = $this->stateFactory->create($state);
     $this->state->setContext($this->context);
-    $this->state->setAction($this);
+    $this->state->setActions($this);
     $this->state->onEnter();
   }
 

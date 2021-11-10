@@ -18,7 +18,7 @@ interface IState {
   /**
    * @param \Mqtt\Protocol\Decoder\Frame\Fsm\IActions $action
    */
-  public function setAction(\Mqtt\Protocol\Decoder\Frame\Fsm\IActions $action);
+  public function setActions(\Mqtt\Protocol\Decoder\Frame\Fsm\IActions $action);
 
   public function onEnter();
 
