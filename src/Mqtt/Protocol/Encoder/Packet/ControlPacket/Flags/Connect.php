@@ -13,6 +13,11 @@ class Connect {
   const BIT_USERNAME = 7;
 
   /**
+   * @var \Mqtt\Protocol\Binary\Data\Uint8
+   */
+  protected $flags;
+
+  /**
    * @var bool
    */
   public $useCleanSession;
@@ -42,7 +47,12 @@ class Connect {
    */
   public $willRetain;
 
-  public function __construct() {
+  /**
+   * @param \Mqtt\Protocol\Binary\Data\Uint8 $flags
+   */
+  public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $flags) {
+    $this->flags = clone $flags;
+
     $this->useCleanSession = false;
     $this->usePassword = false;
     $this->useUsername = false;
@@ -52,6 +62,8 @@ class Connect {
   }
 
   public function __clone() {
+    $this->flags = clone $this->flags;
+
     $this->useCleanSession = false;
     $this->usePassword = false;
     $this->useUsername = false;
@@ -60,13 +72,19 @@ class Connect {
     $this->willRetain = false;
   }
 
-  public function encode(\Mqtt\Protocol\Binary\Data\Uint8 $flags) {
+  /**
+   * @param \Mqtt\Protocol\Binary\IBuffer $buffer
+   */
+  public function encode(\Mqtt\Protocol\Binary\IBuffer $buffer) {
+    $flags = clone $this->flags;
     $flags->bits()->setBit(static::BIT_USERNAME, $this->useUsername);
     $flags->bits()->setBit(static::BIT_PASSWORD, $this->usePassword);
     $flags->bits()->setBit(static::BIT_WILL_REATIN, $this->willRetain);
     $flags->bits()->setSub(static::BIT_WILL_QOS_LS, static::BIT_WILL_QOS_MS, $this->willQoS);
     $flags->bits()->setBit(static::BIT_WILL, $this->useWill);
     $flags->bits()->setBit(static::BIT_CLEAN_SESSION, $this->useCleanSession);
+
+    $flags->encode($buffer);
   }
 
 }

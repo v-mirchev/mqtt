@@ -49,6 +49,7 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
       );
     }
 
+    $this->validateClientId($packet);
     $this->validateAuthentication($packet);
     $this->validateWill($packet);
 
@@ -64,7 +65,7 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
 
     $this->flags = clone $this->flags;
     $this->buildConnectFlags($packet);
-    $this->flags->encode($payload);
+    $this->flags->encode($this->frame->payload);
 
     $payload->appendUint16($packet->keepAlive);
     $payload->appendUtf8String($packet->clientId);
@@ -95,11 +96,30 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     $this->flags->willRetain = $packet->willRetain;
   }
 
+  /**
+   * @param \Mqtt\Protocol\Entity\Packet\Connect $packet
+   * @throws \Mqtt\Exception\ProtocolViolation
+   */
+  public function validateClientId(\Mqtt\Protocol\Entity\Packet\Connect $packet) {
+    if ($packet->clientId === '') {
+      if (!$packet->cleanSession) {
+        throw new \Mqtt\Exception\ProtocolViolation(
+          'Incorrect Will setup in CONNECT',
+          \Mqtt\Exception\ProtocolViolation::INCORRECT_CONNECT_CLIENTID_SETUP
+        );
+      }
+    }
+  }
+
+  /**
+   * @param \Mqtt\Protocol\Entity\Packet\Connect $packet
+   * @throws \Mqtt\Exception\ProtocolViolation
+   */
   public function validateWill(\Mqtt\Protocol\Entity\Packet\Connect $packet) {
     if (!$packet->useWill) {
       if (
-        !empty($packet->willMessage) ||
-        !empty($packet->willTopic) ||
+        $packet->willMessage !== '' ||
+        $packet->willTopic !== '' ||
         $packet->willQos ||
         $packet->willRetain
       ) {
@@ -108,14 +128,26 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
           \Mqtt\Exception\ProtocolViolation::INCORRECT_CONNECT_WILL_SETUP
         );
       }
+    } elseif (
+      $packet->willMessage === '' ||
+      $packet->willTopic === ''
+    ) {
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Incorrect Will setup in CONNECT',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONNECT_WILL_SETUP
+      );
     }
   }
 
+  /**
+   * @param \Mqtt\Protocol\Entity\Packet\Connect $packet
+   * @throws \Mqtt\Exception\ProtocolViolation
+   */
   public function validateAuthentication(\Mqtt\Protocol\Entity\Packet\Connect $packet) {
     if (!$packet->useUsername) {
       if (
-        !empty($packet->useUsername) ||
-        !empty($packet->password) ||
+        $packet->username !== '' ||
+        $packet->password !== '' ||
         $packet->usePassword
       ) {
         throw new \Mqtt\Exception\ProtocolViolation(
@@ -123,14 +155,12 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
           \Mqtt\Exception\ProtocolViolation::INCORRECT_CONNECT_AUTHENTICATION_SETUP
         );
       }
-    }
-
-    if (!$packet->usePassword && !empty($packet->password)) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Incorrect Authentication setup in CONNECT',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONNECT_AUTHENTICATION_SETUP
-      );
-    }
+    } elseif ($packet->username === '') {
+        throw new \Mqtt\Exception\ProtocolViolation(
+          'Incorrect Authentication setup in CONNECT',
+          \Mqtt\Exception\ProtocolViolation::INCORRECT_CONNECT_AUTHENTICATION_SETUP
+        );
+      }
   }
 
   /**

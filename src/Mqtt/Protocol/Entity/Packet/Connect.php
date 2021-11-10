@@ -22,61 +22,61 @@ class Connect implements \Mqtt\Protocol\Entity\Packet\IPacket {
   /**
    * @var bool
    */
-  public $useUsername;
+  public $useUsername = false;
 
   /**
    * @var bool
    */
-  public $usePassword;
+  public $usePassword = false;
 
   /**
    * @var bool
    */
-  public $useWill;
+  public $useWill = false;
 
   /**
    * @var bool
    */
-  public $willRetain;
+  public $willRetain = false;
 
   /**
    * @var int
    */
-  public $willQos;
+  public $willQos = 0x00;
 
   /**
    * @var bool
    */
-  public $cleanSession;
+  public $cleanSession = false;
 
   /**
    * @var int
    */
-  public $keepAlive;
+  public $keepAlive = 0;
 
   /**
    * @var string
    */
-  public $username;
+  public $username = '';
 
   /**
    * @var string
    */
-  public $password;
+  public $password = '';
 
   /**
    * @var string
    */
-  public $willTopic;
+  public $willTopic = '';
 
   /**
    * @var string
    */
-  public $willMessage;
+  public $willMessage = '';
 
   /**
    * @var string
    */
-  public $clientId;
+  public $clientId = '';
 
 }

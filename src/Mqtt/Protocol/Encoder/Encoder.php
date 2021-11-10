@@ -22,8 +22,16 @@ class Encoder implements \Mqtt\Protocol\Encoder\IEncoder {
     \Mqtt\Protocol\Encoder\Packet\IEncoder $packetEncoder,
     \Mqtt\Protocol\Encoder\Frame\IEncoder $frameEncoder
   ) {
-    $this->packetEncoder = $packetEncoder;
-    $this->frameEncoder = $frameEncoder;
+    $this->packetEncoder = clone $packetEncoder;
+    $this->frameEncoder = clone $frameEncoder;
+
+    $this->packetEncoder->onCompleted(\Closure::fromCallable([$this->frameEncoder, 'encode']));
+    $this->frameEncoder->onCompleted(function (string $data) : void {});
+  }
+
+  public function __clone() {
+    $this->packetEncoder = clone $this->packetEncoder;
+    $this->frameEncoder = clone $this->frameEncoder;
 
     $this->packetEncoder->onCompleted(\Closure::fromCallable([$this->frameEncoder, 'encode']));
     $this->frameEncoder->onCompleted(function (string $data) : void {});

@@ -28,6 +28,10 @@ class Encoder implements \Mqtt\Protocol\Encoder\Packet\IEncoder {
     $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) : void {};
   }
 
+  public function __clone() {
+    $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) : void {};
+  }
+
   /**
    * @param \Mqtt\Protocol\Entity\Packet\IPacket $packet
    * @return void
