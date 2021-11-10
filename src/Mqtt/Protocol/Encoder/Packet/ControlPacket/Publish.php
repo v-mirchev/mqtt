@@ -61,7 +61,7 @@ class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     $payload->decorate($this->frame->payload);
 
     $payload->appendUtf8String($packet->topic);
-    if ($packet->qosLevel > \Mqtt\Entity\IQoS::AT_MOST_ONCE) {
+    if ($packet->qosLevel > \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE) {
       $payload->appendUint16($packet->getId());
     }
     $this->frame->payload->append($packet->message);
