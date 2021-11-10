@@ -11,9 +11,8 @@ trait Binary {
   protected function hex2string(string $string) : string {
     return implode('',
       array_map('chr',
-      array_map(function ($value) { return intval($value, 16); }, str_split(
-        str_replace(' ', '', $string),
-      2)
+        array_map(function ($byte) { return intval($byte, 16); },
+          str_split(str_replace(' ', '', $string), 2)
     )));
   }
 
