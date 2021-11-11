@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
 class PubRel implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
+  use \Mqtt\Protocol\Decoder\Packet\ControlPacket\TValidators;
+
   /**
    * @var \Mqtt\Protocol\Binary\Data\Uint16
    */
@@ -31,28 +33,12 @@ class PubRel implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
-    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBREL) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $frame->packetType . '> is not PUBREL',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
-      );
-    }
-
-    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet flags received do not match PUBREL reserved ones',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
-      );
-    }
+    $this->assertPacketIs($frame, \Mqtt\Protocol\IPacketType::PUBREL);
+    $this->assertPacketFlags($frame, \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL);
 
     $this->identificator->decode($frame->payload);
 
-    if (!$frame->payload->isEmpty()) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Unknown payload data in PUBREL',
-        \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
-      );
-    }
+    $this->assertPayloadConsumed($frame);
 
     $this->pubRel = clone $this->pubRel;
     $this->pubRel->setId($this->identificator->get());

@@ -44,12 +44,17 @@ class Publish {
     $this->retain = (bool)$frameFlags->bits()->getBit(static::BIT_RETAIN);
     $this->qos = (int)$frameFlags->bits()->getSub(static::BIT_QOS_START, static::BIT_QOS_END)->get();
 
-    if ($this->qos > 2) {
+    if (!in_array($this->qos, [
+      \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE,
+      \Mqtt\Protocol\Entity\IQoS::AT_LEAST_ONCE,
+      \Mqtt\Protocol\Entity\IQoS::EXACTLY_ONCE,
+    ])) {
       throw new \Mqtt\Exception\ProtocolViolation(
-        'Incorrect packet QoS received in PUBLISH',
+        'Publish with unklnown Qos <' . $this->qos . '>',
         \Mqtt\Exception\ProtocolViolation::INCORRECT_QOS
       );
     }
+
   }
 
   /**

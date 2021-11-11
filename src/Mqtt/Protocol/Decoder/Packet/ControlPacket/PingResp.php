@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
 class PingResp implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
+  use \Mqtt\Protocol\Decoder\Packet\ControlPacket\TValidators;
+
   /**
    * @var \Mqtt\Protocol\Entity\Packet\PingResp
    */
@@ -23,26 +25,9 @@ class PingResp implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
-    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PINGRESP) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $frame->packetType . '> is not PINGRESP',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
-      );
-    }
-
-    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_PINGRESP) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet flags received do not match PINRESP reserved ones',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
-      );
-    }
-
-    if (!$frame->payload->isEmpty()) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Unknown payload data in CONNACK',
-        \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
-      );
-    }
+    $this->assertPacketIs($frame, \Mqtt\Protocol\IPacketType::PINGRESP);
+    $this->assertPacketFlags($frame, \Mqtt\Protocol\IPacketReservedBits::FLAGS_PINGRESP);
+    $this->assertPayloadConsumed($frame);
 
     $this->pingResp = clone $this->pingResp;
   }

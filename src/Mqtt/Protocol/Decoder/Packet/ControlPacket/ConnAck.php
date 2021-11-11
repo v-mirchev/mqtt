@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
 class ConnAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
+  use \Mqtt\Protocol\Decoder\Packet\ControlPacket\TValidators;
+
   const CODES = [
     0 => 'Connection Accepted',
     1 => 'Connection Refused, unacceptable protocol version',
@@ -48,19 +50,8 @@ class ConnAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
-    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::CONNACK) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $frame->packetType . '> is not CONNACK',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
-      );
-    }
-
-    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_CONNACK) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet flags received do not match CONNACK reserved ones',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
-      );
-    }
+    $this->assertPacketIs($frame, \Mqtt\Protocol\IPacketType::CONNACK);
+    $this->assertPacketFlags($frame, \Mqtt\Protocol\IPacketReservedBits::FLAGS_CONNACK);
 
     $this->flags->decode($frame->payload);
     $this->code->decode($frame->payload);
@@ -72,12 +63,7 @@ class ConnAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
       );
     }
 
-    if (!$frame->payload->isEmpty()) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Unknown payload data in CONNACK',
-        \Mqtt\Exception\ProtocolViolation::UNKNOWN_PAYLOAD_DATA
-      );
-    }
+    $this->assertPayloadConsumed($frame);
 
     $this->connAck = clone $this->connAck;
     $this->connAck->isSessionPresent = $this->flags->getSessionPresent();

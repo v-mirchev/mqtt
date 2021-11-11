@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Encoder\Packet\ControlPacket;
 
 class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
 
+  use \Mqtt\Protocol\Encoder\Packet\ControlPacket\TValidators;
+
   /**
    * @var \Mqtt\Protocol\Entity\Frame
    */
@@ -42,12 +44,8 @@ class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
   public function encode(\Mqtt\Protocol\Entity\Packet\IPacket $packet): void {
     /* @var $packet \Mqtt\Protocol\Entity\Packet\Publish */
 
-    if (! $packet->isA(\Mqtt\Protocol\IPacketType::PUBLISH)) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $packet->getType() . '> is not PUBLISH',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
-      );
-    }
+    $this->assertPacketIs($packet, \Mqtt\Protocol\IPacketType::PUBLISH);
+    $this->validateQosSetup($packet);
 
     $this->frame = clone $this->frame;
     $this->frame->packetType = \Mqtt\Protocol\IPacketType::PUBLISH;
@@ -65,6 +63,38 @@ class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
       $payload->appendUint16($packet->getId());
     }
     $this->frame->payload->append($packet->message);
+  }
+
+  /**
+   * @param \Mqtt\Protocol\Entity\Packet\IPacket $packet
+   * @return void
+   * @throws \Mqtt\Exception\ProtocolViolation
+   */
+  public function validateQosSetup(\Mqtt\Protocol\Entity\Packet\IPacket $packet) : void {
+    if (!in_array($packet->qosLevel, [
+      \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE,
+      \Mqtt\Protocol\Entity\IQoS::AT_LEAST_ONCE,
+      \Mqtt\Protocol\Entity\IQoS::EXACTLY_ONCE,
+    ])) {
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Publish with unklnown Qos <' . $packet->qosLevel . '>',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_QOS
+      );
+    }
+
+    if ($packet->qosLevel === \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE) {
+      if ($packet->getId() > 0) {
+        throw new \Mqtt\Exception\ProtocolViolation(
+          'Publish with Qos::AT_MOST_ONCE must have no ID set',
+          \Mqtt\Exception\ProtocolViolation::INCORRECT_PUBLISH_ID_SETUP
+        );
+      }
+    } elseif ($packet->getId() === 0) {
+      throw new \Mqtt\Exception\ProtocolViolation(
+        'Publish with Qos greater than AT_MOST_ONCE must have ID set',
+        \Mqtt\Exception\ProtocolViolation::INCORRECT_PUBLISH_ID_SETUP
+      );
+    }
   }
 
   /**

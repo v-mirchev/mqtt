@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Decoder\Packet\ControlPacket;
 
 class SubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
+  use \Mqtt\Protocol\Decoder\Packet\ControlPacket\TValidators;
+
   /**
    * @var \Mqtt\Protocol\Binary\ITypedBuffer
    */
@@ -31,19 +33,8 @@ class SubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
-    if ($frame->packetType !== \Mqtt\Protocol\IPacketType::SUBACK) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $frame->packetType . '> is not SUBACK',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
-      );
-    }
-
-    if ($frame->flags->get() !== \Mqtt\Protocol\IPacketReservedBits::FLAGS_SUBACK) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet flags received do not match SUBACK reserved ones',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_CONTROL_HEADER_RESERVED_BITS
-      );
-    }
+    $this->assertPacketIs($frame, \Mqtt\Protocol\IPacketType::SUBACK);
+    $this->assertPacketFlags($frame, \Mqtt\Protocol\IPacketReservedBits::FLAGS_SUBACK);
 
     $typedBuffer = clone $this->typedBuffer;
     $typedBuffer->decorate($frame->payload);
@@ -54,12 +45,7 @@ class SubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     $this->subAck->returnCodes = [];
     while (!$frame->payload->isEmpty()) {
       $returnCode = $typedBuffer->getUint8()->get();
-      if (!in_array($returnCode, [ 0x00, 0x01, 0x02, 0x80] )) {
-        throw new \Mqtt\Exception\ProtocolViolation(
-          'Return codes received do not match SUBACK allowed ones',
-          \Mqtt\Exception\ProtocolViolation::INCORRECT_SUBACK_RETURN_CODE
-        );
-      }
+      $this->validateSubscribeReturnCode($returnCode);
       $this->subAck->returnCodes[] = $returnCode;
     }
   }

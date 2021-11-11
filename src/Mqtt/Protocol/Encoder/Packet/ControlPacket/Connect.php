@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Encoder\Packet\ControlPacket;
 
 class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
 
+  use \Mqtt\Protocol\Encoder\Packet\ControlPacket\TValidators;
+
   /**
    * @var \Mqtt\Protocol\Entity\Frame
    */
@@ -42,12 +44,7 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
   public function encode(\Mqtt\Protocol\Entity\Packet\IPacket $packet): void {
     /* @var $packet \Mqtt\Protocol\Entity\Packet\Connect */
 
-    if (! $packet->isA(\Mqtt\Protocol\IPacketType::CONNECT)) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $packet->getType() . '> is not CONNECT',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
-      );
-    }
+    $this->assertPacketIs($packet, \Mqtt\Protocol\IPacketType::CONNECT);
 
     $this->validateClientId($packet);
     $this->validateAuthentication($packet);
@@ -63,9 +60,7 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     $payload->appendUtf8String($packet->protocolName);
     $payload->appendUint8($packet->protocolLevel);
 
-    $this->flags = clone $this->flags;
-    $this->buildConnectFlags($packet);
-    $this->flags->encode($this->frame->payload);
+    $this->encodeConnectFlags($packet);
 
     $payload->appendUint16($packet->keepAlive);
     $payload->appendUtf8String($packet->clientId);
@@ -87,13 +82,17 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
   /**
    * @param \Mqtt\Protocol\Entity\Packet\Connect $packet
    */
-  public function buildConnectFlags(\Mqtt\Protocol\Entity\Packet\Connect $packet) {
+  public function encodeConnectFlags(\Mqtt\Protocol\Entity\Packet\Connect $packet) {
+    $this->flags = clone $this->flags;
+
     $this->flags->useCleanSession = $packet->cleanSession;
     $this->flags->useUsername = $packet->useUsername;
     $this->flags->usePassword = $packet->usePassword;
     $this->flags->useWill = $packet->useWill;
     $this->flags->willQoS = $packet->willQos;
     $this->flags->willRetain = $packet->willRetain;
+
+    $this->flags->encode($this->frame->payload);
   }
 
   /**

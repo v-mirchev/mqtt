@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Encoder\Packet\ControlPacket;
 
 class PubRec implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
 
+  use \Mqtt\Protocol\Encoder\Packet\ControlPacket\TValidators;
+
   /**
    * @var \Mqtt\Protocol\Entity\Frame
    */
@@ -34,12 +36,7 @@ class PubRec implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
   public function encode(\Mqtt\Protocol\Entity\Packet\IPacket $packet): void {
     /* @var $packet \Mqtt\Protocol\Entity\Packet\PubRec */
 
-    if (! $packet->isA(\Mqtt\Protocol\IPacketType::PUBREC)) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $packet->getType() . '> is not PUBREC',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
-      );
-    }
+    $this->assertPacketIs($packet, \Mqtt\Protocol\IPacketType::PUBREC);
 
     $this->frame = clone $this->frame;
     $this->frame->packetType = \Mqtt\Protocol\IPacketType::PUBREC;

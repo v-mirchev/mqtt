@@ -4,6 +4,8 @@ namespace Mqtt\Protocol\Encoder\Packet\ControlPacket;
 
 class Disconnect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
 
+  use \Mqtt\Protocol\Encoder\Packet\ControlPacket\TValidators;
+
   /**
    * @var \Mqtt\Protocol\Entity\Frame
    */
@@ -24,12 +26,7 @@ class Disconnect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder 
   public function encode(\Mqtt\Protocol\Entity\Packet\IPacket $packet): void {
     /* @var $packet \Mqtt\Protocol\Entity\Packet\Disconnect */
 
-    if (! $packet->isA(\Mqtt\Protocol\IPacketType::DISCONNECT)) {
-      throw new \Mqtt\Exception\ProtocolViolation(
-        'Packet type received <' . $packet->getType() . '> is not DISCONNECT',
-        \Mqtt\Exception\ProtocolViolation::INCORRECT_PACKET_TYPE
-      );
-    }
+    $this->assertPacketIs($packet, \Mqtt\Protocol\IPacketType::DISCONNECT);
 
     $this->frame = clone $this->frame;
     $this->frame->packetType = \Mqtt\Protocol\IPacketType::DISCONNECT;

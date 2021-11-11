@@ -15,4 +15,6 @@ class ProtocolViolation extends \Exception {
   const INCORRECT_CONNECT_CLIENTID_SETUP = 104;
 
   const INCORRECT_SUBACK_RETURN_CODE = 110;
+
+  const INCORRECT_PUBLISH_ID_SETUP = 120;
 }
