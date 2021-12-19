@@ -27,9 +27,9 @@ class Uint16 implements \Mqtt\Protocol\Binary\Data\ICodec, \Mqtt\Protocol\Binary
     \Mqtt\Protocol\Binary\Data\Uint8 $uint8,
     \Mqtt\Protocol\Binary\Data\Bit $bit
   ) {
-    $this->lsb = clone $uint8;
-    $this->msb = clone $uint8;
-    $this->bit = clone $bit;
+    $this->lsb = $uint8;
+    $this->msb = $uint8;
+    $this->bit = $bit;
   }
 
   /**
@@ -63,6 +63,9 @@ class Uint16 implements \Mqtt\Protocol\Binary\Data\ICodec, \Mqtt\Protocol\Binary
   public function __clone() {
     $this->msb = clone $this->msb;
     $this->lsb = clone $this->lsb;
+
+    $this->bit = clone $this->bit;
+    $this->bit->uint($this);
   }
 
   /**

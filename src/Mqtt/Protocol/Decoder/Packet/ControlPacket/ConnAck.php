@@ -40,9 +40,9 @@ class ConnAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     \Mqtt\Protocol\Binary\Data\Uint8 $code,
     \Mqtt\Protocol\Entity\Packet\ConnAck $connAck
   ) {
-    $this->flags = clone $flags;
-    $this->code = clone $code;
-    $this->connAck = clone $connAck;
+    $this->flags = $flags;
+    $this->code = $code;
+    $this->connAck = $connAck;
   }
 
   /**

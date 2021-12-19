@@ -24,8 +24,8 @@ class SubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     \Mqtt\Protocol\Binary\ITypedBuffer $typedBuffer,
     \Mqtt\Protocol\Entity\Packet\SubAck $subAck
   ) {
-    $this->typedBuffer = clone $typedBuffer;
-    $this->subAck = clone $subAck;
+    $this->typedBuffer = $typedBuffer;
+    $this->subAck = $subAck;
   }
 
   /**

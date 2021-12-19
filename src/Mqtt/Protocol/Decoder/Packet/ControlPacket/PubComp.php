@@ -24,8 +24,8 @@ class PubComp implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     \Mqtt\Protocol\Binary\Data\Uint16 $uint16,
     \Mqtt\Protocol\Entity\Packet\PubComp $pubComp
   ) {
-    $this->identificator = clone $uint16;
-    $this->pubComp = clone $pubComp;
+    $this->identificator = $uint16;
+    $this->pubComp = $pubComp;
   }
 
   /**
@@ -33,6 +33,8 @@ class PubComp implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
+    $this->identificator = clone $this->identificator;
+
     $this->assertPacketIs($frame, \Mqtt\Protocol\IPacketType::PUBCOMP);
     $this->assertPacketFlags($frame, \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBCOMP);
 

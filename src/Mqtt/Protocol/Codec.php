@@ -22,8 +22,8 @@ class Codec implements \Mqtt\Protocol\ICodec {
     \Mqtt\Protocol\Encoder\IEncoder $encoder,
     \Mqtt\Protocol\Decoder\IDecoder $decoder
   ) {
-    $this->encoder = clone $encoder;
-    $this->decoder = clone $decoder;
+    $this->encoder = $encoder;
+    $this->decoder = $decoder;
   }
 
   public function __clone() {

@@ -24,8 +24,8 @@ class UnsubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     \Mqtt\Protocol\Binary\Data\Uint16 $uint16,
     \Mqtt\Protocol\Entity\Packet\UnsubAck $unsubAck
   ) {
-    $this->identificator = clone $uint16;
-    $this->unsubAck = clone $unsubAck;
+    $this->identificator = $uint16;
+    $this->unsubAck = $unsubAck;
   }
 
   /**
@@ -33,6 +33,9 @@ class UnsubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
+    $this->identificator = clone $this->identificator;
+    $this->unsubAck = clone $this->unsubAck;
+
     $this->assertPacketIs($frame, \Mqtt\Protocol\IPacketType::UNSUBACK);
     $this->assertPacketFlags($frame, \Mqtt\Protocol\IPacketReservedBits::FLAGS_UNSUBACK);
 
@@ -40,7 +43,6 @@ class UnsubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
     $this->assertPayloadConsumed($frame);
 
-    $this->unsubAck = clone $this->unsubAck;
     $this->unsubAck->setId($this->identificator->get());
   }
 

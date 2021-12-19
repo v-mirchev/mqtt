@@ -51,7 +51,7 @@ class Connect {
    * @param \Mqtt\Protocol\Binary\Data\Uint8 $flags
    */
   public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $flags) {
-    $this->flags = clone $flags;
+    $this->flags = $flags;
 
     $this->useCleanSession = false;
     $this->usePassword = false;

@@ -20,7 +20,7 @@ class UintVariable implements \Mqtt\Protocol\Encoder\Frame\IStreamEncoder {
    * @param \Mqtt\Protocol\Binary\Data\Bit $uint8Prototype
    */
   public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $uint8Prototype) {
-    $this->uint8Prototype = clone $uint8Prototype;
+    $this->uint8Prototype = $uint8Prototype;
     $this->value = 0;
   }
 

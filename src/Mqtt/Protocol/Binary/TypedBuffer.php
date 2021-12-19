@@ -52,6 +52,7 @@ class TypedBuffer implements \Mqtt\Protocol\Binary\ITypedBuffer {
    * @return void
    */
   public function appendUint16(int $uint16): void {
+    $this->uint16 = clone $this->uint16;
     $this->uint16->set($uint16);
     $this->uint16->encode($this->buffer);
   }
@@ -61,6 +62,7 @@ class TypedBuffer implements \Mqtt\Protocol\Binary\ITypedBuffer {
    * @return void
    */
   public function appendUint8(int $uint8): void {
+    $this->uint8 = clone $this->uint8;
     $this->uint8->set($uint8);
     $this->uint8->encode($this->buffer);
   }
@@ -70,6 +72,7 @@ class TypedBuffer implements \Mqtt\Protocol\Binary\ITypedBuffer {
    * @return void
    */
   public function appendUtf8String(string $utf8String): void {
+    $this->utf8string = clone $this->utf8string;
     $this->utf8string->set($utf8String);
     $this->utf8string->encode($this->buffer);
   }

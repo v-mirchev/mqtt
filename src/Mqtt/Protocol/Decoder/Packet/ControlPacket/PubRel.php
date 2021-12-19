@@ -24,8 +24,8 @@ class PubRel implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     \Mqtt\Protocol\Binary\Data\Uint16 $uint16,
     \Mqtt\Protocol\Entity\Packet\PubRel $pubRel
   ) {
-    $this->identificator = clone $uint16;
-    $this->pubRel = clone $pubRel;
+    $this->identificator = $uint16;
+    $this->pubRel = $pubRel;
   }
 
   /**
@@ -33,6 +33,8 @@ class PubRel implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
+    $this->identificator = clone $this->identificator;
+
     $this->assertPacketIs($frame, \Mqtt\Protocol\IPacketType::PUBREL);
     $this->assertPacketFlags($frame, \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL);
 

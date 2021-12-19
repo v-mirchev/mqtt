@@ -31,9 +31,9 @@ class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     \Mqtt\Protocol\Encoder\Packet\ControlPacket\Flags\Publish $flags,
     \Mqtt\Protocol\Binary\ITypedBuffer $typedBuffer
   ) {
-    $this->frame = clone $frame;
-    $this->flags = clone $flags;
-    $this->typedBuffer = clone $typedBuffer;
+    $this->frame = $frame;
+    $this->flags = $flags;
+    $this->typedBuffer = $typedBuffer;
   }
 
   /**
@@ -50,6 +50,7 @@ class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     $this->frame = clone $this->frame;
     $this->frame->packetType = \Mqtt\Protocol\IPacketType::PUBLISH;
 
+    $this->flags = clone $this->flags;
     $this->flags->dup = $packet->isDuplicate;
     $this->flags->retain = $packet->isRetain;
     $this->flags->qos = $packet->qosLevel;

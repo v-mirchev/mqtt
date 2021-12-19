@@ -24,8 +24,8 @@ class PubRel implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     \Mqtt\Protocol\Entity\Frame $frame,
     \Mqtt\Protocol\Binary\Data\Uint16 $id
   ) {
-    $this->frame = clone $frame;
-    $this->id = clone $id;
+    $this->frame = $frame;
+    $this->id = $id;
   }
 
   /**
@@ -42,6 +42,7 @@ class PubRel implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     $this->frame->packetType = \Mqtt\Protocol\IPacketType::PUBREL;
     $this->frame->flags->set(\Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBREL);
 
+    $this->id = clone $this->id;
     $this->id->set($packet->getId());
     $this->id->encode($this->frame->payload);
   }

@@ -24,8 +24,8 @@ class Decoder implements \Mqtt\Protocol\Decoder\Frame\IDecoder {
     \Mqtt\Protocol\Binary\IBuffer $buffer,
     \Mqtt\Protocol\Decoder\Frame\Fsm\Fsm $fsm
   ) {
-    $this->buffer = clone $buffer;
-    $this->fsm = clone $fsm;
+    $this->buffer = $buffer;
+    $this->fsm = $fsm;
 
     $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) {};
   }

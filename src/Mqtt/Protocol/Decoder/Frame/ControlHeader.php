@@ -20,7 +20,7 @@ class ControlHeader implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
    * @param \Mqtt\Protocol\Binary\Data\Uint8 $uint8
    */
   public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $uint8) {
-    $this->controlHeader = clone $uint8;
+    $this->controlHeader = $uint8;
   }
 
   public function __clone() {

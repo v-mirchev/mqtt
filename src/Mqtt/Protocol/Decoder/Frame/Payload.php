@@ -20,7 +20,7 @@ class Payload implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
    * @param \Mqtt\Protocol\Binary\IBuffer $buffer
    */
   public function __construct(\Mqtt\Protocol\Binary\IBuffer $buffer) {
-    $this->buffer = clone $buffer;
+    $this->buffer = $buffer;
     $this->length = 0;
   }
 
@@ -47,7 +47,7 @@ class Payload implements \Mqtt\Protocol\Decoder\Frame\IStreamDecoder {
    * @return void
    */
   public function streamDecoder(): \Generator {
-    $this->buffer->reset();
+    $this->buffer = clone $this->buffer;
     while ($this->buffer->length() < $this->length) {
       $char = yield;
       $this->buffer->append($char);

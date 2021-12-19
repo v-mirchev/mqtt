@@ -24,8 +24,8 @@ class PubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     \Mqtt\Protocol\Binary\Data\Uint16 $uint16,
     \Mqtt\Protocol\Entity\Packet\PubAck $pubAck
   ) {
-    $this->identificator = clone $uint16;
-    $this->pubAck = clone $pubAck;
+    $this->identificator = $uint16;
+    $this->pubAck = $pubAck;
   }
 
   /**
@@ -33,6 +33,8 @@ class PubAck implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
+    $this->identificator = clone $this->identificator;
+
     $this->assertPacketIs($frame, \Mqtt\Protocol\IPacketType::PUBACK);
     $this->assertPacketFlags($frame, \Mqtt\Protocol\IPacketReservedBits::FLAGS_PUBACK);
 

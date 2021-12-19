@@ -28,7 +28,7 @@ class ControlHeader implements \Mqtt\Protocol\Encoder\Frame\IStreamEncoder {
    * @param \Mqtt\Protocol\Binary\Data\Uint8 $uint8
    */
   public function __construct(\Mqtt\Protocol\Binary\Data\Uint8 $uint8) {
-    $this->controlHeader = clone $uint8;
+    $this->controlHeader = $uint8;
   }
 
   public function __clone() {
@@ -59,6 +59,7 @@ class ControlHeader implements \Mqtt\Protocol\Encoder\Frame\IStreamEncoder {
    * @param \Mqtt\Protocol\Binary\IBuffer $buffer
    */
   public function encode(\Mqtt\Protocol\Binary\IBuffer $buffer) : void {
+    $this->controlHeader = clone $this->controlHeader;
     $this->controlHeader->bits()->setSub(static::BIT_START_PACKET_TYPE, static::BIT_END_PACKET_TYPE, $this->packetType);
     $this->controlHeader->bits()->setSub(static::BIT_START_FLAGS, static::BIT_END_FLAGS, $this->flags);
     $this->controlHeader->encode($buffer);

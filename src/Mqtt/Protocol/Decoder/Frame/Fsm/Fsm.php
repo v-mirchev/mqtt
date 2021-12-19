@@ -39,9 +39,9 @@ class Fsm implements \Mqtt\Protocol\Decoder\Frame\Fsm\IActions {
     \Mqtt\Protocol\Decoder\Frame\Fsm\Factory $stateFactory,
     \Mqtt\Protocol\Entity\Frame $entityPrototype
   ) {
-    $this->context = clone $context;
+    $this->context = $context;
     $this->stateFactory = $stateFactory;
-    $this->entityPrototype = clone $entityPrototype;
+    $this->entityPrototype = $entityPrototype;
 
     $this->onFrameCompleted = function (\Mqtt\Protocol\Entity\Frame $frame) {};
   }

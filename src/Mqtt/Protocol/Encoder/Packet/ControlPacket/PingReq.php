@@ -15,7 +15,7 @@ class PingReq implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
    * @param \Mqtt\Protocol\Entity\Frame $frame
    */
   public function __construct(\Mqtt\Protocol\Entity\Frame $frame) {
-    $this->frame = clone $frame;
+    $this->frame = $frame;
   }
 
   /**
@@ -25,6 +25,8 @@ class PingReq implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
    */
   public function encode(\Mqtt\Protocol\Entity\Packet\IPacket $packet): void {
     /* @var $packet \Mqtt\Protocol\Entity\Packet\PingReq */
+
+    $this->frame = clone $this->frame;
 
     $this->assertPacketIs($packet, \Mqtt\Protocol\IPacketType::PINGREQ);
 

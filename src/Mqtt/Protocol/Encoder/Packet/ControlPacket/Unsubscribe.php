@@ -24,7 +24,7 @@ class Unsubscribe implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder
     \Mqtt\Protocol\Entity\Frame $frame,
     \Mqtt\Protocol\Binary\ITypedBuffer $typedBuffer
   ) {
-    $this->frame = clone $frame;
+    $this->frame = $frame;
     $this->typedBuffer = $typedBuffer;
   }
 

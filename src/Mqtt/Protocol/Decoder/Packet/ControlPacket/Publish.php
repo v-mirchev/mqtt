@@ -30,10 +30,10 @@ class Publish implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     \Mqtt\Protocol\Binary\Data\Utf8String $topic,
     \Mqtt\Protocol\Entity\Packet\Publish $publish
   ) {
-    $this->flags = clone $flags;
-    $this->id = clone $id;
-    $this->topic = clone $topic;
-    $this->publish = clone $publish;
+    $this->flags = $flags;
+    $this->id = $id;
+    $this->topic = $topic;
+    $this->publish = $publish;
   }
 
   /**
@@ -41,6 +41,10 @@ class Publish implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Entity\Frame $frame): void {
+    $this->id = clone $this->id;
+    $this->topic = clone $this->topic;
+    $this->publish = clone $this->publish;
+
     if ($frame->packetType !== \Mqtt\Protocol\IPacketType::PUBLISH) {
       throw new \Mqtt\Exception\ProtocolViolation(
         'Packet type received <' . $frame->packetType . '> is not PUBLISH',
@@ -55,7 +59,6 @@ class Publish implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     }
     $message = $frame->payload->getString();
 
-    $this->publish = clone $this->publish;
     $this->publish->isDuplicate = $this->flags->isDuplicate();
     $this->publish->isRetain = $this->flags->isRetain();
     $this->publish->qosLevel = $this->flags->getQos();

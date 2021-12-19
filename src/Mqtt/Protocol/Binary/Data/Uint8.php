@@ -18,7 +18,7 @@ class Uint8 implements \Mqtt\Protocol\Binary\Data\ICodec, \Mqtt\Protocol\Binary\
    * @param \Mqtt\Protocol\Binary\Data\Bit $bit
    */
   public function __construct(\Mqtt\Protocol\Binary\Data\Bit $bit) {
-    $this->bit = clone $bit;
+    $this->bit = $bit;
   }
 
   /**

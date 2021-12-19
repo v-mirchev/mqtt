@@ -19,7 +19,7 @@ class Utf8String implements \Mqtt\Protocol\Binary\Data\ICodec {
    */
   public function __construct(\Mqtt\Protocol\Binary\Data\Uint16 $length) {
     $this->content = '';
-    $this->length = clone $length;
+    $this->length = $length;
   }
 
   /**
@@ -57,6 +57,7 @@ class Utf8String implements \Mqtt\Protocol\Binary\Data\ICodec {
    * @return void
    */
   public function decode(\Mqtt\Protocol\Binary\IBuffer $buffer): void {
+    $this->length = clone $this->length;
     $this->length->decode($buffer);
     $this->set($buffer->getString($this->length->get()));
   }

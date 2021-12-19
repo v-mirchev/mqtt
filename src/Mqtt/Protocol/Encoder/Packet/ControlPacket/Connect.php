@@ -31,9 +31,9 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     \Mqtt\Protocol\Encoder\Packet\ControlPacket\Flags\Connect $flags,
     \Mqtt\Protocol\Binary\ITypedBuffer $typedBuffer
   ) {
-    $this->frame = clone $frame;
-    $this->flags = clone $flags;
-    $this->typedBuffer = clone $typedBuffer;
+    $this->frame = $frame;
+    $this->flags = $flags;
+    $this->typedBuffer = $typedBuffer;
   }
 
   /**
