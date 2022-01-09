@@ -54,7 +54,7 @@ class Publish implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
 
     $this->flags->decode($frame->flags);
     $this->topic->decode($frame->payload);
-    if ($this->flags->getQos() !== \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE) {
+    if ($this->flags->getQos() !== \Mqtt\Protocol\IQoS::AT_MOST_ONCE) {
       $this->id->decode($frame->payload);
     }
     $message = $frame->payload->getString();
@@ -62,7 +62,7 @@ class Publish implements \Mqtt\Protocol\Decoder\Packet\IControlPacketDecoder {
     $this->publish->isDuplicate = $this->flags->isDuplicate();
     $this->publish->isRetain = $this->flags->isRetain();
     $this->publish->qosLevel = $this->flags->getQos();
-    if ($this->publish->qosLevel !== \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE) {
+    if ($this->publish->qosLevel !== \Mqtt\Protocol\IQoS::AT_MOST_ONCE) {
       $this->publish->setId($this->id->get());
     }
     $this->publish->topic = $this->topic->get();

@@ -1,6 +1,6 @@
 <?php declare(strict_types = 1);
 
-namespace Mqtt\Protocol\Entity;
+namespace Mqtt\Protocol;
 
 interface IQoS {
 

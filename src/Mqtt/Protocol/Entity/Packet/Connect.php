@@ -47,7 +47,7 @@ class Connect implements \Mqtt\Protocol\Entity\Packet\IPacket {
   /**
    * @var bool
    */
-  public $cleanSession = false;
+  public $cleanSession = true;
 
   /**
    * @var int

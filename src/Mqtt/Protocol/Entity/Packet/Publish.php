@@ -12,17 +12,17 @@ class Publish implements \Mqtt\Protocol\Entity\Packet\IPacket {
   /**
    * @var int
    */
-  public $qosLevel;
+  public $qosLevel = 0;
 
   /**
    * @var bool
    */
-  public $isDuplicate;
+  public $isDuplicate = false;
 
   /**
    * @var bool
    */
-  public $isRetain;
+  public $isRetain = false;
 
   /**
    * @var string

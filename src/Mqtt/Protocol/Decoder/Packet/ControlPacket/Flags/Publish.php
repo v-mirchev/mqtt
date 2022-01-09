@@ -45,9 +45,9 @@ class Publish {
     $this->qos = (int)$frameFlags->bits()->getSub(static::BIT_QOS_START, static::BIT_QOS_END)->get();
 
     if (!in_array($this->qos, [
-      \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE,
-      \Mqtt\Protocol\Entity\IQoS::AT_LEAST_ONCE,
-      \Mqtt\Protocol\Entity\IQoS::EXACTLY_ONCE,
+      \Mqtt\Protocol\IQoS::AT_MOST_ONCE,
+      \Mqtt\Protocol\IQoS::AT_LEAST_ONCE,
+      \Mqtt\Protocol\IQoS::EXACTLY_ONCE,
     ])) {
       throw new \Mqtt\Exception\ProtocolViolation(
         'Publish with unklnown Qos <' . $this->qos . '>',

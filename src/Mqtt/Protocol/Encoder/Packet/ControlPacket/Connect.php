@@ -103,7 +103,7 @@ class Connect implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     if ($packet->clientId === '') {
       if (!$packet->cleanSession) {
         throw new \Mqtt\Exception\ProtocolViolation(
-          'Incorrect Will setup in CONNECT',
+          'Incorrect client ID/Clean-Session setup in CONNECT',
           \Mqtt\Exception\ProtocolViolation::INCORRECT_CONNECT_CLIENTID_SETUP
         );
       }

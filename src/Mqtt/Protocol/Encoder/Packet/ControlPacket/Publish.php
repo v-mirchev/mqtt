@@ -60,7 +60,7 @@ class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
     $payload->decorate($this->frame->payload);
 
     $payload->appendUtf8String($packet->topic);
-    if ($packet->qosLevel > \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE) {
+    if ($packet->qosLevel > \Mqtt\Protocol\IQoS::AT_MOST_ONCE) {
       $payload->appendUint16($packet->getId());
     }
     $this->frame->payload->append($packet->message);
@@ -73,9 +73,9 @@ class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
    */
   public function validateQosSetup(\Mqtt\Protocol\Entity\Packet\IPacket $packet) : void {
     if (!in_array($packet->qosLevel, [
-      \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE,
-      \Mqtt\Protocol\Entity\IQoS::AT_LEAST_ONCE,
-      \Mqtt\Protocol\Entity\IQoS::EXACTLY_ONCE,
+      \Mqtt\Protocol\IQoS::AT_MOST_ONCE,
+      \Mqtt\Protocol\IQoS::AT_LEAST_ONCE,
+      \Mqtt\Protocol\IQoS::EXACTLY_ONCE,
     ])) {
       throw new \Mqtt\Exception\ProtocolViolation(
         'Publish with unklnown Qos <' . $packet->qosLevel . '>',
@@ -83,7 +83,7 @@ class Publish implements \Mqtt\Protocol\Encoder\Packet\IControlPacketEncoder {
       );
     }
 
-    if ($packet->qosLevel === \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE) {
+    if ($packet->qosLevel === \Mqtt\Protocol\IQoS::AT_MOST_ONCE) {
       if ($packet->getId() > 0) {
         throw new \Mqtt\Exception\ProtocolViolation(
           'Publish with Qos::AT_MOST_ONCE must have no ID set',
