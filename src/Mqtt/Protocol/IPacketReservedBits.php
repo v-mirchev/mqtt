@@ -5,7 +5,7 @@ namespace Mqtt\Protocol;
 interface IPacketReservedBits {
 
   const FLAGS_CONNECT = 0b0000;
-  const FLAGS_CONNACK = 0b0010;
+  const FLAGS_CONNACK = 0b0000;
   const FLAGS_PUBACK = 0b0000;
   const FLAGS_PUBREC = 0b0000;
   const FLAGS_PUBREL = 0b0010;
