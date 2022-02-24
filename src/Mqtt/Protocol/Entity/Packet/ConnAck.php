@@ -13,8 +13,8 @@ class ConnAck implements \Mqtt\Protocol\Entity\Packet\IPacket {
   const CODE_CONNECTION_REFUSED_PROTOCOL_VERSION = 1;
   const CODE_CONNECTION_REFUSED_IDENTIFIER_REJECTED = 2;
   const CODE_CONNECTION_REFUSED_SERVER_UNAVAILABLE = 3;
-  const CODE_CONNECTION__REFUSED_NOT_AUTHENTICATED = 4;
-  const CODE_CONNECTION__REFUSED_NOT_AUTHORIZED = 5;
+  const CODE_CONNECTION_REFUSED_NOT_AUTHENTICATED = 4;
+  const CODE_CONNECTION_REFUSED_NOT_AUTHORIZED = 5;
 
   const CODE_MAX_VALUE = 5;
 
@@ -32,6 +32,5 @@ class ConnAck implements \Mqtt\Protocol\Entity\Packet\IPacket {
    * @var bool
    */
   public $isSessionPresent;
-
 
 }
