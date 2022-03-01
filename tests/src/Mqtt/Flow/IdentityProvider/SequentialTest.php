@@ -1,16 +1,16 @@
 <?php declare(strict_types = 1);
 
-namespace Mqtt\Protocol\IdentityProvider;
+namespace Mqtt\Flow\IdentityProvider;
 
 class SequentialTest extends \PHPUnit\Framework\TestCase {
 
   /**
-   * @var \Mqtt\Protocol\IdentityProvider\Sequential
+   * @var \Mqtt\Flow\IdentityProvider\Sequential
    */
   protected $object;
 
   protected function setUp() {
-    $this->object = new \Mqtt\Protocol\IdentityProvider\Sequential();
+    $this->object = new \Mqtt\Flow\IdentityProvider\Sequential();
   }
 
   public function testCloningIsInCleanState() {
