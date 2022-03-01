@@ -43,7 +43,7 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
 
   public function testEncodingFailsWhenIdSetForQosAtMostOnce() {
     $this->packet->setId(10);
-    $this->packet->qosLevel = \Mqtt\Protocol\Entity\IQoS::AT_MOST_ONCE;
+    $this->packet->qosLevel = \Mqtt\Protocol\IQoS::AT_MOST_ONCE;
 
     $this->expectException(\Mqtt\Exception\ProtocolViolation::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_PUBLISH_ID_SETUP);
@@ -51,7 +51,7 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testEncodingFailsWhenIdNotSetForQosAtLeastOnce() {
-    $this->packet->qosLevel = \Mqtt\Protocol\Entity\IQoS::AT_LEAST_ONCE;
+    $this->packet->qosLevel = \Mqtt\Protocol\IQoS::AT_LEAST_ONCE;
 
     $this->expectException(\Mqtt\Exception\ProtocolViolation::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_PUBLISH_ID_SETUP);
@@ -59,7 +59,7 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testEncodingFailsWhenIdNotSetForQosExactlyOnce() {
-    $this->packet->qosLevel = \Mqtt\Protocol\Entity\IQoS::EXACTLY_ONCE;
+    $this->packet->qosLevel = \Mqtt\Protocol\IQoS::EXACTLY_ONCE;
 
     $this->expectException(\Mqtt\Exception\ProtocolViolation::class);
     $this->expectExceptionCode(\Mqtt\Exception\ProtocolViolation::INCORRECT_PUBLISH_ID_SETUP);
@@ -67,7 +67,6 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testEncodesPacketTypeProperly() {
-    $this->packet->setId(0x33);
     $this->packet->topic = 'TOPIC';
     $this->packet->message = 'CONTENT';
 
@@ -88,7 +87,6 @@ class PublishTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testEncodesFramePayloadProperly() {
-    $this->packet->setId(0x33);
     $this->packet->topic = 'TOPIC';
     $this->packet->message = 'CONTENT';
     $this->object->encode($this->packet);
